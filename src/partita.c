@@ -389,6 +389,112 @@ int verificaNessMossa(Partita *partitaPtr, int coloreGiocatore) {
 }
 
 /* =========================================================
+   LOGICA BOT
+========================================================= */
+
+/**
+ * DESCRIZIONE: Calcola il punteggio di una mossa per il bot.
+ * ARGOMENTI:
+ *   partitaPtr: puntatore alla struttura Partita
+ *   rigaInput: riga della mossa
+ *   colInput: colonna della mossa
+ *   coloreBot: colore del bot
+ * RITORNO: punteggio della mossa
+ */
+int calcolaPunteggioMossa(Partita *partitaPtr, int rigaInput, int colInput, int coloreBot) {
+    int direzioniRiga[8];
+    int direzioniColonna[8];
+    int indiceDir;
+    int pedineFlippabili;
+    int punteggioTotale;
+    int bonusAngolo;
+    int bonusBordo;
+    int dimensioneScacc;
+    
+    direzioniRiga[0] = -1; direzioniRiga[1] = -1; direzioniRiga[2] = -1; direzioniRiga[3] = 0;
+    direzioniRiga[4] = 0; direzioniRiga[5] = 1; direzioniRiga[6] = 1; direzioniRiga[7] = 1;
+    
+    direzioniColonna[0] = -1; direzioniColonna[1] = 0; direzioniColonna[2] = 1; direzioniColonna[3] = -1;
+    direzioniColonna[4] = 1; direzioniColonna[5] = -1; direzioniColonna[6] = 0; direzioniColonna[7] = 1;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    punteggioTotale = 0;
+    bonusAngolo = 0;
+    bonusBordo = 0;
+    
+    /* Conta pedine che si possono flippare */
+    indiceDir = 0;
+    while (indiceDir < 8) {
+        pedineFlippabili = calcolaPedineFlipp(partitaPtr, rigaInput, colInput, 
+                                              direzioniRiga[indiceDir], direzioniColonna[indiceDir], 
+                                              coloreBot);
+        punteggioTotale = punteggioTotale + pedineFlippabili;
+        indiceDir = indiceDir + 1;
+    }
+    
+    /* Bonus per angoli */
+    if ((rigaInput == 0 && colInput == 0) ||
+        (rigaInput == 0 && colInput == dimensioneScacc - 1) ||
+        (rigaInput == dimensioneScacc - 1 && colInput == 0) ||
+        (rigaInput == dimensioneScacc - 1 && colInput == dimensioneScacc - 1)) {
+        bonusAngolo = 10;
+    }
+    
+    /* Bonus per bordi */
+    if (rigaInput == 0 || rigaInput == dimensioneScacc - 1 || 
+        colInput == 0 || colInput == dimensioneScacc - 1) {
+        bonusBordo = 3;
+    }
+    
+    return punteggioTotale + bonusAngolo + bonusBordo;
+}
+
+/**
+ * DESCRIZIONE: Trova la migliore mossa disponibile per il bot.
+ * ARGOMENTI:
+ *   partitaPtr: puntatore alla struttura Partita
+ *   coloreBot: colore del bot
+ *   miglioreRiga: puntatore per salvare la riga della migliore mossa
+ *   miglioreCol: puntatore per salvare la colonna della migliore mossa
+ * RITORNO: 1 se trova una mossa, 0 altrimenti
+ */
+int trovaMossaMigliore(Partita *partitaPtr, int coloreBot, int *miglioreRiga, int *miglioreCol) {
+    int indiceRiga;
+    int indiceColonna;
+    int dimensioneScacc;
+    int punteggioCorrente;
+    int punteggioMigliore;
+    int mossaTrovata;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    punteggioMigliore = -1;
+    mossaTrovata = 0;
+    
+    *miglioreRiga = 0;
+    *miglioreCol = 0;
+    
+    indiceRiga = 0;
+    while (indiceRiga < dimensioneScacc) {
+        indiceColonna = 0;
+        while (indiceColonna < dimensioneScacc) {
+            if (verificaMossaValida(partitaPtr, indiceRiga, indiceColonna, coloreBot) == 1) {
+                punteggioCorrente = calcolaPunteggioMossa(partitaPtr, indiceRiga, indiceColonna, coloreBot);
+                if (punteggioCorrente > punteggioMigliore) {
+                    punteggioMigliore = punteggioCorrente;
+                    *miglioreRiga = indiceRiga;
+                    *miglioreCol = indiceColonna;
+                    mossaTrovata = 1;
+                }
+            }
+            indiceColonna = indiceColonna + 1;
+        }
+        indiceRiga = indiceRiga + 1;
+    }
+    
+    return mossaTrovata;
+}
+
+/* =========================================================
    FUNZIONI PUBBLICHE
 ========================================================= */
 

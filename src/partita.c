@@ -16,6 +16,8 @@ DATA MODIFICA: 22/07/2025
 
 #define DIM_OTHELLO 8
 #define VUOTO 0
+#define CELLA_VUOTA 0
+
 #define NERO 1
 #define BIANCO 2
 
@@ -40,15 +42,15 @@ void stampareTitoloPartita(){
   stampareCentrato("         |_|                                       ");
 }
 
-void stampaLineaOrizz(Partita *partita) {
+void stampareLineaOrizzontale(Partita *partita) {
     int indiceColonna;
-    int dimensioneScacc;
+    int dimensione;
     
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
+    dimensione = leggereDimScacchiera(leggereScacchieraPartita(partita));
     printf("   +");
     
     indiceColonna = 0;
-    while (indiceColonna < dimensioneScacc) {
+    while (indiceColonna < dimensione) {
         printf("---");
         indiceColonna = indiceColonna + 1;
     }
@@ -57,13 +59,13 @@ void stampaLineaOrizz(Partita *partita) {
 
 void stampaIntestColonne(Partita *partita) {
     int indiceColonna;
-    int dimensioneScacc;
+    int dimensione;
     
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
+    dimensione = leggereDimScacchiera(leggereScacchieraPartita(partita));
     printf("    ");
     
     indiceColonna = 0;
-    while (indiceColonna < dimensioneScacc) {
+    while (indiceColonna < dimensione) {
         printf("%3d", indiceColonna + 1);
         indiceColonna = indiceColonna + 1;
     }
@@ -73,30 +75,36 @@ void stampaIntestColonne(Partita *partita) {
 void stampaScacchiera(Partita *partita) {
     int indiceRiga;
     int indiceColonna;
-    int dimensioneScacc;
+    int dimensione;
     int valoreCorrente;
-    char carattereVisual;
+    char carattereVisualizzato;
     
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
+    dimensione = leggereDimScacchiera(leggereScacchieraPartita(partita));
     
     stampaIntestColonne(partita);
-    stampaLineaOrizz(partita);
+    stampareLineaOrizzontale(partita);
     
     indiceRiga = 0;
-    while (indiceRiga < dimensioneScacc) {
+    while (indiceRiga < dimensione) {
         printf("%2d |", indiceRiga + 1);
         
         indiceColonna = 0;
-        while (indiceColonna < dimensioneScacc) {
+        while (indiceColonna < dimensione) {
             valoreCorrente = leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
-            carattereVisual = (valoreCorrente == NERO) ? 'N' : (valoreCorrente == BIANCO) ? 'B' : '.';
-            printf("%3c", carattereVisual);
+            if(valoreCorrente == NERO){
+              carattereVisualizzato = 'N';
+            } else if (valoreCorrente == BIANCO) {
+              carattereVisualizzato = 'B';
+            } else {
+              carattereVisualizzato = '.';
+            }
+            printf("%3c", carattereVisualizzato);
             indiceColonna = indiceColonna + 1;
         }
         printf(" |\n");
         indiceRiga = indiceRiga + 1;
     }
-    stampaLineaOrizz(partita);
+    stampareLineaOrizzontale(partita);
 }
 
 void disegnaCornice() {
@@ -135,13 +143,6 @@ void stampaVittoria(int neriTotali, int bianchiTotali) {
     int inputUtente;
     
     pulireSchermo();
-    printf("\n\n\n");
-    stampareCentrato(" _   _    _    ___ ");
-    stampareCentrato("| | | |  / \\  |_ _|");
-    stampareCentrato("| |_| | / _ \\  | | ");
-    stampareCentrato("|  _  |/ ___ \\ | | ");
-    stampareCentrato("|_| |_/_/   \\_\\___|");
-    printf("\n\n");
     printf("Nero: %d pedine\n", neriTotali);
     printf("Bianco: %d pedine\n", bianchiTotali);
     
@@ -157,10 +158,6 @@ void stampaVittoria(int neriTotali, int bianchiTotali) {
     tornareHomepage(&inputUtente, 20, 30);
 }
 
-/* =========================================================
-   LOGICA DI GIOCO
-========================================================= */
-
 /**
  * DESCRIZIONE: Conta il numero di pedine di un giocatore sulla scacchiera.
  * ARGOMENTI:
@@ -172,16 +169,16 @@ int contaPedineGiocatore(Partita *partita, int coloreGiocatore) {
     int indiceRiga;
     int indiceColonna;
     int conteggioTotale;
-    int dimensioneScacc;
+    int dimensione;
     int valoreCorrente;
     
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
+    dimensione = leggereDimScacchiera(leggereScacchieraPartita(partita));
     conteggioTotale = 0;
     
     indiceRiga = 0;
-    while (indiceRiga < dimensioneScacc) {
+    while (indiceRiga < dimensione) {
         indiceColonna = 0;
-        while (indiceColonna < dimensioneScacc) {
+        while (indiceColonna < dimensione) {
             valoreCorrente = leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
             if (valoreCorrente == coloreGiocatore) {
                 conteggioTotale = conteggioTotale + 1;
@@ -214,8 +211,12 @@ int calcolaPedineFlipp(Partita *partita, int rigaInizio, int colInizio,
     int colCorrente;
     int risultatoFlip;
     
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
-    coloreAvversario = (coloreGiocatore == NERO) ? BIANCO : NERO;
+    dimensioneScacc = leggereDimScacchiera(leggereScacchieraPartita(partita));
+    if (coloreGiocatore == NERO) {
+      coloreAvversario = BIANCO;
+    } else {
+      coloreAvversario = NERO;
+    }
     conteggioFlip = 0;
     risultatoFlip = 0;
     
@@ -240,7 +241,6 @@ int calcolaPedineFlipp(Partita *partita, int rigaInizio, int colInizio,
             colCorrente = colCorrente + deltaColonna;
         }
     }
-    
     if (risultatoFlip == 0) {
         risultatoFlip = 0;
     }
@@ -274,7 +274,7 @@ int verificaMossaValida(Partita *partita, int rigaInput, int colInput, int color
     cellaOccupata = (leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) != VUOTO);
     mossaValidaTrovata = 0;
     
-    if (cellaOccupata == 0) {
+    if (cellaOccupata == CELLA_VUOTA) {
         indiceDir = 0;
         while (indiceDir < 8 && mossaValidaTrovata == 0) {
             pedineFlippabili = calcolaPedineFlipp(partita, rigaInput, colInput, 
@@ -357,7 +357,7 @@ int verificaNessMossa(Partita *partita, int coloreGiocatore) {
     int dimensioneScacc;
     int risultatoFinale;
     
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
+    dimensioneScacc = leggereDimScacchiera(leggereScacchieraPartita(partita));
     mossaTrovata = 0;
     risultatoFinale = 1;
     
@@ -379,116 +379,6 @@ int verificaNessMossa(Partita *partita, int coloreGiocatore) {
     
     return risultatoFinale;
 }
-
-/* =========================================================
-   LOGICA BOT
-========================================================= */
-
-/**
- * DESCRIZIONE: Calcola il punteggio di una mossa per il bot.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   rigaInput: riga della mossa
- *   colInput: colonna della mossa
- *   coloreBot: colore del bot
- * RITORNO: punteggio della mossa
- */
-int calcolaPunteggioMossa(Partita *partita, int rigaInput, int colInput, int coloreBot) {
-    int direzioniRiga[8];
-    int direzioniColonna[8];
-    int indiceDir;
-    int pedineFlippabili;
-    int punteggioTotale;
-    int bonusAngolo;
-    int bonusBordo;
-    int dimensioneScacc;
-    
-    direzioniRiga[0] = -1; direzioniRiga[1] = -1; direzioniRiga[2] = -1; direzioniRiga[3] = 0;
-    direzioniRiga[4] = 0; direzioniRiga[5] = 1; direzioniRiga[6] = 1; direzioniRiga[7] = 1;
-    
-    direzioniColonna[0] = -1; direzioniColonna[1] = 0; direzioniColonna[2] = 1; direzioniColonna[3] = -1;
-    direzioniColonna[4] = 1; direzioniColonna[5] = -1; direzioniColonna[6] = 0; direzioniColonna[7] = 1;
-    
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
-    punteggioTotale = 0;
-    bonusAngolo = 0;
-    bonusBordo = 0;
-    
-    /* Conta pedine che si possono flippare */
-    indiceDir = 0;
-    while (indiceDir < 8) {
-        pedineFlippabili = calcolaPedineFlipp(partita, rigaInput, colInput, 
-                                              direzioniRiga[indiceDir], direzioniColonna[indiceDir], 
-                                              coloreBot);
-        punteggioTotale = punteggioTotale + pedineFlippabili;
-        indiceDir = indiceDir + 1;
-    }
-    
-    /* Bonus per angoli */
-    if ((rigaInput == 0 && colInput == 0) ||
-        (rigaInput == 0 && colInput == dimensioneScacc - 1) ||
-        (rigaInput == dimensioneScacc - 1 && colInput == 0) ||
-        (rigaInput == dimensioneScacc - 1 && colInput == dimensioneScacc - 1)) {
-        bonusAngolo = 10;
-    }
-    
-    /* Bonus per bordi */
-    if (rigaInput == 0 || rigaInput == dimensioneScacc - 1 || 
-        colInput == 0 || colInput == dimensioneScacc - 1) {
-        bonusBordo = 3;
-    }
-    
-    return punteggioTotale + bonusAngolo + bonusBordo;
-}
-
-/**
- * DESCRIZIONE: Trova la migliore mossa disponibile per il bot.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   coloreBot: colore del bot
- *   miglioreRiga: puntatore per salvare la riga della migliore mossa
- *   miglioreCol: puntatore per salvare la colonna della migliore mossa
- * RITORNO: 1 se trova una mossa, 0 altrimenti
- */
-int trovaMossaMigliore(Partita *partita, int coloreBot, int *miglioreRiga, int *miglioreCol) {
-    int indiceRiga;
-    int indiceColonna;
-    int dimensioneScacc;
-    int punteggioCorrente;
-    int punteggioMigliore;
-    int mossaTrovata;
-    
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
-    punteggioMigliore = -1;
-    mossaTrovata = 0;
-    
-    *miglioreRiga = 0;
-    *miglioreCol = 0;
-    
-    indiceRiga = 0;
-    while (indiceRiga < dimensioneScacc) {
-        indiceColonna = 0;
-        while (indiceColonna < dimensioneScacc) {
-            if (verificaMossaValida(partita, indiceRiga, indiceColonna, coloreBot) == 1) {
-                punteggioCorrente = calcolaPunteggioMossa(partita, indiceRiga, indiceColonna, coloreBot);
-                if (punteggioCorrente > punteggioMigliore) {
-                    punteggioMigliore = punteggioCorrente;
-                    *miglioreRiga = indiceRiga;
-                    *miglioreCol = indiceColonna;
-                    mossaTrovata = 1;
-                }
-            }
-            indiceColonna = indiceColonna + 1;
-        }
-        indiceRiga = indiceRiga + 1;
-    }
-    
-    return mossaTrovata;
-}
-
-/* =========================================================
-   FUNZIONI PUBBLICHE
-========================================================= */
 
 void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
     Partita partitaCorrente;
@@ -589,7 +479,7 @@ void avviarePartitaContinuata(Partita *partita) {
     int dimensioneScacc;
     int azioneInput;
     
-    dimensioneScacc = leggereDimScacchiera(partita->scacchieraPartita);
+    dimensioneScacc = leggereDimScacchiera(leggereScacchieraPartita(partita));
     finePartita = 0;
     
     neriTotali = contaPedineGiocatore(partita, NERO);

@@ -29,7 +29,7 @@ void disegnareCornice();
 // Funzioni di gestione scacchiera e stampa
 void stampareScacchieraPartita(Partita *partita);
 void stampareIntestazioneColonne(int dimensione, int numeroSottoquadrato);
-void stampareLineaOrizzontale(int dimensione, int numeroSottoquadrato);
+void stampareLineaOrizzontale(Partita *partita);
 void stampareRigheScacchiera(Scacchiera scacchiera);
 void stampareRigaScacchiera(Scacchiera scacchiera, int riga);
 

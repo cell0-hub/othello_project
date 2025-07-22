@@ -107,6 +107,8 @@ void stampaScacchiera(Partita *partita) {
     stampareLineaOrizzontale(partita);
 }
 
+
+
 void disegnaCornice() {
     int contatoreCornice;
     
@@ -415,6 +417,7 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
         }
         stampaScacchiera(&partitaCorrente);
         stampaTabellaInput();
+        stampareConteggioPedine(&partitaCorrente, turnoGiocatore);
 
         if (errore) {
           mostrareMessaggioErrore("mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
@@ -585,4 +588,16 @@ void convertireDimensione(int *dimensione) {
             }
         }
     }
+}
+
+void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
+    int neriTotali = contaPedineGiocatore(partita, NERO);
+    int bianchiTotali = contaPedineGiocatore(partita, BIANCO);
+    char* nomeGiocatoreCorrente = (turnoCorrente == NERO) ? "NERO" : "BIANCO";
+    
+    // Posiziona il conteggio in alto a destra
+    spostareCursore(RIGA_ERRORE-1, COLONNA_ERRORE-8);
+    printf(" Nere:  %2d    ", neriTotali);
+    printf(" Bianche: %2d  ", bianchiTotali);
+    printf(" Turno: %s     ", nomeGiocatoreCorrente);
 }

@@ -21,6 +21,7 @@ Scopo di ogni funzione presente:
 #include <stdlib.h>
 #include "../include/homepage.h"
 #include "../include/funzioniUtilita.h"
+#include "../include/impostazioni.h"
 
 #define LARGHEZZA_TERMINALE 80
 
@@ -133,6 +134,7 @@ void collezionareInputHomepage() {
       reimpostareZonaInput(INPUT_RIGA, INPUT_COLONNA);
     }
     else if (input == NUOVA_PARTITA) {
+      avviareImpostazioni();
       inMenuPrinipale = FALSO;
     }
     else if (input == PARTITE_SALVATE) {

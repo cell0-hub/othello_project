@@ -3,18 +3,9 @@ AUTORI: Onofrio de Robertis
         Michele Amato
         Davide Fornelli
         Giuliano Antoniciello
-
 DATA INIZIO: 27/05/2024
 DATA MODIFICA: 22/07/2025
-
-NOME FILE: partita.c (versione Othello)
-
-MODIFICHE:
-- Adattato per gioco Othello
-- Griglia 8x8
-- Logica di flip pedine
-- Controllo mosse valide
-- Turni giocatore 1 (nero) e 2 (bianco)
+NOME FILE: partita.c (Othello con stile Sudoku)
 */
 
 #include <stdio.h>
@@ -22,508 +13,571 @@ MODIFICHE:
 #include "../include/partita.h"
 #include "../include/funzioniUtilita.h"
 #include "../include/caricaPartita.h"
+#include "../include/homepage.h"
 
 #define DIM_OTHELLO 8
 #define VUOTO 0
 #define NERO 1
 #define BIANCO 2
 
-#define PICCOLA 1
-#define MEDIA 2
-#define GRANDE 3
+/* --- MACRO COLORE E POSIZIONAMENTO (da Sudoku) --- */
+#define BLU   "\033[34m"
+#define RESET "\033[0m"
 
-/**
- * DESCRIZIONE: Avvia una nuova partita Othello.
- * ARGOMENTI:
- *   nomePartita: nome della partita
- *   modalita: modalità di gioco
- *   dimensione: dimensione della scacchiera
- * RITORNO: nessuno
- */
-void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
-    Partita partita;
-    int turno;
-    int riga;
-    int colonna;
-    int fine;
-    int numeroNeri;
-    int numeroBianchi;
-    int meta;
-    char sceltaSalvataggio;
+#define RIGA_INPUT_RIGA   13
+#define RIGA_INPUT_COL    16
+#define RIGA_INPUT_VAL    19
+#define RIGA_INPUT        28
+#define COLONNA_INPUT     67
+#define RIGA_ERRORE       22
+#define COLONNA_ERRORE    27
 
-    turno = NERO;
-    fine = 0;
-    numeroNeri = 0;
-    numeroBianchi = 0;
-    riga = 0;
-    colonna = 0;
-    sceltaSalvataggio = 'n';
-    meta = 0;
+/* =========================================================
+   FUNZIONI GRAFICHE (stile Sudoku)
+========================================================= */
 
-    scrivereNomePartita(&partita, (char *)nomePartita);
-    partita.modalita = modalita;
-    scrivereDimScacchieraPartita(&partita, dimensione);
-    inizializzareScacchieraPartita(&partita, dimensione);
-
-    if (dimensione >= 4 && modulo(dimensione, 2) == 0) {
-        meta = dimensione / 2;
-        scrivereStatoScacchieraPartita(&partita, NERO, meta - 1, meta - 1);
-        scrivereStatoScacchieraPartita(&partita, BIANCO, meta - 1, meta);
-        scrivereStatoScacchieraPartita(&partita, BIANCO, meta, meta - 1);
-        scrivereStatoScacchieraPartita(&partita, NERO, meta, meta);
-    }
-
-    pulireBuffer();
-
-    while (fine == 0) {
-        pulireSchermo();
-        stampareScacchieraOthello(&partita);
-
-        numeroNeri = contarePedine(&partita, NERO);
-        numeroBianchi = contarePedine(&partita, BIANCO);
-        printf("\nTurno: %s   Nero: %d   Bianco: %d\n",
-               (turno == NERO ? "Nero" : "Bianco"), numeroNeri, numeroBianchi);
-
-        printf("Vuoi salvare la partita? (s/n): ");
-        scanf(" %c", &sceltaSalvataggio);
-        pulireBuffer();
-        if (sceltaSalvataggio == 's' || sceltaSalvataggio == 'S') {
-            salvarePartita(&partita);
-            printf("Partita salvata! Premi invio per continuare...");
-            getchar();
-        }
-
-        if (nessunaMossaPossibile(&partita, turno) == 1) {
-            printf("Nessuna mossa disponibile per %s.\n",
-                   (turno == NERO ? "Nero" : "Bianco"));
-            if (turno == NERO) {
-                turno = turno + 1;
-            } else {
-                turno = turno - 1;
-            }
-            if (nessunaMossaPossibile(&partita, turno) == 1) {
-                fine = 1;
-            }
-            continue;
-        }
-
-        printf("Inserisci riga e colonna (1-%d, es. 4 5): ", dimensione);
-        scanf("%d %d", &riga, &colonna);
-        pulireBuffer();
-
-        if (riga < 1 || riga > dimensione || colonna < 1 || colonna > dimensione) {
-            printf("Valori fuori range.\n");
-            continue;
-        }
-
-        riga = riga - 1;
-        colonna = colonna - 1;
-
-        if (mossaValida(&partita, riga, colonna, turno) == 0) {
-            printf("Mossa non valida.\n");
-            continue;
-        }
-
-        eseguiMossa(&partita, riga, colonna, turno);
-        if (turno == NERO) {
-            turno = turno + 1;
-        } else {
-            turno = turno - 1;
-        }
-    }
-
-    stampareVittoriaOthello(numeroNeri, numeroBianchi);
+void stampareTitoloOthello(void) {
+    printf(BLU);
+    pulireSchermo();
+    printf("\n");
+    stampareCentrato("  ___  _____ _____ ___  _   _ ");
+    stampareCentrato(" / _ \\|  ___|_   _/ _ \\| | | |");
+    stampareCentrato("| | | | |_    | || | | | |_| |");
+    stampareCentrato("| |_| |  _|   | || |_| |  _  |");
+    stampareCentrato(" \\___/|_|     |_| \\___/|_| |_|");
+    printf("\n" RESET);
 }
 
-/**
- * DESCRIZIONE: Avvia una partita Othello continuata da uno stato salvato.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita già caricata
- * RITORNO: nessuno
- */
-void avviarePartitaContinuata(Partita *partita) {
-    int turno;
-    int dimensione;
-    int riga;
-    int colonna;
-    int fine;
-    int numeroNeri;
-    int numeroBianchi;
-    char sceltaSalvataggio;
+void stampaLineaOrizzOthel(Partita *partitaPtr) {
+    int indiceColonna;
+    int dimensioneScacc;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    printf("   +");
+    
+    indiceColonna = 0;
+    while (indiceColonna < dimensioneScacc) {
+        printf("---");
+        indiceColonna = indiceColonna + 1;
+    }
+    printf("-+\n");
+}
 
-    turno = NERO;
-    dimensione = leggereDimScacchiera(partita->scacchieraPartita);
-    riga = 0;
-    colonna = 0;
-    fine = 0;
-    numeroNeri = 0;
-    numeroBianchi = 0;
-    sceltaSalvataggio = 'n';
+void stampaIntestColonneOth(Partita *partitaPtr) {
+    int indiceColonna;
+    int dimensioneScacc;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    printf("    ");
+    
+    indiceColonna = 0;
+    while (indiceColonna < dimensioneScacc) {
+        printf("%3d", indiceColonna + 1);
+        indiceColonna = indiceColonna + 1;
+    }
+    printf("\n");
+}
 
-    numeroNeri = contarePedine(partita, NERO);
-    numeroBianchi = contarePedine(partita, BIANCO);
-    if (numeroNeri > numeroBianchi) {
-        turno = BIANCO;
+void stampaScacchieraOthel(Partita *partitaPtr) {
+    int indiceRiga;
+    int indiceColonna;
+    int dimensioneScacc;
+    int valoreCorrente;
+    char carattereVisual;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    
+    stampaIntestColonneOth(partitaPtr);
+    stampaLineaOrizzOthel(partitaPtr);
+    
+    indiceRiga = 0;
+    while (indiceRiga < dimensioneScacc) {
+        printf("%2d |", indiceRiga + 1);
+        
+        indiceColonna = 0;
+        while (indiceColonna < dimensioneScacc) {
+            valoreCorrente = leggereStatoScacchiera(leggereScacchieraPartita(partitaPtr), indiceRiga, indiceColonna);
+            carattereVisual = (valoreCorrente == NERO) ? 'N' : (valoreCorrente == BIANCO) ? 'B' : '.';
+            printf("%3c", carattereVisual);
+            indiceColonna = indiceColonna + 1;
+        }
+        printf(" |\n");
+        indiceRiga = indiceRiga + 1;
+    }
+    stampaLineaOrizzOthel(partitaPtr);
+}
+
+void disegnaCorniceOthello(void) {
+    int contatoreCornice;
+    
+    spostareCursore(RIGA_INPUT_RIGA - 5, COLONNA_INPUT - 2);
+    printf("+------------+\n");
+    spostareCursore(RIGA_INPUT_RIGA - 6, COLONNA_INPUT - 2);
+    printf("|   Input    |\n");
+    spostareCursore(RIGA_INPUT_RIGA - 7, COLONNA_INPUT - 2);
+    printf("+------------+\n");
+    
+    contatoreCornice = -4;
+    while (contatoreCornice < 4) {
+        spostareCursore(RIGA_INPUT_RIGA + contatoreCornice, COLONNA_INPUT - 2);
+        printf("|            |\n");
+        contatoreCornice = contatoreCornice + 1;
+    }
+    spostareCursore(RIGA_INPUT_RIGA + 4, COLONNA_INPUT - 2);
+    printf("+------------+\n");
+}
+
+void stampaTabellaInputOth(void) {
+    disegnaCorniceOthello();
+    spostareCursore(RIGA_INPUT_RIGA - 4, COLONNA_INPUT);
+    printf("-Azione-");
+    spostareCursore(RIGA_INPUT_RIGA - 1, COLONNA_INPUT + 1);
+    printf("-Riga-");
+    spostareCursore(RIGA_INPUT_COL - 1, COLONNA_INPUT);
+    printf("-Colonna-");
+    spostareCursore(25, 17);
+    printf("\033[34m azione: (1 giocare / 2 salvare / 3 uscire) \033[0m");
+}
+
+void stampaVittoriaOthello(int neriTotali, int bianchiTotali) {
+    int inputUtente;
+    
+    pulireSchermo();
+    printf("\n\n\n");
+    stampareCentrato(" _   _    _    ___ ");
+    stampareCentrato("| | | |  / \\  |_ _|");
+    stampareCentrato("| |_| | / _ \\  | | ");
+    stampareCentrato("|  _  |/ ___ \\ | | ");
+    stampareCentrato("|_| |_/_/   \\_\\___|");
+    printf("\n\n");
+    printf("Nero: %d pedine\n", neriTotali);
+    printf("Bianco: %d pedine\n", bianchiTotali);
+    
+    if (neriTotali > bianchiTotali) {
+        stampareCentrato("VINCE IL NERO!");
     } else {
-        turno = NERO;
-    }
-
-    pulireBuffer();
-    while (fine == 0) {
-        pulireSchermo();
-        stampareScacchieraOthello(partita);
-        numeroNeri = contarePedine(partita, NERO);
-        numeroBianchi = contarePedine(partita, BIANCO);
-        printf("\nTurno: %s   Nero: %d   Bianco: %d\n",
-               (turno == NERO ? "Nero" : "Bianco"), numeroNeri, numeroBianchi);
-        printf("Vuoi salvare la partita? (s/n): ");
-        scanf(" %c", &sceltaSalvataggio);
-        pulireBuffer();
-        if (sceltaSalvataggio == 's' || sceltaSalvataggio == 'S') {
-            salvarePartita(partita);
-            printf("Partita salvata! Premi invio per continuare...");
-            getchar();
-        }
-        if (nessunaMossaPossibile(partita, turno) == 1) {
-            printf("Nessuna mossa disponibile per %s.\n",
-                   (turno == NERO ? "Nero" : "Bianco"));
-            if (turno == NERO) {
-                turno = turno + 1;
-            } else {
-                turno = turno - 1;
-            }
-            if (nessunaMossaPossibile(partita, turno) == 1) {
-                fine = 1;
-            }
-            continue;
-        }
-        printf("Inserisci riga e colonna (1-%d, es. 4 5): ", dimensione);
-        scanf("%d %d", &riga, &colonna);
-        pulireBuffer();
-        if (riga < 1 || riga > dimensione || colonna < 1 || colonna > dimensione) {
-            printf("Valori fuori range.\n");
-            continue;
-        }
-        riga = riga - 1;
-        colonna = colonna - 1;
-        if (mossaValida(partita, riga, colonna, turno) == 0) {
-            printf("Mossa non valida.\n");
-            continue;
-        }
-        eseguiMossa(partita, riga, colonna, turno);
-        if (turno == NERO) {
-            turno = turno + 1;
+        if (bianchiTotali > neriTotali) {
+            stampareCentrato("VINCE IL BIANCO!");
         } else {
-            turno = turno - 1;
+            stampareCentrato("PAREGGIO!");
         }
     }
-    stampareVittoriaOthello(numeroNeri, numeroBianchi);
+    tornareHomepage(&inputUtente, 20, 30);
 }
 
-// === INIZIALIZZAZIONE ===
+/* =========================================================
+   LOGICA DI GIOCO
+========================================================= */
+
 /**
- * DESCRIZIONE: Inizializza una partita Othello con la posizione iniziale standard.
+ * DESCRIZIONE: Conta il numero di pedine di un giocatore sulla scacchiera.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita da inizializzare
- * RITORNO: nessuno
+ *   partitaPtr: puntatore alla struttura Partita
+ *   coloreGiocatore: colore del giocatore
+ * RITORNO: numero di pedine
  */
-void inizializzarePartitaOthello(Partita *partita) {
-    int dimensione;
-    dimensione = DIM_OTHELLO;
-    scrivereDimScacchieraPartita(partita, dimensione);
-    inizializzareScacchieraPartita(partita, dimensione);
-    scrivereStatoScacchieraPartita(partita, NERO, 3, 3);
-    scrivereStatoScacchieraPartita(partita, BIANCO, 3, 4);
-    scrivereStatoScacchieraPartita(partita, BIANCO, 4, 3);
-    scrivereStatoScacchieraPartita(partita, NERO, 4, 4);
+int contaPedineGiocatore(Partita *partitaPtr, int coloreGiocatore) {
+    int indiceRiga;
+    int indiceColonna;
+    int conteggioTotale;
+    int dimensioneScacc;
+    int valoreCorrente;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    conteggioTotale = 0;
+    
+    indiceRiga = 0;
+    while (indiceRiga < dimensioneScacc) {
+        indiceColonna = 0;
+        while (indiceColonna < dimensioneScacc) {
+            valoreCorrente = leggereStatoScacchiera(leggereScacchieraPartita(partitaPtr), indiceRiga, indiceColonna);
+            if (valoreCorrente == coloreGiocatore) {
+                conteggioTotale = conteggioTotale + 1;
+            }
+            indiceColonna = indiceColonna + 1;
+        }
+        indiceRiga = indiceRiga + 1;
+    }
+    return conteggioTotale;
 }
 
-// === CONTROLLO VALIDITÀ MOSSA ===
 /**
- * DESCRIZIONE: Controlla se una mossa è valida per il giocatore (più leggibile e robusta).
+ * DESCRIZIONE: Conta quante pedine si possono flippare in una direzione.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   riga: riga della mossa
- *   colonna: colonna della mossa
- *   giocatore: colore del giocatore (NERO/BIANCO)
+ *   partitaPtr: puntatore alla struttura Partita
+ *   rigaInizio: riga di partenza
+ *   colInizio: colonna di partenza
+ *   deltaRiga: direzione riga
+ *   deltaColonna: direzione colonna
+ *   coloreGiocatore: colore del giocatore
+ * RITORNO: numero di pedine da flippare
+ */
+int calcolaPedineFlipp(Partita *partitaPtr, int rigaInizio, int colInizio, 
+                       int deltaRiga, int deltaColonna, int coloreGiocatore) {
+    int coloreAvversario;
+    int conteggioFlip;
+    int valoreCorrente;
+    int dimensioneScacc;
+    int rigaCorrente;
+    int colCorrente;
+    int risultatoFlip;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    coloreAvversario = (coloreGiocatore == NERO) ? BIANCO : NERO;
+    conteggioFlip = 0;
+    risultatoFlip = 0;
+    
+    rigaCorrente = rigaInizio + deltaRiga;
+    colCorrente = colInizio + deltaColonna;
+    
+    while (rigaCorrente >= 0 && rigaCorrente < dimensioneScacc && 
+           colCorrente >= 0 && colCorrente < dimensioneScacc) {
+        valoreCorrente = leggereStatoScacchiera(leggereScacchieraPartita(partitaPtr), rigaCorrente, colCorrente);
+        
+        if (valoreCorrente == coloreAvversario) {
+            conteggioFlip = conteggioFlip + 1;
+        } else {
+            if (valoreCorrente == coloreGiocatore) {
+                risultatoFlip = conteggioFlip;
+            }
+            rigaCorrente = dimensioneScacc; /* Forza uscita dal ciclo */
+        }
+        
+        if (risultatoFlip == 0 && rigaCorrente < dimensioneScacc) {
+            rigaCorrente = rigaCorrente + deltaRiga;
+            colCorrente = colCorrente + deltaColonna;
+        }
+    }
+    
+    if (risultatoFlip == 0) {
+        risultatoFlip = 0;
+    }
+    
+    return risultatoFlip;
+}
+
+/**
+ * DESCRIZIONE: Controlla se una mossa è valida per il giocatore.
+ * ARGOMENTI:
+ *   partitaPtr: puntatore alla struttura Partita
+ *   rigaInput: riga della mossa
+ *   colInput: colonna della mossa
+ *   coloreGiocatore: colore del giocatore (NERO/BIANCO)
  * RITORNO: 1 se valida, 0 altrimenti
  */
-int mossaValida(Partita *partita, int riga, int colonna, int giocatore) {
-    int direzioniRiga[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
-    int direzioniColonna[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
-    int indiceDirezione;
+int verificaMossaValida(Partita *partitaPtr, int rigaInput, int colInput, int coloreGiocatore) {
+    int direzioniRiga[8];
+    int direzioniColonna[8];
+    int indiceDir;
     int pedineFlippabili;
     int cellaOccupata;
     int mossaValidaTrovata;
-
-    cellaOccupata = (leggereStatoScacchiera(leggereScacchieraPartita(partita), riga, colonna) != VUOTO);
+    
+    direzioniRiga[0] = -1; direzioniRiga[1] = -1; direzioniRiga[2] = -1; direzioniRiga[3] = 0;
+    direzioniRiga[4] = 0; direzioniRiga[5] = 1; direzioniRiga[6] = 1; direzioniRiga[7] = 1;
+    
+    direzioniColonna[0] = -1; direzioniColonna[1] = 0; direzioniColonna[2] = 1; direzioniColonna[3] = -1;
+    direzioniColonna[4] = 1; direzioniColonna[5] = -1; direzioniColonna[6] = 0; direzioniColonna[7] = 1;
+    
+    cellaOccupata = (leggereStatoScacchiera(leggereScacchieraPartita(partitaPtr), rigaInput, colInput) != VUOTO);
     mossaValidaTrovata = 0;
-    indiceDirezione = 0;
+    
     if (cellaOccupata == 0) {
-        while (indiceDirezione < 8) {
-            pedineFlippabili = pedineDaFlippareInDirezione(partita, riga, colonna, direzioniRiga[indiceDirezione], direzioniColonna[indiceDirezione], giocatore);
+        indiceDir = 0;
+        while (indiceDir < 8 && mossaValidaTrovata == 0) {
+            pedineFlippabili = calcolaPedineFlipp(partitaPtr, rigaInput, colInput, 
+                                                  direzioniRiga[indiceDir], direzioniColonna[indiceDir], 
+                                                  coloreGiocatore);
             if (pedineFlippabili > 0) {
                 mossaValidaTrovata = 1;
             }
-            indiceDirezione = indiceDirezione + 1;
+            indiceDir = indiceDir + 1;
         }
     }
     return mossaValidaTrovata;
 }
 
-// === ESECUZIONE MOSSA ===
+/**
+ * DESCRIZIONE: Flippa le pedine in tutte le direzioni dopo una mossa valida.
+ * ARGOMENTI:
+ *   partitaPtr: puntatore alla struttura Partita
+ *   rigaInput: riga della mossa
+ *   colInput: colonna della mossa
+ *   coloreGiocatore: colore del giocatore
+ * RITORNO: nessuno
+ */
+void eseguiFlipPedine(Partita *partitaPtr, int rigaInput, int colInput, int coloreGiocatore) {
+    int direzioniRiga[8];
+    int direzioniColonna[8];
+    int indiceDir;
+    int pedineFlippabili;
+    int passoFlip;
+    int nuovaRiga;
+    int nuovaColonna;
+    
+    direzioniRiga[0] = -1; direzioniRiga[1] = -1; direzioniRiga[2] = -1; direzioniRiga[3] = 0;
+    direzioniRiga[4] = 0; direzioniRiga[5] = 1; direzioniRiga[6] = 1; direzioniRiga[7] = 1;
+    
+    direzioniColonna[0] = -1; direzioniColonna[1] = 0; direzioniColonna[2] = 1; direzioniColonna[3] = -1;
+    direzioniColonna[4] = 1; direzioniColonna[5] = -1; direzioniColonna[6] = 0; direzioniColonna[7] = 1;
+    
+    indiceDir = 0;
+    while (indiceDir < 8) {
+        pedineFlippabili = calcolaPedineFlipp(partitaPtr, rigaInput, colInput, 
+                                              direzioniRiga[indiceDir], direzioniColonna[indiceDir], 
+                                              coloreGiocatore);
+        passoFlip = 1;
+        while (passoFlip <= pedineFlippabili) {
+            nuovaRiga = rigaInput + direzioniRiga[indiceDir] * passoFlip;
+            nuovaColonna = colInput + direzioniColonna[indiceDir] * passoFlip;
+            scrivereStatoScacchieraPartita(partitaPtr, coloreGiocatore, nuovaRiga, nuovaColonna);
+            passoFlip = passoFlip + 1;
+        }
+        indiceDir = indiceDir + 1;
+    }
+}
+
 /**
  * DESCRIZIONE: Esegue una mossa e aggiorna la scacchiera.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   riga: riga della mossa
- *   colonna: colonna della mossa
- *   giocatore: colore del giocatore
+ *   partitaPtr: puntatore alla struttura Partita
+ *   rigaInput: riga della mossa
+ *   colInput: colonna della mossa
+ *   coloreGiocatore: colore del giocatore
  * RITORNO: nessuno
  */
-void eseguiMossa(Partita *partita, int riga, int colonna, int giocatore) {
-    scrivereStatoScacchieraPartita(partita, giocatore, riga, colonna);
-    flipPedine(partita, riga, colonna, giocatore);
+void eseguiMossaCompleta(Partita *partitaPtr, int rigaInput, int colInput, int coloreGiocatore) {
+    scrivereStatoScacchieraPartita(partitaPtr, coloreGiocatore, rigaInput, colInput);
+    eseguiFlipPedine(partitaPtr, rigaInput, colInput, coloreGiocatore);
 }
 
-// === FLIP PEDINE ===
-/**
- * DESCRIZIONE: Flippa le pedine in tutte le direzioni dopo una mossa valida (più leggibile e robusta).
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   riga: riga della mossa
- *   colonna: colonna della mossa
- *   giocatore: colore del giocatore
- * RITORNO: nessuno
- */
-void flipPedine(Partita *partita, int riga, int colonna, int giocatore) {
-    int direzioniRiga[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
-    int direzioniColonna[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
-    int indiceDirezione;
-    int pedineDaFlippare;
-    int passo;
-    int nuovaRiga;
-    int nuovaColonna;
-
-    indiceDirezione = 0;
-    while (indiceDirezione < 8) {
-        pedineDaFlippare = pedineDaFlippareInDirezione(partita, riga, colonna, direzioniRiga[indiceDirezione], direzioniColonna[indiceDirezione], giocatore);
-        passo = 1;
-        while (passo <= pedineDaFlippare) {
-            nuovaRiga = riga + direzioniRiga[indiceDirezione] * passo;
-            nuovaColonna = colonna + direzioniColonna[indiceDirezione] * passo;
-            scrivereStatoScacchieraPartita(partita, giocatore, nuovaRiga, nuovaColonna);
-            passo = passo + 1;
-        }
-        indiceDirezione = indiceDirezione + 1;
-    }
-}
-
-// === CONTA PEDINE DA FLIPPARE IN UNA DIREZIONE ===
-/**
- * DESCRIZIONE: Conta quante pedine si possono flippare in una direzione.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   riga: riga di partenza
- *   colonna: colonna di partenza
- *   dr: direzione riga
- *   dc: direzione colonna
- *   giocatore: colore del giocatore
- * RITORNO: numero di pedine da flippare
- */
-int pedineDaFlippareInDirezione(Partita *partita, int riga, int colonna, int dr, int dc, int giocatore) {
-    int dimensione;
-    int avversario;
-    int conteggio;
-    int valore;
-    int esito;
-
-    dimensione = leggereDimScacchiera(partita->scacchieraPartita);
-    avversario = NERO;
-    if (giocatore == NERO) {
-        avversario = BIANCO;
-    }
-    conteggio = 0;
-    riga = riga + dr;
-    colonna = colonna + dc;
-    esito = 0;
-    while (riga >= 0 && riga < dimensione && colonna >= 0 && colonna < dimensione && esito == 0) {
-        valore = leggereStatoScacchiera(leggereScacchieraPartita(partita), riga, colonna);
-        if (valore == avversario) {
-            conteggio = conteggio + 1;
-        } else if (valore == giocatore) {
-            esito = 1;
-        } else {
-            esito = 2;
-        }
-        riga = riga + dr;
-        colonna = colonna + dc;
-    }
-    if (esito == 1) {
-        return conteggio;
-    } else {
-        return 0;
-    }
-}
-
-// === CONTROLLO FINE PARTITA ===
 /**
  * DESCRIZIONE: Controlla se non ci sono mosse possibili per il giocatore.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   giocatore: colore del giocatore
+ *   partitaPtr: puntatore alla struttura Partita
+ *   coloreGiocatore: colore del giocatore
  * RITORNO: 1 se nessuna mossa possibile, 0 altrimenti
  */
-int nessunaMossaPossibile(Partita *partita, int giocatore) {
-    int dimensione;
-    int riga;
-    int colonna;
-    int trovato;
-    int esito;
-
-    dimensione = leggereDimScacchiera(partita->scacchieraPartita);
-    riga = 0;
-    trovato = 0;
-    esito = 1;
-    while (riga < dimensione) {
-        colonna = 0;
-        while (colonna < dimensione) {
-            if (mossaValida(partita, riga, colonna, giocatore) == 1) {
-                trovato = 1;
+int verificaNessMossa(Partita *partitaPtr, int coloreGiocatore) {
+    int indiceRiga;
+    int indiceColonna;
+    int mossaTrovata;
+    int dimensioneScacc;
+    int risultatoFinale;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    mossaTrovata = 0;
+    risultatoFinale = 1;
+    
+    indiceRiga = 0;
+    while (indiceRiga < dimensioneScacc && mossaTrovata == 0) {
+        indiceColonna = 0;
+        while (indiceColonna < dimensioneScacc && mossaTrovata == 0) {
+            if (verificaMossaValida(partitaPtr, indiceRiga, indiceColonna, coloreGiocatore) == 1) {
+                mossaTrovata = 1;
             }
-            colonna = colonna + 1;
+            indiceColonna = indiceColonna + 1;
         }
-        riga = riga + 1;
+        indiceRiga = indiceRiga + 1;
     }
-    if (trovato == 1) {
-        esito = 0;
+    
+    if (mossaTrovata == 1) {
+        risultatoFinale = 0;
     }
-    return esito;
+    
+    return risultatoFinale;
 }
 
-// === STAMPA SCACCHIERA ===
-/**
- * DESCRIZIONE: Stampa la scacchiera Othello a schermo.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- * RITORNO: nessuno
- */
-void stampareScacchieraOthello(Partita *partita) {
-    int dimensione;
-    int colonna;
-    int riga;
-    int valore;
-    char simbolo;
+/* =========================================================
+   FUNZIONI PUBBLICHE
+========================================================= */
 
-    dimensione = leggereDimScacchiera(partita->scacchieraPartita);
-    printf("\n    ");
-    colonna = 0;
-    while (colonna < dimensione) {
-        printf(" %d ", colonna + 1);
-        colonna = colonna + 1;
-    }
-    printf("\n   +");
-    colonna = 0;
-    while (colonna < dimensione) {
-        printf("---+");
-        colonna = colonna + 1;
-    }
-    printf("\n");
-    riga = 0;
-    while (riga < dimensione) {
-        printf(" %d |", riga + 1);
-        colonna = 0;
-        while (colonna < dimensione) {
-            valore = leggereStatoScacchiera(leggereScacchieraPartita(partita), riga, colonna);
-            simbolo = '.';
-            if (valore == NERO) {
-                simbolo = 'N';
-            } else if (valore == BIANCO) {
-                simbolo = 'B';
+void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
+    Partita partitaCorrente;
+    int turnoGiocatore;
+    int finePartita;
+    int rigaInput;
+    int colInput;
+    int neriTotali;
+    int bianchiTotali;
+    int metaDimensione;
+    int azioneInput;
+    
+    scrivereNomePartita(&partitaCorrente, nomePartita);
+    partitaCorrente.modalita = modalita;
+    scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
+    inizializzareScacchieraPartita(&partitaCorrente, dimensione);
+    
+    turnoGiocatore = NERO;
+    finePartita = 0;
+    metaDimensione = dimensione / 2;
+    
+    scrivereStatoScacchieraPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
+    scrivereStatoScacchieraPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
+    scrivereStatoScacchieraPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
+    scrivereStatoScacchieraPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
+    
+    while (finePartita == 0) {
+        stampareTitoloOthello();
+        stampaScacchieraOthel(&partitaCorrente);
+        stampaTabellaInputOth();
+        
+        neriTotali = contaPedineGiocatore(&partitaCorrente, NERO);
+        bianchiTotali = contaPedineGiocatore(&partitaCorrente, BIANCO);
+        
+        spostareCursore(RIGA_INPUT - 18, COLONNA_INPUT);
+        printf(">> ");
+        
+        azioneInput = 0;
+        scanf("%d", &azioneInput);
+        pulireBuffer();
+        
+        if (azioneInput == 2) {
+            salvarePartita(&partitaCorrente);
+        }
+        if (azioneInput == 3) {
+            avviareMenuPrincipale();
+            return;
+        }
+        
+        if (azioneInput == 1) {
+            collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+            collezionareInput(&colInput, RIGA_INPUT_COL);
+            
+            rigaInput = rigaInput - 1;
+            colInput = colInput - 1;
+            
+            if (rigaInput >= 0 && rigaInput < dimensione && colInput >= 0 && colInput < dimensione &&
+                verificaMossaValida(&partitaCorrente, rigaInput, colInput, turnoGiocatore) == 1) {
+                eseguiMossaCompleta(&partitaCorrente, rigaInput, colInput, turnoGiocatore);
+                turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
+                
+                if (verificaNessMossa(&partitaCorrente, turnoGiocatore) == 1) {
+                    turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
+                    if (verificaNessMossa(&partitaCorrente, turnoGiocatore) == 1) {
+                        finePartita = 1;
+                    }
+                }
+            } else {
+                mostrareMessaggioErrore("Mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
             }
-            printf(" %c |", simbolo);
-            colonna = colonna + 1;
         }
-        printf("\n   +");
-        colonna = 0;
-        while (colonna < dimensione) {
-            printf("---+");
-            colonna = colonna + 1;
-        }
-        printf("\n");
-        riga = riga + 1;
     }
+    
+    neriTotali = contaPedineGiocatore(&partitaCorrente, NERO);
+    bianchiTotali = contaPedineGiocatore(&partitaCorrente, BIANCO);
+    stampaVittoriaOthello(neriTotali, bianchiTotali);
 }
 
-// === CONTA PEDINE ===
-/**
- * DESCRIZIONE: Conta il numero di pedine di un giocatore sulla scacchiera.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   giocatore: colore del giocatore
- * RITORNO: numero di pedine
- */
-int contarePedine(Partita *partita, int giocatore) {
-    int dimensione;
-    int riga;
-    int colonna;
-    int conteggio;
-
-    dimensione = leggereDimScacchiera(partita->scacchieraPartita);
-    riga = 0;
-    conteggio = 0;
-    while (riga < dimensione) {
-        colonna = 0;
-        while (colonna < dimensione) {
-            if (leggereStatoScacchiera(leggereScacchieraPartita(partita), riga, colonna) == giocatore) {
-                conteggio = conteggio + 1;
+void avviarePartitaContinuata(Partita *partitaPtr) {
+    int turnoGiocatore;
+    int rigaInput;
+    int colInput;
+    int finePartita;
+    int neriTotali;
+    int bianchiTotali;
+    int dimensioneScacc;
+    int azioneInput;
+    
+    dimensioneScacc = leggereDimScacchiera(partitaPtr->scacchieraPartita);
+    finePartita = 0;
+    
+    neriTotali = contaPedineGiocatore(partitaPtr, NERO);
+    bianchiTotali = contaPedineGiocatore(partitaPtr, BIANCO);
+    turnoGiocatore = (neriTotali > bianchiTotali) ? BIANCO : NERO;
+    
+    while (finePartita == 0) {
+        stampareTitoloOthello();
+        stampaScacchieraOthel(partitaPtr);
+        stampaTabellaInputOth();
+        
+        spostareCursore(RIGA_INPUT - 18, COLONNA_INPUT);
+        printf(">> ");
+        
+        azioneInput = 0;
+        scanf("%d", &azioneInput);
+        pulireBuffer();
+        
+        if (azioneInput == 2) {
+            salvarePartita(partitaPtr);
+        }
+        if (azioneInput == 3) {
+            avviareMenuPrincipale();
+            return;
+        }
+        
+        if (azioneInput == 1) {
+            collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+            collezionareInput(&colInput, RIGA_INPUT_COL);
+            
+            rigaInput = rigaInput - 1;
+            colInput = colInput - 1;
+            
+            if (rigaInput >= 0 && rigaInput < dimensioneScacc && colInput >= 0 && colInput < dimensioneScacc &&
+                verificaMossaValida(partitaPtr, rigaInput, colInput, turnoGiocatore) == 1) {
+                eseguiMossaCompleta(partitaPtr, rigaInput, colInput, turnoGiocatore);
+                turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
+                
+                if (verificaNessMossa(partitaPtr, turnoGiocatore) == 1) {
+                    turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
+                    if (verificaNessMossa(partitaPtr, turnoGiocatore) == 1) {
+                        finePartita = 1;
+                    }
+                }
+            } else {
+                mostrareMessaggioErrore("Mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
             }
-            colonna = colonna + 1;
         }
-        riga = riga + 1;
     }
-    return conteggio;
+    
+    neriTotali = contaPedineGiocatore(partitaPtr, NERO);
+    bianchiTotali = contaPedineGiocatore(partitaPtr, BIANCO);
+    stampaVittoriaOthello(neriTotali, bianchiTotali);
 }
 
-// === STAMPA VITTORIA ===
 /**
- * DESCRIZIONE: Stampa il risultato della partita Othello.
+ * DESCRIZIONE: Colleziona un input numerico da terminale per una scacchiera, con validazione.
  * ARGOMENTI:
- *   neri: numero di pedine nere
- *   bianchi: numero di pedine bianche
- * RITORNO: nessuno
+ *   inputPtr: puntatore a intero dove salvare il valore inserito
+ *   rigaTerminale: riga del terminale dove posizionare il cursore
+ * RITORNO: 1 se input valido, 0 altrimenti
  */
-void stampareVittoriaOthello(int neri, int bianchi) {
-    int input;
-    pulireSchermo();
-    printf("\n\n");
-    stampareCentrato("Partita terminata!");
-    printf("\n");
-    printf("Nero: %d pedine\n", neri);
-    printf("Bianco: %d pedine\n", bianchi);
-    if (neri > bianchi) {
-        stampareCentrato("Vince il NERO!");
-    } else if (bianchi > neri) {
-        stampareCentrato("Vince il BIANCO!");
-    } else {
-        stampareCentrato("PAREGGIO!");
+int collezionareInput(int *inputPtr, int rigaTerminale) {
+    int inputValido;
+    int risultatoInput;
+    
+    inputValido = 0;
+    risultatoInput = 1;
+    
+    while (inputValido == 0) {
+        reimpostareZonaInput(rigaTerminale, COLONNA_INPUT);
+        if (scanf("%d", inputPtr) == 1) {
+            inputValido = 1;
+        } else {
+            pulireBuffer();
+            mostrareMessaggioErrore("Input non valido", rigaTerminale + 2, COLONNA_INPUT);
+        }
     }
-    input = 0;
-    tornareHomepage(&input, 20, 30);
+    pulireBuffer();
+    return risultatoInput;
 }
 
 /**
- * DESCRIZIONE: Converte la dimensione simbolica in valore numerico.
+ * DESCRIZIONE: Converte la dimensione simbolica in valore numerico (compatibilità Sudoku).
  * ARGOMENTI:
- *   dimensione: puntatore alla variabile dimensione
+ *   dimensionePtr: puntatore alla variabile dimensione
  * RITORNO: nessuno
  */
 void convertireDimensione(int *dimensione) {
-    if (*dimensione == PICCOLA) {
+    if (*dimensione == 1) {
         *dimensione = 4;
-    } else if (*dimensione == MEDIA) {
-        *dimensione = 8;
-    } else if (*dimensione == GRANDE) {
-        *dimensione = 16;
+    } else {
+        if (*dimensione == 2) {
+            *dimensione = 8;
+        } else {
+            if (*dimensione == 3) {
+                *dimensione = 16;
+            }
+        }
     }
 }

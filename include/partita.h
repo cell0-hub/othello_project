@@ -38,7 +38,7 @@ void convertireDimensione(int *dimensione);
 int calcolareSottoquadrato(int dimensione);
 
 // Funzioni di validazione
-int collezionareInput(Scacchiera *scacchiera, int *input, int rigaTerminale);
+int collezionareInput(int *input, int rigaTerminale);
 
 // Funzioni di controllo stato partita
 int controllareScacchieraPiena(Scacchiera scacchiera);

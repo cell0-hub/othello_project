@@ -12,6 +12,7 @@ Scopo di ogni funzione presente:
 - estrapolareNomeDaFile: estrae il nome "umano" da un file partita.
 - caricarePartita: carica una partita Othello da file.
 - salvarePartita: salva una partita Othello su file.
+- stampareTitoloCaricaPartita: stampa il titolo artistico per il caricamento partite.
 */
 
 #include "../include/funzioniUtilita.h"
@@ -24,6 +25,20 @@ Scopo di ogni funzione presente:
 
 #define MAX_PARTITE 13
 #define VERO 1
+#define RIGA 11
+#define COLONNA 40
+#define TITOLO_RIGA 9
+#define TITOLO_COLONNA 0
+#define OPZIONE_START_RIGA 12
+#define OPZIONE_COLONNA 28
+#define PROMPT_RIGA 19
+#define PROMPT_COLONNA 28
+#define INPUT_RIGA 20
+#define INPUT_COLONNA 35
+#define ERR_MSG_RIGA 22
+#define ERR_MSG_COLONNA 31
+#define ARANCIONE "\033[38;5;208m"
+#define RESET "\033[0m"
 
 /**
  * DESCRIZIONE: Legge la prossima voce in una cartella.
@@ -118,6 +133,31 @@ int contareNumeroPartiteSalvate() {
     return conteggio;
 }
 
+/********************************************************
+* FUNZIONE: stampareTitoloCaricaPartita                 *
+*                                                       *
+* DESCRIZIONE: Mostra a schermo un titolo artistico     *
+*              colorato per la schermata di caricamento *
+*              delle partite salvate.                   *
+*                                                       *
+* ARGOMENTI: Nessuno                                    *
+*                                                       *
+* RITORNO: Terminale aggiornato                         *
+********************************************************/
+void stampareTitoloCaricaPartita() {
+    printf(ARANCIONE);
+    stampareCentrato("     _____ _____ _____ _____ _____ _____     ");
+    stampareCentrato("    |     |  _  | __  |     |     |  _  |    ");
+    stampareCentrato("    |   --|     |    -|-   -|   --|     |    ");
+    stampareCentrato("    |_____|__|__|__|__|_____|_____|__|__|    ");
+    stampareCentrato("   _____ _____ _____ _____ _____ _____ _____ ");
+    stampareCentrato("  |  _  |  _  | __  |_   _|     |_   _|  _  |");
+    stampareCentrato("  |   __|     |    -| | | |-   -| | | |     |");
+    stampareCentrato("  |__|  |__|__|__|__| |_| |_____| |_| |__|__|");
+    stampareCentrato("                                             ");
+    printf(RESET);
+}
+
 /**
  * DESCRIZIONE: Estrae il nome "umano" da un file partita (toglie prefisso e suffisso).
  * ARGOMENTI: nomeFile: nome file, nome: buffer di output
@@ -202,15 +242,33 @@ void salvarePartita(Partita *partita) {
     fclose(file);
 }
 
-/**
- * DESCRIZIONE: Menu per caricare una partita Othello salvata.
- * ARGOMENTI: nessuno
- * RITORNO: nessuno
- */
+/********************************************************
+* FUNZIONE: avviareMenuCaricaPartita                    *
+*                                                       *
+* DESCRIZIONE: Mostra l'elenco delle partite salvate    *
+*              presenti nella cartella "database",      *
+*              consente all'utente di scegliere una     *
+*              partita da caricare digitando il nome    *
+*              o il numero corrispondente.              *
+*                                                       *
+* COMPORTAMENTO:                                        *
+* - Se non ci sono partite salvate, l'utente viene      *
+*   reindirizzato alla homepage                         *
+* - L'utente può digitare "0" per tornare al menu       *
+*   principale.                                         *
+* - Se la partita esiste ed è caricabile, viene avviata.*
+*                                                       *
+* ARGOMENTI: Nessuno                                    *
+*                                                       *
+* RITORNO: Nessuno (effetto collaterale: avvia una      *
+*          partita oppure torna alla homepage)          *
+*                                                       *
+********************************************************/
 void avviareMenuCaricaPartita() {
     char *nomiPartite[100];
     int numeroPartite;
     int input;
+    int tornaHP;
     int cursorePartite;
     char nomeVisualizzato[128];
     char percorso[256];
@@ -218,16 +276,13 @@ void avviareMenuCaricaPartita() {
     char nome[128];
 
     pulireSchermo();
-    printf("\n==== CARICA PARTITA OTHELLO ====");
+    stampareTitoloCaricaPartita();
     raccogliereNomiPartiteSalvate(nomiPartite);
     numeroPartite = contareNumeroPartiteSalvate();
     if (numeroPartite == 0) {
-        printf("\nNessuna partita salvata.\n");
+        stampareCentrato("Nessuna partita salvata.");
         liberareNomiPartite(nomiPartite, numeroPartite);
-        printf("\nPremi invio per tornare al menu principale...");
-        getchar();
-        avviareMenuPrincipale();
-        return;
+        tornareHomepage(&tornaHP, RIGA_ERRORE, COLONNA - 10);
     }
     printf("  [0] Torna al menu principale\n");
     cursorePartite = 0;
@@ -236,12 +291,14 @@ void avviareMenuCaricaPartita() {
         printf("  [%d] %s\n", cursorePartite + 1, nomeVisualizzato);
         cursorePartite = cursorePartite + 1;
     }
-    printf("\nScegli una partita: ");
+    
+    printf("\n Scegli una partita: ");
     scanf("%d", &input);
     pulireBuffer();
+    
     if (input == 0) {
         liberareNomiPartite(nomiPartite, numeroPartite);
-        avviareMenuPrincipale();
+        avviareMenuPrincipale(); 
         return;
     } else if (input > 0 && input <= numeroPartite) {
         snprintf(percorso, sizeof(percorso), "database/%s", nomiPartite[input-1]);
@@ -252,28 +309,6 @@ void avviareMenuCaricaPartita() {
         avviarePartitaContinuata(&partita);
     } else {
         liberareNomiPartite(nomiPartite, numeroPartite);
-        printf("\nScelta non valida.\n");
-        avviareMenuCaricaPartita();
+        avviareMenuCaricaPartita(); 
     }
 }
-
-
-
-
-/*******************************************************
-* FUNZIONE: caricareValoriGriglia                          *
-*                                                        *
-* DESCRIZIONE: Legge da file i valori della griglia      *
-*              della partita Sudoku e li scrive nella    *
-*              struttura della partita riga per riga.    *
-*                                                        *
-* ARGOMENTI:                                             *
-* file: puntatore al file aperto in lettura              *
-* partita: puntatore alla struttura della partita        *
-* dimensione: dimensione della griglia                   *
-*                                                        *
-* RITORNO:                                               *
-* partita: partita aggiornata
-*********************************************************/
-// (Rimuovo/ignoro la vecchia caricareValoriGriglia e ogni riferimento a difficoltà o Sudoku)
-

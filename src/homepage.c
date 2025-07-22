@@ -21,8 +21,6 @@ Scopo di ogni funzione presente:
 #include <stdlib.h>
 #include "../include/homepage.h"
 #include "../include/funzioniUtilita.h"
-#include "../include/CaricaPartita.h"
-#include "../include/Impostazioni.h"
 
 #define LARGHEZZA_TERMINALE 80
 
@@ -68,10 +66,10 @@ void stampareMenuPrincipale()
   printf(VERDE);
   printf("\n");
   stampareCentrato("       _   _          _ _          ___ ");
-  stampareCentrato("  ___ | |_| |__   ___| | | ___    / _ \");
-  stampareCentrato(" / _ \| __| '_ \ / _ \ | |/ _ \  / /_\/");
-  stampareCentrato("| (_) | |_| | | |  __/ | | (_) |/ /_\\ ");
-  stampareCentrato(" \___/ \__|_| |_|\___|_|_|\___(_)____/ ");
+  stampareCentrato("  ___ | |_| |__   ___| | | ___    / _ \\");
+  stampareCentrato(" / _ \\| __| '_ \\ / _ \\ | |/ _ \\  / /_\\/");
+  stampareCentrato("| (_) | |_| | | |  __/ | | (_) |/ /_\\\\ ");
+  stampareCentrato(" \\___/ \\__|_| |_|\\___|_|_|\\___(_)____/ ");
   printf(RESET);
 
   spostareCursore(TITOLO_RIGA, TITOLO_COLONNA);
@@ -136,11 +134,9 @@ void collezionareInputHomepage() {
     }
     else if (input == NUOVA_PARTITA) {
       inMenuPrinipale = FALSO;
-      avviareImpostazioni();
     }
     else if (input == PARTITE_SALVATE) {
       inMenuPrinipale = FALSO;
-      avviareMenuCaricaPartita();
     }
     else if (input == ESCI) {
       exit(0);

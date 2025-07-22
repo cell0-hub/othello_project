@@ -32,83 +32,133 @@ Scopo delle funzioni presenti:
 #include "../include/tipiDiDato.h"
 #include "../include/partita.h"
 
-// Funzioni per Scacchiera
+/**
+ * DESCRIZIONE: Restituisce la dimensione della scacchiera.
+ * ARGOMENTI: scacchiera: struttura Scacchiera
+ * RITORNO: dimensione della scacchiera
+ */
 int leggereDimScacchiera(Scacchiera scacchiera) {
     int valoreLetto;
-
     valoreLetto = scacchiera.dimScacchiera;
     return valoreLetto;
 }
 
+/**
+ * DESCRIZIONE: Restituisce il valore in una cella specifica della scacchiera.
+ * ARGOMENTI: scacchiera: struttura Scacchiera, riga: riga, colonna: colonna
+ * RITORNO: valore della cella
+ */
 int leggereStatoScacchiera(Scacchiera scacchiera, int riga, int colonna) {
     int valoreLetto;
     valoreLetto = scacchiera.caselle[riga][colonna].stato;
     return valoreLetto;
 }
 
+/**
+ * DESCRIZIONE: Imposta la dimensione della scacchiera.
+ * ARGOMENTI: scacchiera: puntatore a Scacchiera, valore: dimensione
+ * RITORNO: nessuno
+ */
 void scrivereDimScacchiera(Scacchiera *scacchiera, int valore) {
     scacchiera->dimScacchiera = valore;
 }
 
+/**
+ * DESCRIZIONE: Imposta un valore in una cella specifica della scacchiera.
+ * ARGOMENTI: scacchiera: puntatore a Scacchiera, riga: riga, colonna: colonna, valore: valore da scrivere
+ * RITORNO: nessuno
+ */
 void scrivereStatoScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore) {
     scacchiera->caselle[riga][colonna].stato = valore;
 }
 
-// Funzioni per Partita
+/**
+ * DESCRIZIONE: Restituisce la scacchiera dalla struttura Partita.
+ * ARGOMENTI: partita: puntatore a Partita
+ * RITORNO: struttura Scacchiera
+ */
 Scacchiera leggereScacchieraPartita(Partita *partita) {
     Scacchiera scacchieraLetta;
-
     scacchieraLetta = partita->scacchieraPartita;
     return scacchieraLetta;
 }
 
+/**
+ * DESCRIZIONE: Restituisce il nome della partita.
+ * ARGOMENTI: partita: puntatore a Partita
+ * RITORNO: puntatore a stringa nome
+ */
 char* leggereNomePartita(Partita *partita) {
     char* nomeLetto;
     nomeLetto = partita->nomePartita;
     return nomeLetto;
 }
 
+/**
+ * DESCRIZIONE: Imposta il nome della partita.
+ * ARGOMENTI: partita: puntatore a Partita, nome: stringa nome
+ * RITORNO: nessuno
+ */
 void scrivereNomePartita(Partita *partita, char nome[50]) {
     strcpy(partita->nomePartita, nome);
 }
 
+/**
+ * DESCRIZIONE: Imposta la dimensione della scacchiera nella struttura Partita.
+ * ARGOMENTI: partita: puntatore a Partita, valore: dimensione
+ * RITORNO: nessuno
+ */
 void scrivereDimScacchieraPartita(Partita *partita, int valore) {
     scrivereDimScacchiera(&partita->scacchieraPartita, valore);
 }
 
+/**
+ * DESCRIZIONE: Imposta un valore in una cella della scacchiera della struttura Partita.
+ * ARGOMENTI: partita: puntatore a Partita, valore: valore da scrivere, riga: riga, colonna: colonna
+ * RITORNO: nessuno
+ */
 void scrivereStatoScacchieraPartita(Partita *partita, int valore, int riga, int colonna) {
     scrivereStatoScacchiera(&partita->scacchieraPartita, riga, colonna, valore);
 }
 
-
+/**
+ * DESCRIZIONE: Alloca e inizializza a zero la scacchiera di gioco con dimensione scelta.
+ * ARGOMENTI: partita: puntatore a Partita, dim: dimensione
+ * RITORNO: nessuno
+ */
 void inizializzareScacchieraPartita(Partita *partita, int dim) {
-    int riga; // righe della scacchiera
-    int colonna; // colonne della scacchiera 
-
+    int riga;
+    int colonna;
     scrivereDimScacchieraPartita(partita, dim);
-         
     partita->scacchieraPartita.caselle = malloc(dim * sizeof(Casella *));
-    
     riga = 0;
     while (riga < dim) {
         partita->scacchieraPartita.caselle[riga] = malloc(dim * sizeof(Casella));
         colonna = 0;  
         while (colonna < dim) {
-            partita->scacchieraPartita.caselle[riga][colonna].stato = 0; // Inizializza a zero
+            partita->scacchieraPartita.caselle[riga][colonna].stato = 0;
             colonna = colonna + 1;
         }
         riga = riga + 1;
     }
 }
 
-//funzioni per Cella
+/**
+ * DESCRIZIONE: Restituisce lo stato di una casella.
+ * ARGOMENTI: casella: struttura Casella
+ * RITORNO: stato della casella
+ */
 int leggereStatoCasella(Casella casella){
   int valoreLetto;
-
   valoreLetto = casella.stato;
   return valoreLetto;
 }
 
+/**
+ * DESCRIZIONE: Imposta lo stato di una casella.
+ * ARGOMENTI: casella: puntatore a Casella, nuovoStato: valore da assegnare
+ * RITORNO: nessuno
+ */
 void scrivereStatoCasella(Casella *casella, int nuovoStato) {
   casella->stato = nuovoStato;
 }

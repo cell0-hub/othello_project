@@ -41,7 +41,6 @@ Scopo delle funzioni presenti:
 #define VERO 1
 #define FALSO 0
 
-
 #define OPZIONE_MIN 1
 #define OPZIONE_MAX 3
 
@@ -52,18 +51,11 @@ Scopo delle funzioni presenti:
 #define CIANO "\033[36m"
 #define RESET "\033[0m"
 
-
-/********************************************************
-* FUNZIONE: stampareMenuModalita                      *
-*                                                       *
-* DESCRIZIONE: Pulisce lo schermo e stampa il titolo e  *
-*              il menu delle impostazioni di difficoltà *
-*              per iniziare una nuova partita.          *
-*                                                       *
-* ARGOMENTI: Nessuno                                    *
-*                                                       *
-* RITORNO: Terminale aggiornato                         *
-********************************************************/
+/**
+ * DESCRIZIONE: Pulisce lo schermo e stampa il titolo e il menu delle impostazioni di difficoltà e dimensione.
+ * ARGOMENTI: nessuno
+ * RITORNO: nessuno
+ */
 void stampareMenuImpostazioni() {
   pulireSchermo();
   printf(CIANO);
@@ -99,22 +91,13 @@ void stampareMenuImpostazioni() {
   printf("-Scegliere il Nome-");
 }
 
-
-/********************************************************
-* FUNZIONE: avviareMenuImpostazioni                     *
-*                                                       *
-* DESCRIZIONE: Avvia il processo per iniziare una       *
-*              nuova partita. Mostra il menu di scelta  *
-*              della difficoltà, raccoglie i parametri  *
-*              necessari (difficoltà, dimensione, nome  *
-*              della partita) e avvia il gioco.         *
-*                                                       *
-* ARGOMENTI: Nessuno                                    *
-*                                                       *
-* RITORNO: Terminale aggiornato                         *
-********************************************************/
+/**
+ * DESCRIZIONE: Avvia il processo per iniziare una nuova partita. Mostra il menu di scelta della difficoltà, raccoglie i parametri necessari (modalità, dimensione, nome partita) e avvia il gioco.
+ * ARGOMENTI: nessuno
+ * RITORNO: nessuno
+ */
 void avviareImpostazioni() {
-  char* nomePartita;
+  char nomePartita[NOME_MAX];
   int modalita;
   int dimensione;
 
@@ -126,43 +109,30 @@ void avviareImpostazioni() {
 
   convertireDimensione(&dimensione);
 
-  avviarePartita(&nomePartita, modalita, dimensione);
+  avviarePartita(nomePartita, modalita, dimensione);
 }
 
-/*********************************************************
-* FUNZIONE: collezionareModalita                       *
-*                                                        *
-* DESCRIZIONE: Permette all'utente di inserire un valore *
-*              numerico per la difficoltà del gioco.     *
-*              Controlla che l'input sia numerico e      *
-*              compreso tara OPZIONE_MIN e OPZIONE_MAX.  *
-*                                                        *
-* ARGOMENTI:                                             *
-* - int *inputModalita: puntatore alla variabile che   *
-*   conterrà il valore scelto dall'utente.               *
-*                                                        *
-* RITORNO: valore della difficoltà selezionata           *
-********************************************************/
+/**
+ * DESCRIZIONE: Permette all'utente di inserire un valore numerico per la modalità di gioco. Controlla che l'input sia numerico e compreso tra OPZIONE_MIN e OPZIONE_MAX-1.
+ * ARGOMENTI: nessuno
+ * RITORNO: valore della modalità selezionata
+ */
 int collezionareModalita() {
   int inputModalita;
   int inMenuModalita;
 
+  inputModalita = 0;
   inMenuModalita = VERO;
 
-  while(inMenuModalita) {
+  while(inMenuModalita == VERO) {
     reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
-    
-    //controllo non incluso nello pseudocodice perche' si da per scontato che
-    //l' input dell' utente sia un numero
     while(scanf("%d", &inputModalita) != 1) {
       pulireBuffer();
       reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
       mostrareMessaggioErrore("Digita un Numero", ERR_MSG_RIGA - 6, ERR_MSG_COLONNA);
       reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
     }
-    
     pulireBuffer();
-    
     if(inputModalita >= OPZIONE_MIN && inputModalita <= OPZIONE_MAX - 1) {
       inMenuModalita = FALSO;  
     } else {
@@ -170,44 +140,29 @@ int collezionareModalita() {
       reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
     }
   }
-
   return inputModalita;
 }
 
-/*********************************************************
-* FUNZIONE: collezionareDimensione                       *
-*                                                        *
-* DESCRIZIONE: Permette all'utente di inserire un valore *
-*              numerico per la dimensione della griglia. *
-*              Valida l’input assicurandosi che rientri  *
-*              nell’intervallo OPZIONE_MIN - OPZIONE_MAX *
-*                                                        *
-* ARGOMENTI:                                             *
-* - int *inputDimensione: puntatore alla variabile che   *
-*   conterrà il valore scelto dall’utente.               *
-*                                                        *
-* RITORNO: valore della dimensione selezionata           *
-********************************************************/
-
+/**
+ * DESCRIZIONE: Permette all'utente di inserire un valore numerico per la dimensione della griglia. Valida l’input assicurandosi che rientri nell’intervallo OPZIONE_MIN - OPZIONE_MAX.
+ * ARGOMENTI: nessuno
+ * RITORNO: valore della dimensione selezionata
+ */
 int collezionareDimensione() {
   int inMenuDimensione;
   int inputDimensione;
 
   inMenuDimensione = VERO;
-  while(inMenuDimensione) {
+  inputDimensione = 0;
+  while(inMenuDimensione == VERO) {
     reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
-    
-    //controllo non incluso nello pseudocodice perche' si da per scontato che
-    //l' input dell' utente sia un numero
     while(scanf("%d", &inputDimensione) != 1) {
       pulireBuffer();
       reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
       mostrareMessaggioErrore("Digita un Numero", ERR_MSG_RIGA + 2, ERR_MSG_COLONNA);
       reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
     }
-
     pulireBuffer();
-
     if(inputDimensione >= OPZIONE_MIN && inputDimensione <= OPZIONE_MAX) {
       inMenuDimensione = FALSO;  
     } else {
@@ -215,29 +170,21 @@ int collezionareDimensione() {
       reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
     }
   }
-
   return inputDimensione;
 }
 
-
-/**************************************************************
-* FUNZIONE: collezionaNomePartita                             *
-*                                                             *
-* DESCRIZIONE: Permette all’utente di inserire un nome per la *
-*              partita.                                       *
-*                                                             *
-* ARGOMENTI:                                                  *
-* - char *nomeParitita: puntatore a buffer dove salvare il    *
-*   nome della partita.                                       *
-*                                                             *
-* RITORNO: partita aggiornata                                 *
-**************************************************************/
+/**
+ * DESCRIZIONE: Permette all’utente di inserire un nome per la partita.
+ * ARGOMENTI: inputNomePartita: buffer dove salvare il nome della partita
+ * RITORNO: nessuno
+ */
 void collezionareNomePartita(char *inputNomePartita) {
   int lunghezzaNome;
   int inputValido;
 
+  lunghezzaNome = 0;
   inputValido = 0;
-  while(!inputValido) {
+  while(inputValido == 0) {
     reimpostareZonaInput(INPUT_RIGA_NOME, INPUT_COLONNA + 35);
     fgets(inputNomePartita, NOME_MAX, stdin);
     lunghezzaNome = lunghezza(inputNomePartita);

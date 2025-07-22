@@ -25,110 +25,193 @@ Scopo di ogni funzione presente:
 #define MAX_PARTITE 13
 #define VERO 1
 
-// Utility: legge la prossima voce in una cartella
+/**
+ * DESCRIZIONE: Legge la prossima voce in una cartella.
+ * ARGOMENTI: cartella: puntatore a DIR
+ * RITORNO: puntatore a struct dirent
+ */
 struct dirent* leggereProssimaVoce(DIR* cartella) {
-    return readdir(cartella);
+    struct dirent* voce;
+    voce = readdir(cartella);
+    return voce;
 }
 
-// Utility: ottiene il nome di un file/voce
+/**
+ * DESCRIZIONE: Ottiene il nome di un file/voce.
+ * ARGOMENTI: voce: puntatore a struct dirent
+ * RITORNO: nome del file
+ */
 const char* ottenereNomeFile(struct dirent* voce) {
-    return voce->d_name;
+    const char* nome;
+    nome = voce->d_name;
+    return nome;
 }
 
-// Raccoglie i nomi delle partite salvate (file che iniziano con "partita_")
+/**
+ * DESCRIZIONE: Raccoglie i nomi delle partite salvate (file che iniziano con "partita_").
+ * ARGOMENTI: nomiPartite: array di stringhe da riempire
+ * RITORNO: nessuno
+ */
 void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
-    DIR *cartella = opendir("database");
+    DIR *cartella;
     struct dirent *voce;
-    int conteggio = 0;
-    if (!cartella) return;
-    while ((voce = leggereProssimaVoce(cartella)) != NULL && conteggio < MAX_PARTITE) {
-        const char *nomeFile = ottenereNomeFile(voce);
+    int conteggio;
+    const char *nomeFile;
+
+    cartella = opendir("database");
+    conteggio = 0;
+    if (!cartella) {
+        return;
+    }
+    voce = leggereProssimaVoce(cartella);
+    while (voce != NULL && conteggio < MAX_PARTITE) {
+        nomeFile = ottenereNomeFile(voce);
         if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
             nomiPartite[conteggio] = malloc(strlen(nomeFile) + 1);
             strcpy(nomiPartite[conteggio], nomeFile);
-            conteggio++;
+            conteggio = conteggio + 1;
         }
+        voce = leggereProssimaVoce(cartella);
     }
     closedir(cartella);
 }
 
-// Libera la memoria dei nomi delle partite
+/**
+ * DESCRIZIONE: Libera la memoria dei nomi delle partite.
+ * ARGOMENTI: nomiPartite: array di stringhe, numero: quanti elementi liberare
+ * RITORNO: nessuno
+ */
 void liberareNomiPartite(char *nomiPartite[], int numero) {
-    for (int i = 0; i < numero; i++) {
-        free(nomiPartite[i]);
+    int indice;
+    indice = 0;
+    while (indice < numero) {
+        free(nomiPartite[indice]);
+        indice = indice + 1;
     }
 }
 
-// Conta il numero di partite salvate
+/**
+ * DESCRIZIONE: Conta il numero di partite salvate.
+ * ARGOMENTI: nessuno
+ * RITORNO: numero di partite trovate
+ */
 int contareNumeroPartiteSalvate() {
-    DIR *cartella = opendir("database");
+    DIR *cartella;
     struct dirent *voce;
-    int conteggio = 0;
-    if (!cartella) return 0;
-    while ((voce = leggereProssimaVoce(cartella)) != NULL && conteggio < MAX_PARTITE) {
-        const char *nomeFile = ottenereNomeFile(voce);
+    int conteggio;
+    const char *nomeFile;
+
+    cartella = opendir("database");
+    conteggio = 0;
+    if (!cartella) {
+        return 0;
+    }
+    voce = leggereProssimaVoce(cartella);
+    while (voce != NULL && conteggio < MAX_PARTITE) {
+        nomeFile = ottenereNomeFile(voce);
         if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
-            conteggio++;
+            conteggio = conteggio + 1;
         }
+        voce = leggereProssimaVoce(cartella);
     }
     closedir(cartella);
     return conteggio;
 }
 
-// Estrae il nome "umano" da un file partita (toglie prefisso e suffisso)
+/**
+ * DESCRIZIONE: Estrae il nome "umano" da un file partita (toglie prefisso e suffisso).
+ * ARGOMENTI: nomeFile: nome file, nome: buffer di output
+ * RITORNO: nessuno
+ */
 void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
-    int cursNome = 0, cursNomeFile = 8;
-    while(nomeFile[cursNomeFile] != '.' && nomeFile[cursNomeFile] != '\0') {
-        nome[cursNome++] = nomeFile[cursNomeFile++];
+    int cursoreNome;
+    int cursoreNomeFile;
+    cursoreNome = 0;
+    cursoreNomeFile = 8;
+    while(nomeFile[cursoreNomeFile] != '.' && nomeFile[cursoreNomeFile] != '\0') {
+        nome[cursoreNome] = nomeFile[cursoreNomeFile];
+        cursoreNome = cursoreNome + 1;
+        cursoreNomeFile = cursoreNomeFile + 1;
     }
-    nome[cursNome] = '\0';
+    nome[cursoreNome] = '\0';
 }
 
-// === SOLO OTHELLO ===
-// Carica una partita Othello da file: prima riga dimensione, poi matrice scacchiera
+/**
+ * DESCRIZIONE: Carica una partita Othello da file: prima riga dimensione, poi matrice scacchiera.
+ * ARGOMENTI: partita: puntatore a Partita, percorso: path del file
+ * RITORNO: nessuno
+ */
 void caricarePartita(Partita *partita, const char *percorso) {
     FILE *file;
     int dimensione;
+    int riga;
+    int colonna;
+    int valore;
+
     file = fopen(percorso, "r");
-    if (!file) return;
+    if (!file) {
+        return;
+    }
     fscanf(file, "%d", &dimensione);
     scrivereDimScacchieraPartita(partita, dimensione);
     inizializzareScacchieraPartita(partita, dimensione);
-    for (int r = 0; r < dimensione; r++) {
-        for (int c = 0; c < dimensione; c++) {
-            int val;
-            fscanf(file, "%d", &val);
-            scrivereStatoScacchieraPartita(partita, val, r, c);
+    riga = 0;
+    while (riga < dimensione) {
+        colonna = 0;
+        while (colonna < dimensione) {
+            fscanf(file, "%d", &valore);
+            scrivereStatoScacchieraPartita(partita, valore, riga, colonna);
+            colonna = colonna + 1;
         }
+        riga = riga + 1;
     }
     fclose(file);
 }
 
-// Salva una partita Othello su file: prima riga dimensione, poi matrice scacchiera
+/**
+ * DESCRIZIONE: Salva una partita Othello su file: prima riga dimensione, poi matrice scacchiera.
+ * ARGOMENTI: partita: puntatore a Partita
+ * RITORNO: nessuno
+ */
 void salvarePartita(Partita *partita) {
     FILE *file;
     char percorso[100];
-    int dimensione = leggereDimScacchiera(leggereScacchieraPartita(partita));
+    int dimensione;
+    int riga;
+    int colonna;
+    int valore;
+
+    dimensione = leggereDimScacchiera(leggereScacchieraPartita(partita));
     snprintf(percorso, sizeof(percorso), "database/partita_%s.txt", leggereNomePartita(partita));
     file = fopen(percorso, "w");
-    if (!file) return;
+    if (!file) {
+        return;
+    }
     fprintf(file, "%d\n", dimensione);
-    for (int r = 0; r < dimensione; r++) {
-        for (int c = 0; c < dimensione; c++) {
-            int val = leggereStatoScacchiera(leggereScacchieraPartita(partita), r, c);
-            fprintf(file, "%d ", val);
+    riga = 0;
+    while (riga < dimensione) {
+        colonna = 0;
+        while (colonna < dimensione) {
+            valore = leggereStatoScacchiera(leggereScacchieraPartita(partita), riga, colonna);
+            fprintf(file, "%d ", valore);
+            colonna = colonna + 1;
         }
         fprintf(file, "\n");
+        riga = riga + 1;
     }
     fclose(file);
 }
 
-// Menu per caricare una partita Othello salvata
+/**
+ * DESCRIZIONE: Menu per caricare una partita Othello salvata.
+ * ARGOMENTI: nessuno
+ * RITORNO: nessuno
+ */
 void avviareMenuCaricaPartita() {
     char *nomiPartite[100];
     int numeroPartite;
     int input;
-    int cursPartite;
+    int cursorePartite;
     char nomeVisualizzato[128];
     char percorso[256];
     Partita partita;
@@ -147,9 +230,11 @@ void avviareMenuCaricaPartita() {
         return;
     }
     printf("  [0] Torna al menu principale\n");
-    for (cursPartite = 0; cursPartite < numeroPartite; cursPartite++) {
-        estrapolareNomeDaFile(nomiPartite[cursPartite], nomeVisualizzato);
-        printf("  [%d] %s\n", cursPartite + 1, nomeVisualizzato);
+    cursorePartite = 0;
+    while (cursorePartite < numeroPartite) {
+        estrapolareNomeDaFile(nomiPartite[cursorePartite], nomeVisualizzato);
+        printf("  [%d] %s\n", cursorePartite + 1, nomeVisualizzato);
+        cursorePartite = cursorePartite + 1;
     }
     printf("\nScegli una partita: ");
     scanf("%d", &input);

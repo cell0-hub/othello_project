@@ -14,7 +14,6 @@ Scopo di ogni funzione presente:
 - stampareMenuPrincipale: Pulisce lo schermo e mostra sia il titolo che il menu principale del gioco.
 - avviareMenuPrincipale: Avvia il menu principale mostrando il contenuto a schermo.
 - collezionareInput: Gestisce l’acquisizione dell’input numerico da parte dell’utente nel menu principale.
-
 */
 
 #include <stdio.h>
@@ -70,7 +69,7 @@ void stampareMenuPrincipale()
   stampareCentrato("       _   _          _ _          ___ ");
   stampareCentrato("  ___ | |_| |__   ___| | | ___    / _ \\");
   stampareCentrato(" / _ \\| __| '_ \\ / _ \\ | |/ _ \\  / /_\\/");
-  stampareCentrato("| (_) | |_| | | |  __/ | | (_) |/ /_\\\\ ");
+  stampareCentrato("| (_) | |_| | | |  __/ | | (_) |/ /_\\ ");
   stampareCentrato(" \\___/ \\__|_| |_|\\___|_|_|\\___(_)____/ ");
   printf(RESET);
 
@@ -96,51 +95,45 @@ void stampareMenuPrincipale()
 *                                                       *
 * RITORNO: Terminale aggiornato                         *
 ********************************************************/
-
 void avviareMenuPrincipale(){
   stampareMenuPrincipale();
   collezionareInputHomepage(); 
 }
 
 /************************************************************** 
- *  FUNZIONE: collezionareInput()                             *
- *  DESCRIZIONE: colleziona l' input dell' utente             *
+ *  FUNZIONE: collezionareInputHomepage()                      *
+ *  DESCRIZIONE: colleziona l' input dell' utente              *
  *                                                            *
  *  ARGOMENTI:                                                *
  *  //                                                        *
  *                                                            *
- *  RITORNO: funzione scelta dall' utente avviata             *
+ *  RITORNO: funzione scelta dall' utente avviata              *
  **************************************************************/
-
 void collezionareInputHomepage() {
-  int inMenuPrinipale; 
+  int inMenuPrincipale; 
   int input;
 
-  inMenuPrinipale = VERO;
-  while(inMenuPrinipale) {
+  inMenuPrincipale = VERO;
+  input = 0;
+  while(inMenuPrincipale == VERO) {
     reimpostareZonaInput(INPUT_RIGA, INPUT_COLONNA);
-    
-    // non presente nello pseudocodice, perche' si da per scontato
-    // che l' input dell' utente sia un numero
     while(scanf("%d", &input) != 1) {  
       pulireBuffer();
       mostrareMessaggioErrore(" Digita un Numero ", ERR_MSG_RIGA, ERR_MSG_COLONNA);
       reimpostareZonaInput(INPUT_RIGA, INPUT_COLONNA);
     }
-
     pulireBuffer();
-
     if(input < OPZIONE_MIN || input > OPZIONE_MAX) {
       mostrareMessaggioErrore("Digita un Numero compreso tra 1 - 4 ", ERR_MSG_RIGA, ERR_MSG_COLONNA - 7);
       reimpostareZonaInput(INPUT_RIGA, INPUT_COLONNA);
     }
     else if (input == NUOVA_PARTITA) {
       avviareImpostazioni();
-      inMenuPrinipale = FALSO;
+      inMenuPrincipale = FALSO;
     }
     else if (input == PARTITE_SALVATE) {
       avviareMenuCaricaPartita();
-      inMenuPrinipale = FALSO;
+      inMenuPrincipale = FALSO;
     }
     else if (input == ESCI) {
       exit(0);

@@ -200,7 +200,7 @@ void caricarePartita(Partita *partita, const char *percorso) {
         colonna = 0;
         while (colonna < dimensione) {
             fscanf(file, "%d", &valore);
-            scrivereStatoScacchieraPartita(partita, valore, riga, colonna);
+            scrivereStatoCasellaScacchieraPartita(partita, valore, riga, colonna);
             colonna = colonna + 1;
         }
         riga = riga + 1;
@@ -232,7 +232,7 @@ void salvarePartita(Partita *partita) {
     while (riga < dimensione) {
         colonna = 0;
         while (colonna < dimensione) {
-            valore = leggereStatoScacchiera(leggereScacchieraPartita(partita), riga, colonna);
+            valore = leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), riga, colonna);
             fprintf(file, "%d ", valore);
             colonna = colonna + 1;
         }

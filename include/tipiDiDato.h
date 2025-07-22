@@ -21,9 +21,9 @@ typedef struct {
 
 // Dichiarazioni delle funzioni per Scacchiera
 int leggereDimScacchiera(Scacchiera scacchiera);
-int leggereStatoScacchiera(Scacchiera scacchiera, int riga, int colonna);
+int leggereStatoCasellaScacchiera(Scacchiera scacchiera, int riga, int colonna);
 void scrivereDimScacchiera(Scacchiera *scacchiera, int valore);
-void scrivereStatoScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore);
+void scrivereStatoCasellaScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore);
 
 
 // Dichiarazioni delle funzioni per Partita
@@ -31,7 +31,7 @@ Scacchiera leggereScacchieraPartita(Partita *partita);
 char* leggereNomePartita(Partita *partita);
 void scrivereNomePartita(Partita *partita, char nome[50]);
 void scrivereDimScacchieraPartita(Partita *partita, int valore);
-void scrivereStatoScacchieraPartita(Partita *partita, int valore, int riga, int colonna);
+void scrivereStatoCasellaScacchieraPartita(Partita *partita, int valore, int riga, int colonna);
 void inizializzareScacchieraPartita(Partita *partita, int dimensione);
 
 #endif

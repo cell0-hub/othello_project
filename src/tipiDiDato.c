@@ -48,7 +48,7 @@ int leggereDimScacchiera(Scacchiera scacchiera) {
  * ARGOMENTI: scacchiera: struttura Scacchiera, riga: riga, colonna: colonna
  * RITORNO: valore della cella
  */
-int leggereStatoScacchiera(Scacchiera scacchiera, int riga, int colonna) {
+int leggereStatoCasellaScacchiera(Scacchiera scacchiera, int riga, int colonna) {
     int valoreLetto;
     valoreLetto = scacchiera.caselle[riga][colonna].stato;
     return valoreLetto;
@@ -68,7 +68,7 @@ void scrivereDimScacchiera(Scacchiera *scacchiera, int valore) {
  * ARGOMENTI: scacchiera: puntatore a Scacchiera, riga: riga, colonna: colonna, valore: valore da scrivere
  * RITORNO: nessuno
  */
-void scrivereStatoScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore) {
+void scrivereStatoCasellaScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore) {
     scacchiera->caselle[riga][colonna].stato = valore;
 }
 
@@ -117,8 +117,8 @@ void scrivereDimScacchieraPartita(Partita *partita, int valore) {
  * ARGOMENTI: partita: puntatore a Partita, valore: valore da scrivere, riga: riga, colonna: colonna
  * RITORNO: nessuno
  */
-void scrivereStatoScacchieraPartita(Partita *partita, int valore, int riga, int colonna) {
-    scrivereStatoScacchiera(&partita->scacchieraPartita, riga, colonna, valore);
+void scrivereStatoCasellaScacchieraPartita(Partita *partita, int valore, int riga, int colonna) {
+    scrivereStatoCasellaScacchiera(&partita->scacchieraPartita, riga, colonna, valore);
 }
 
 /**
@@ -162,6 +162,3 @@ int leggereStatoCasella(Casella casella){
 void scrivereStatoCasella(Casella *casella, int nuovoStato) {
   casella->stato = nuovoStato;
 }
-
-
-

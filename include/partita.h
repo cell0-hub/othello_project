@@ -12,7 +12,7 @@
 #define COLONNA_INPUT 67
 #define FALSO 0
 #define VERO 1
-#define RIGA_ERRORE 22
+#define RIGA_ERRORE 24
 #define COLONNA_ERRORE 27
 
 // Funzioni principali del gioco
@@ -21,10 +21,10 @@ void avviarePartitaContinuata(Partita *partita);
 
 // Funzioni di visualizzazione
 void mostraSchermo(int dimensione);
-void stampareTitoloPartita(void);
-void stampareVittoria(void);
-void stampareTabellaInput(void);
-void disegnareCornice(void);
+void stampareTitoloPartita();
+void stampareVittoria();
+void stampareTabellaInput();
+void disegnareCornice();
 
 // Funzioni di gestione scacchiera e stampa
 void stampareScacchieraPartita(Partita *partita);

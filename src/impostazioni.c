@@ -21,8 +21,9 @@ Scopo delle funzioni presenti:
 
 #include "../include/funzioniUtilita.h"
 #include "../include/impostazioni.h"
+#include "../include/partita.h"
+
 #include <stdio.h>
-#include <string.h>
 
 #define  DIFFICOLTA_FACILE  1
 #define  DIFFICOLTA_INTERMEDIA  2 
@@ -113,19 +114,20 @@ void stampareMenuImpostazioni() {
 * RITORNO: Terminale aggiornato                         *
 ********************************************************/
 void avviareImpostazioni() {
-  int inputModalita;
-  int inputDimensione;
-  char inputNomePartita[NOME_MAX + 1];
+  char* nomePartita;
+  int modalita;
+  int dimensione;
 
   stampareMenuImpostazioni();
 
-  inputModalita = collezionareModalita();
-  inputDimensione = collezionareDimensione();
-  collezionareNomePartita(inputNomePartita);
+  modalita = collezionareModalita();
+  dimensione = collezionareDimensione();
+  collezionareNomePartita(nomePartita);
+
+  convertireDimensione(&dimensione);
+
+  avviarePartita(&nomePartita, modalita, dimensione);
 }
-
-
-
 
 /*********************************************************
 * FUNZIONE: collezionareModalita                       *

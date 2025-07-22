@@ -44,6 +44,7 @@ void stampareVittoriaOthello(int neri, int bianchi);
 
 // === FUNZIONE PRINCIPALE ===
 void avviarePartita(char inputNome[50], int modalita, int dimensione) {
+    printf("[DEBUG] avviarePartita chiamata con nome=%s, modalita=%d, dimensione=%d\n", inputNome, modalita, dimensione);
     Partita partita;
     int turno = NERO;
     int riga, colonna;
@@ -56,6 +57,7 @@ void avviarePartita(char inputNome[50], int modalita, int dimensione) {
     scrivereDimScacchieraPartita(&partita, dimensione);
     inizializzareScacchieraPartita(&partita, dimensione);
 
+    // Posizione iniziale Othello solo se dimensione almeno 4 e pari
     if (dimensione >= 4 && dimensione % 2 == 0) {
         int mid = dimensione / 2;
         scrivereStatoScacchieraPartita(&partita, NERO, mid - 1, mid - 1);
@@ -244,11 +246,11 @@ void stampareVittoriaOthello(int neri, int bianchi) {
 }
 
 void convertireDimensione(int *dimensione) {
-  if(*dimensione == PICCOLA){
-    *dimensione = 4;
-  } else if(*dimensione == MEDIA){
-    *dimensione = 8;
-  } else if(*dimensione == GRANDE) {
-    *dimensione = 16;
+  if(dimensione = PICCOLA){
+    dimensione = 4;
+  } else if(dimensione = MEDIA){
+    dimensione = 8;
+  } else if(dimensione = GRANDE) {
+    dimensione = 16;
   }
 }

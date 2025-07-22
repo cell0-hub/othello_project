@@ -21,6 +21,7 @@ MODIFICHE:
 #include "../include/tipiDiDato.h"
 #include "../include/partita.h"
 #include "../include/funzioniUtilita.h"
+#include "../include/caricaPartita.h"
 
 #define DIM_OTHELLO 8
 #define VUOTO 0
@@ -75,6 +76,17 @@ void avviarePartita(char inputNome[50], int modalita, int dimensione) {
         printf("\nTurno: %s   Nero: %d   Bianco: %d\n",
                (turno == NERO ? "Nero" : "Bianco"), neri, bianchi);
 
+        // --- Salvataggio ---
+        printf("Vuoi salvare la partita? (s/n): ");
+        char sceltaSalva = 'n';
+        scanf(" %c", &sceltaSalva);
+        pulireBuffer();
+        if (sceltaSalva == 's' || sceltaSalva == 'S') {
+            salvarePartita(&partita);
+            printf("Partita salvata! Premi invio per continuare...");
+            getchar();
+        }
+
         if (nessunaMossaPossibile(&partita, turno)) {
             printf("Nessuna mossa disponibile per %s.\n",
                    (turno == NERO ? "Nero" : "Bianco"));
@@ -107,6 +119,67 @@ void avviarePartita(char inputNome[50], int modalita, int dimensione) {
         turno = (turno == NERO) ? BIANCO : NERO;
     }
 
+    stampareVittoriaOthello(neri, bianchi);
+}
+
+// Avvia una partita Othello continuata da uno stato salvato
+void avviarePartitaContinuata(Partita *partita) {
+    int turno = NERO;
+    int dimensione = leggereDimScacchiera(partita->scacchieraPartita);
+    int riga, colonna;
+    int fine = 0;
+    int neri, bianchi;
+
+    // Conta le pedine per determinare il turno
+    neri = contarePedine(partita, NERO);
+    bianchi = contarePedine(partita, BIANCO);
+    // Turno: chi ha meno pedine inizia, se pari tocca al nero
+    if (neri > bianchi) turno = BIANCO;
+    else turno = NERO;
+
+    pulireBuffer();
+    while (!fine) {
+        pulireSchermo();
+        stampareScacchieraOthello(partita);
+        neri = contarePedine(partita, NERO);
+        bianchi = contarePedine(partita, BIANCO);
+        printf("\nTurno: %s   Nero: %d   Bianco: %d\n",
+               (turno == NERO ? "Nero" : "Bianco"), neri, bianchi);
+        // --- Salvataggio ---
+        printf("Vuoi salvare la partita? (s/n): ");
+        char sceltaSalva = 'n';
+        scanf(" %c", &sceltaSalva);
+        pulireBuffer();
+        if (sceltaSalva == 's' || sceltaSalva == 'S') {
+            salvarePartita(partita);
+            printf("Partita salvata! Premi invio per continuare...");
+            getchar();
+        }
+        if (nessunaMossaPossibile(partita, turno)) {
+            printf("Nessuna mossa disponibile per %s.\n",
+                   (turno == NERO ? "Nero" : "Bianco"));
+            turno = (turno == NERO) ? BIANCO : NERO;
+            if (nessunaMossaPossibile(partita, turno)) {
+                fine = 1;
+                break;
+            }
+            continue;
+        }
+        printf("Inserisci riga e colonna (1-%d, es. 4 5): ", dimensione);
+        scanf("%d %d", &riga, &colonna);
+        pulireBuffer();
+        if (riga < 1 || riga > dimensione || colonna < 1 || colonna > dimensione) {
+            printf("Valori fuori range.\n");
+            continue;
+        }
+        riga--; colonna--;
+        if (!mossaValida(partita, riga, colonna, turno)) {
+            printf("Mossa non valida.\n");
+            continue;
+        }
+        eseguiMossa(partita, riga, colonna, turno);
+        turno = (turno == NERO) ? BIANCO : NERO;
+    }
     stampareVittoriaOthello(neri, bianchi);
 }
 

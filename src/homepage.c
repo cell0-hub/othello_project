@@ -22,6 +22,7 @@ Scopo di ogni funzione presente:
 #include "../include/homepage.h"
 #include "../include/funzioniUtilita.h"
 #include "../include/impostazioni.h"
+#include "../include/caricaPartita.h"
 
 #define LARGHEZZA_TERMINALE 80
 
@@ -138,6 +139,7 @@ void collezionareInputHomepage() {
       inMenuPrinipale = FALSO;
     }
     else if (input == PARTITE_SALVATE) {
+      avviareMenuCaricaPartita();
       inMenuPrinipale = FALSO;
     }
     else if (input == ESCI) {

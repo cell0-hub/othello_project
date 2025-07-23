@@ -157,7 +157,9 @@ void tornareHomepage(int *input, int posRiga, int posColonna){
 }
 
 void pulireSchermo(){
-  system("clear || cls");
+    printf("\033[2J");    // Pulisce lo schermo
+    printf("\033[H");     // Sposta cursore in alto a sinistra
+    fflush(stdout);       // Forza l'output
 }
 
 int lunghezza(const char stringa[]) {

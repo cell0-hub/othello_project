@@ -40,6 +40,9 @@ Scopo di ogni funzione presente:
 #define ARANCIONE "\033[38;5;208m"
 #define RESET "\033[0m"
 
+#define NERO 1
+#define BIANCO 2
+
 /**
  * DESCRIZIONE: Legge la prossima voce in una cartella.
  * ARGOMENTI: cartella: puntatore a DIR
@@ -177,43 +180,12 @@ void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
 }
 
 /**
- * DESCRIZIONE: Carica una partita Othello da file: prima riga dimensione, poi matrice scacchiera.
- * ARGOMENTI: partita: puntatore a Partita, percorso: path del file
+ * DESCRIZIONE: Salva una partita Othello completa su file: 
+ *              dimensione, modalità, turno corrente, poi matrice scacchiera.
+ * ARGOMENTI: partita: puntatore a Partita, turnoCorrente: colore giocatore corrente
  * RITORNO: nessuno
  */
-void caricarePartita(Partita *partita, const char *percorso) {
-    FILE *file;
-    int dimensione;
-    int riga;
-    int colonna;
-    int valore;
-
-    file = fopen(percorso, "r");
-    if (!file) {
-        return;
-    }
-    fscanf(file, "%d", &dimensione);
-    scrivereDimScacchieraPartita(partita, dimensione);
-    inizializzareScacchieraPartita(partita, dimensione);
-    riga = 0;
-    while (riga < dimensione) {
-        colonna = 0;
-        while (colonna < dimensione) {
-            fscanf(file, "%d", &valore);
-            scrivereStatoCasellaScacchieraPartita(partita, valore, riga, colonna);
-            colonna = colonna + 1;
-        }
-        riga = riga + 1;
-    }
-    fclose(file);
-}
-
-/**
- * DESCRIZIONE: Salva una partita Othello su file: prima riga dimensione, poi matrice scacchiera.
- * ARGOMENTI: partita: puntatore a Partita
- * RITORNO: nessuno
- */
-void salvarePartita(Partita *partita) {
+void salvarePartita(Partita *partita, int turnoCorrente) {
     FILE *file;
     char percorso[100];
     int dimensione;
@@ -227,7 +199,13 @@ void salvarePartita(Partita *partita) {
     if (!file) {
         return;
     }
-    fprintf(file, "%d\n", dimensione);
+    
+    // Salva le informazioni della partita
+    fprintf(file, "%d\n", dimensione);           // Prima riga: dimensione
+    fprintf(file, "%d\n", partita->modalita);    // Seconda riga: modalità (1=vs umano, 2=vs bot)
+    fprintf(file, "%d\n", turnoCorrente);        // Terza riga: turno corrente (1=NERO, 2=BIANCO)
+    
+    // Salva la scacchiera
     riga = 0;
     while (riga < dimensione) {
         colonna = 0;
@@ -242,28 +220,53 @@ void salvarePartita(Partita *partita) {
     fclose(file);
 }
 
-/********************************************************
-* FUNZIONE: avviareMenuCaricaPartita                    *
-*                                                       *
-* DESCRIZIONE: Mostra l'elenco delle partite salvate    *
-*              presenti nella cartella "database",      *
-*              consente all'utente di scegliere una     *
-*              partita da caricare digitando il nome    *
-*              o il numero corrispondente.              *
-*                                                       *
-* COMPORTAMENTO:                                        *
-* - Se non ci sono partite salvate, l'utente viene      *
-*   reindirizzato alla homepage                         *
-* - L'utente può digitare "0" per tornare al menu       *
-*   principale.                                         *
-* - Se la partita esiste ed è caricabile, viene avviata.*
-*                                                       *
-* ARGOMENTI: Nessuno                                    *
-*                                                       *
-* RITORNO: Nessuno (effetto collaterale: avvia una      *
-*          partita oppure torna alla homepage)          *
-*                                                       *
-********************************************************/
+/**
+ * DESCRIZIONE: Carica una partita Othello completa da file: 
+ *              dimensione, modalità, turno corrente, poi matrice scacchiera.
+ * ARGOMENTI: partita: puntatore a Partita, percorso: path del file, 
+ *            turnoCorrente: puntatore per salvare il turno caricato
+ * RITORNO: nessuno
+ */
+void caricarePartita(Partita *partita, const char *percorso, int *turnoCorrente) {
+    FILE *file;
+    int dimensione;
+    int modalita;
+    int riga;
+    int colonna;
+    int valore;
+
+    file = fopen(percorso, "r");
+    if (!file) {
+        return;
+    }
+    
+    // Carica le informazioni della partita
+    fscanf(file, "%d", &dimensione);        // Prima riga: dimensione
+    fscanf(file, "%d", &modalita);          // Seconda riga: modalità
+    fscanf(file, "%d", turnoCorrente);      // Terza riga: turno corrente
+    
+    // Inizializza la partita
+    scrivereDimScacchieraPartita(partita, dimensione);
+    partita->modalita = modalita;
+    inizializzareScacchieraPartita(partita, dimensione);
+    
+    // Carica la scacchiera
+    riga = 0;
+    while (riga < dimensione) {
+        colonna = 0;
+        while (colonna < dimensione) {
+            fscanf(file, "%d", &valore);
+            scrivereStatoCasellaScacchieraPartita(partita, valore, riga, colonna);
+            colonna = colonna + 1;
+        }
+        riga = riga + 1;
+    }
+    fclose(file);
+}
+
+/**
+ * DESCRIZIONE: Versione migliorata del menu carica partita che gestisce modalità e turno.
+ */
 void avviareMenuCaricaPartita() {
     char *nomiPartite[100];
     int numeroPartite;
@@ -274,6 +277,7 @@ void avviareMenuCaricaPartita() {
     char percorso[256];
     Partita partita;
     char nome[128];
+    int turnoCaricato;
 
     pulireSchermo();
     stampareTitoloCaricaPartita();
@@ -302,11 +306,21 @@ void avviareMenuCaricaPartita() {
         return;
     } else if (input > 0 && input <= numeroPartite) {
         snprintf(percorso, sizeof(percorso), "database/%s", nomiPartite[input-1]);
-        caricarePartita(&partita, percorso);
+        caricarePartita(&partita, percorso, &turnoCaricato);
         estrapolareNomeDaFile(nomiPartite[input-1], nome);
         scrivereNomePartita(&partita, nome);
         liberareNomiPartite(nomiPartite, numeroPartite);
-        avviarePartitaContinuata(&partita);
+        
+        // Avvia la partita in base alla modalità salvata
+        if (partita.modalita == 1) {
+            // Modalità vs umano
+            avviarePartitaContinuata(&partita);
+        } else if (partita.modalita == 2) {
+            // Modalità vs bot - devi determinare il colore del giocatore umano
+            // Puoi salvare anche questo o determinarlo in base al turno/pedine
+            int coloreGiocatore = NERO; // Default, o implementa logica per determinarlo
+            avviarePartitaContinuataBot(&partita, coloreGiocatore);
+        }
     } else {
         liberareNomiPartite(nomiPartite, numeroPartite);
         avviareMenuCaricaPartita(); 

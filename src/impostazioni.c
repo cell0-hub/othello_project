@@ -37,7 +37,7 @@ Scopo delle funzioni presenti:
 #define ERR_MSG_RIGA 22
 #define ERR_MSG_COLONNA 12
 #define INPUT_RIGA_NOME 11 
-#define NOME_MAX 49
+#define NOME_MAX 50
 #define VERO 1
 #define FALSO 0
 
@@ -109,7 +109,11 @@ void avviareImpostazioni() {
 
   convertireDimensione(&dimensione);
 
-  avviarePartita(nomePartita, modalita, dimensione);
+  if(modalita == 1){
+    avviarePartita(nomePartita, modalita, dimensione);
+  } else {
+    avviarePartitaBot(nomePartita, modalita, dimensione, 1);
+  }
 }
 
 /**

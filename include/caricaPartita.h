@@ -10,7 +10,7 @@
 void avviareMenuCaricaPartita();
 void stampareTitoloCaricaPartita();
 
-void salvarePartita(Partita *partita);
+void salvarePartita(Partita *partita, int turnoCorrente);
 void salvareValoriGriglia(FILE *file, Partita *partita);
 void caricarePartita(Partita *partita, const char *percorso);
 void caricareValoriGriglia(FILE *file, Partita *partita);

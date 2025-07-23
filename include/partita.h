@@ -18,6 +18,9 @@
 // Funzioni principali del gioco
 void avviarePartita();
 void avviarePartitaContinuata(Partita *partita);
+void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int coloreGiocatore);
+void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore);
+  
 
 // Funzioni di visualizzazione
 void mostraSchermo(int dimensione);
@@ -35,7 +38,6 @@ void stampareRigaScacchiera(Scacchiera scacchiera, int riga);
 
 // Funzioni di utilità per dimensioni e difficoltà
 void convertireDimensione(int *dimensione);
-int calcolareSottoquadrato(int dimensione);
 
 // Funzioni di validazione
 int collezionareInput(int *input, int rigaTerminale);
@@ -55,7 +57,5 @@ int contarePedine(Partita *partita, int giocatore);
 void stampareVittoriaOthello(int neri, int bianchi);
 void stampareConteggioPedine(Partita *partita, int turnoCorrente);
 #endif // PARTITA_H
-
-
 
 

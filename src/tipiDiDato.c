@@ -103,6 +103,10 @@ void scrivereNomePartita(Partita *partita, char nome[50]) {
     strcpy(partita->nomePartita, nome);
 }
 
+void scrivereModalitaPartita(Partita *partita, int nuovaModalita) {
+  partita->modalita = nuovaModalita;
+}
+
 /**
  * DESCRIZIONE: Imposta la dimensione della scacchiera nella struttura Partita.
  * ARGOMENTI: partita: puntatore a Partita, valore: dimensione

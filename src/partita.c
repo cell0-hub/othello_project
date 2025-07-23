@@ -642,18 +642,17 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
     int azioneInput;
     int errore;
     int coloreBot;
-    int inputUtente;
 
     errore = FALSO;
-    coloreBot = (coloreGiocatore == NERO) ? BIANCO : NERO;
+    coloreBot = BIANCO; 
     
     scrivereNomePartita(&partitaCorrente, nomePartita);
-    partitaCorrente.modalita = modalita;
+    scrivereModalitaPartita(&partitaCorrente, modalita);
     scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
     inizializzareScacchieraPartita(&partitaCorrente, dimensione);
     
     turnoGiocatore = NERO;
-    finePartita = 0;
+    finePartita = FALSO;
     metaDimensione = dimensione / 2;
     
     // Inizializzazione standard Othello
@@ -662,7 +661,7 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
     scrivereStatoCasellaScacchieraPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
     scrivereStatoCasellaScacchieraPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
     
-    while (finePartita == 0) {
+    while (finePartita == FALSO) {
         pulireSchermo();
         if(dimensione != 16){
             stampareTitoloPartita();
@@ -711,7 +710,7 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
                     if (verificareNessunaMossa(&partitaCorrente, turnoGiocatore) == 1) {
                         turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
                         if (verificareNessunaMossa(&partitaCorrente, turnoGiocatore) == 1) {
-                            finePartita = 1;
+                            finePartita = VERO;
                         }
                     }
                 } else {
@@ -739,7 +738,6 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
             }
         }
     }
-    
     neriTotali = contaPedineGiocatore(&partitaCorrente, NERO);
     bianchiTotali = contaPedineGiocatore(&partitaCorrente, BIANCO);
     stampareVittoria(neriTotali, bianchiTotali);

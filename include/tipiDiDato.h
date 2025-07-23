@@ -33,6 +33,7 @@ void scrivereNomePartita(Partita *partita, char nome[50]);
 void scrivereDimScacchieraPartita(Partita *partita, int valore);
 void scrivereStatoCasellaScacchieraPartita(Partita *partita, int valore, int riga, int colonna);
 void inizializzareScacchieraPartita(Partita *partita, int dimensione);
+void scrivereModalitaPartita(Partita *partita, int nuovaModalita);
 
 #endif
 

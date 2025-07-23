@@ -174,7 +174,7 @@ void stampareVittoria(int neriTotali, int bianchiTotali) {
  *   coloreGiocatore: colore del giocatore
  * RITORNO: numero di pedine
  */
-int contaPedineGiocatore(Partita *partita, int coloreGiocatore) {
+int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
     int indiceRiga;
     int indiceColonna;
     int conteggioTotale;
@@ -210,7 +210,7 @@ int contaPedineGiocatore(Partita *partita, int coloreGiocatore) {
  *   coloreGiocatore: colore del giocatore
  * RITORNO: numero di pedine da flippare
  */
-int calcolaPedineFlipp(Partita *partita, int rigaInizio, int colInizio, 
+int calcolarePedineFlipp(Partita *partita, int rigaInizio, int colInizio, 
                        int deltaRiga, int deltaColonna, int coloreGiocatore) {
     int coloreAvversario;
     int conteggioFlip;
@@ -266,7 +266,7 @@ int calcolaPedineFlipp(Partita *partita, int rigaInizio, int colInizio,
  *   coloreGiocatore: colore del giocatore (NERO/BIANCO)
  * RITORNO: 1 se valida, 0 altrimenti
  */
-int verificaMossaValida(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
+int verificareMossaValida(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
     int direzioni[8][2] = {{NORD, OVEST}, {NORD, CENTRO}, {NORD, EST},
                           {CENTRO, OVEST},               {CENTRO, EST}, 
                           {SUD, OVEST},   {SUD, CENTRO}, {SUD, EST}};
@@ -276,7 +276,7 @@ int verificaMossaValida(Partita *partita, int rigaInput, int colInput, int color
     // Verifica se la cella è vuota
     if (leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) == VUOTO) {
         while (indiceDir < 8 && risultato == 0) {
-            if (calcolaPedineFlipp(partita, rigaInput, colInput, 
+            if (calcolarePedineFlipp(partita, rigaInput, colInput, 
                                    direzioni[indiceDir][0], direzioni[indiceDir][1], 
                                    coloreGiocatore) > 0) {
                 risultato = 1;
@@ -308,14 +308,14 @@ void eseguiFlipPedine(Partita *partita, int rigaInput, int colInput, int coloreG
     int nuovaColonna;
     
     while (indiceDir < 8) {
-        pedineFlippabili = calcolaPedineFlipp(partita, rigaInput, colInput, 
+        pedineFlippabili = calcolarePedineFlipp(partita, rigaInput, colInput, 
                                               direzioni[indiceDir][0], direzioni[indiceDir][1], 
                                               coloreGiocatore);
         passoFlip = 1;
         while (passoFlip <= pedineFlippabili) {
             nuovaRiga = rigaInput + direzioni[indiceDir][0] * passoFlip;
             nuovaColonna = colInput + direzioni[indiceDir][1] * passoFlip;
-            scrivereStatoCasellaScacchieraPartita(partita, coloreGiocatore, nuovaRiga, nuovaColonna);
+            scrivereStatoCasellaPartita(partita, coloreGiocatore, nuovaRiga, nuovaColonna);
             passoFlip = passoFlip + 1;
         }
         indiceDir = indiceDir + 1;
@@ -331,8 +331,8 @@ void eseguiFlipPedine(Partita *partita, int rigaInput, int colInput, int coloreG
  *   coloreGiocatore: colore del giocatore
  * RITORNO: nessuno
  */
-void eseguiMossaCompleta(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
-    scrivereStatoCasellaScacchieraPartita(partita, coloreGiocatore, rigaInput, colInput);
+void eseguireMossaCompleta(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
+    scrivereStatoCasellaPartita(partita, coloreGiocatore, rigaInput, colInput);
     eseguiFlipPedine(partita, rigaInput, colInput, coloreGiocatore);
 }
 
@@ -358,7 +358,7 @@ int verificareNessunaMossa(Partita *partita, int coloreGiocatore) {
     while (indiceRiga < dimensioneScacc && mossaTrovata == 0) {
         indiceColonna = 0;
         while (indiceColonna < dimensioneScacc && mossaTrovata == 0) {
-            if (verificaMossaValida(partita, indiceRiga, indiceColonna, coloreGiocatore) == 1) {
+            if (verificareMossaValida(partita, indiceRiga, indiceColonna, coloreGiocatore) == 1) {
                 mossaTrovata = 1;
             }
             indiceColonna = indiceColonna + 1;
@@ -396,10 +396,10 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
     finePartita = 0;
     metaDimensione = dimensione / 2;
     
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
+    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
+    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
+    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
+    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
     
     while (finePartita == 0) {
         pulireSchermo();
@@ -415,8 +415,8 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
           errore = FALSO;
         }
         
-        neriTotali = contaPedineGiocatore(&partitaCorrente, NERO);
-        bianchiTotali = contaPedineGiocatore(&partitaCorrente, BIANCO);
+        neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
+        bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
         
         spostareCursore(RIGA_INPUT - 18, COLONNA_INPUT);
         printf(">> ");
@@ -442,8 +442,8 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
             colInput = colInput - 1;
             
             if (rigaInput >= 0 && rigaInput < dimensione && colInput >= 0 && colInput < dimensione &&
-                verificaMossaValida(&partitaCorrente, rigaInput, colInput, turnoGiocatore) == 1) {
-                eseguiMossaCompleta(&partitaCorrente, rigaInput, colInput, turnoGiocatore);
+                verificareMossaValida(&partitaCorrente, rigaInput, colInput, turnoGiocatore) == 1) {
+                eseguireMossaCompleta(&partitaCorrente, rigaInput, colInput, turnoGiocatore);
                 turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
                 
                 if (verificareNessunaMossa(&partitaCorrente, turnoGiocatore) == 1) {
@@ -458,8 +458,8 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
         }
     }
     
-    neriTotali = contaPedineGiocatore(&partitaCorrente, NERO);
-    bianchiTotali = contaPedineGiocatore(&partitaCorrente, BIANCO);
+    neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
+    bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
     stampareVittoria(neriTotali, bianchiTotali);
 }
 
@@ -476,8 +476,8 @@ void avviarePartitaContinuata(Partita *partita) {
     dimensioneScacc = leggereDimScacchiera(leggereScacchieraPartita(partita));
     finePartita = 0;
     
-    neriTotali = contaPedineGiocatore(partita, NERO);
-    bianchiTotali = contaPedineGiocatore(partita, BIANCO);
+    neriTotali = contarePedineGiocatore(partita, NERO);
+    bianchiTotali = contarePedineGiocatore(partita, BIANCO);
     turnoGiocatore = (neriTotali > bianchiTotali) ? BIANCO : NERO;
     
     while (finePartita == 0) {
@@ -513,8 +513,8 @@ void avviarePartitaContinuata(Partita *partita) {
             colInput = colInput - 1;
             
             if (rigaInput >= 0 && rigaInput < dimensioneScacc && colInput >= 0 && colInput < dimensioneScacc &&
-                verificaMossaValida(partita, rigaInput, colInput, turnoGiocatore) == 1) {
-                eseguiMossaCompleta(partita, rigaInput, colInput, turnoGiocatore);
+                verificareMossaValida(partita, rigaInput, colInput, turnoGiocatore) == 1) {
+                eseguireMossaCompleta(partita, rigaInput, colInput, turnoGiocatore);
                 turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
                 
                 if (verificareNessunaMossa(partita, turnoGiocatore) == 1) {
@@ -529,8 +529,8 @@ void avviarePartitaContinuata(Partita *partita) {
         }
     }
     
-    neriTotali = contaPedineGiocatore(partita, NERO);
-    bianchiTotali = contaPedineGiocatore(partita, BIANCO);
+    neriTotali = contarePedineGiocatore(partita, NERO);
+    bianchiTotali = contarePedineGiocatore(partita, BIANCO);
     stampareVittoria(neriTotali, bianchiTotali);
 }
 
@@ -582,8 +582,8 @@ void convertireDimensione(int *dimensione) {
 }
 
 void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
-    int neriTotali = contaPedineGiocatore(partita, NERO);
-    int bianchiTotali = contaPedineGiocatore(partita, BIANCO);
+    int neriTotali = contarePedineGiocatore(partita, NERO);
+    int bianchiTotali = contarePedineGiocatore(partita, BIANCO);
     char* nomeGiocatoreCorrente = (turnoCorrente == NERO) ? "NERO" : "BIANCO";
     
     // Posiziona il conteggio in alto a destra
@@ -602,7 +602,7 @@ void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
  *   colBot: puntatore dove salvare la colonna della mossa
  * RITORNO: 1 se trova una mossa, 0 altrimenti
  */
-int trovaMossaBot(Partita *partita, int coloreBot, int *rigaBot, int *colBot) {
+int trovareMossaBot(Partita *partita, int coloreBot, int *rigaBot, int *colBot) {
     int dimensioneScacc;
     int indiceRiga;
     int indiceColonna;
@@ -615,7 +615,7 @@ int trovaMossaBot(Partita *partita, int coloreBot, int *rigaBot, int *colBot) {
     while (indiceRiga < dimensioneScacc && mossaTrovata == 0) {
         indiceColonna = 0;
         while (indiceColonna < dimensioneScacc && mossaTrovata == 0) {
-            if (verificaMossaValida(partita, indiceRiga, indiceColonna, coloreBot) == 1) {
+            if (verificareMossaValida(partita, indiceRiga, indiceColonna, coloreBot) == 1) {
                 *rigaBot = indiceRiga;
                 *colBot = indiceColonna;
                 mossaTrovata = 1;
@@ -656,10 +656,10 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
     metaDimensione = dimensione / 2;
     
     // Inizializzazione standard Othello
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
-    scrivereStatoCasellaScacchieraPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
+    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
+    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
+    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
+    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
     
     while (finePartita == FALSO) {
         pulireSchermo();
@@ -675,8 +675,8 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
             errore = FALSO;
         }
         
-        neriTotali = contaPedineGiocatore(&partitaCorrente, NERO);
-        bianchiTotali = contaPedineGiocatore(&partitaCorrente, BIANCO);
+        neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
+        bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
         
         // Turno del giocatore umano
         if (turnoGiocatore == coloreGiocatore) {
@@ -703,8 +703,8 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
                 colInput = colInput - 1;
                 
                 if (rigaInput >= 0 && rigaInput < dimensione && colInput >= 0 && colInput < dimensione &&
-                    verificaMossaValida(&partitaCorrente, rigaInput, colInput, turnoGiocatore) == 1) {
-                    eseguiMossaCompleta(&partitaCorrente, rigaInput, colInput, turnoGiocatore);
+                    verificareMossaValida(&partitaCorrente, rigaInput, colInput, turnoGiocatore) == 1) {
+                    eseguireMossaCompleta(&partitaCorrente, rigaInput, colInput, turnoGiocatore);
                     turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
                     
                     if (verificareNessunaMossa(&partitaCorrente, turnoGiocatore) == 1) {
@@ -719,8 +719,9 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
             }
         } else {
             // turno del bot 
-            if (trovaMossaBot(&partitaCorrente, coloreBot, &rigaBot, &colBot) == 1) {
-                eseguiMossaCompleta(&partitaCorrente, rigaBot, colBot, turnoGiocatore);
+            getchar();
+            if (trovareMossaBot(&partitaCorrente, coloreBot, &rigaBot, &colBot) == 1) {
+                eseguireMossaCompleta(&partitaCorrente, rigaBot, colBot, turnoGiocatore);
                 turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
                 
                 if (verificareNessunaMossa(&partitaCorrente, turnoGiocatore) == 1) {
@@ -738,8 +739,8 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
             }
         }
     }
-    neriTotali = contaPedineGiocatore(&partitaCorrente, NERO);
-    bianchiTotali = contaPedineGiocatore(&partitaCorrente, BIANCO);
+    neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
+    bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
     stampareVittoria(neriTotali, bianchiTotali);
 }
 
@@ -762,8 +763,8 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
     dimensioneScacc = leggereDimScacchiera(leggereScacchieraPartita(partita));
     finePartita = 0;
     
-    neriTotali = contaPedineGiocatore(partita, NERO);
-    bianchiTotali = contaPedineGiocatore(partita, BIANCO);
+    neriTotali = contarePedineGiocatore(partita, NERO);
+    bianchiTotali = contarePedineGiocatore(partita, BIANCO);
     turnoGiocatore = (neriTotali > bianchiTotali) ? BIANCO : NERO;
     
     while (finePartita == 0) {
@@ -807,8 +808,8 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
                 colInput = colInput - 1;
                 
                 if (rigaInput >= 0 && rigaInput < dimensioneScacc && colInput >= 0 && colInput < dimensioneScacc &&
-                    verificaMossaValida(partita, rigaInput, colInput, turnoGiocatore) == 1) {
-                    eseguiMossaCompleta(partita, rigaInput, colInput, turnoGiocatore);
+                    verificareMossaValida(partita, rigaInput, colInput, turnoGiocatore) == 1) {
+                    eseguireMossaCompleta(partita, rigaInput, colInput, turnoGiocatore);
                     turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
                     
                     if (verificareNessunaMossa(partita, turnoGiocatore) == 1) {
@@ -823,14 +824,10 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
             }
         } else {
             // Turno del bot
-            spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT - 10);
-            printf("Il bot sta pensando...");
-            spostareCursore(RIGA_INPUT - 14, COLONNA_INPUT - 10);
-            printf("Premi INVIO per continuare");
             getchar();
             
-            if (trovaMossaBot(partita, coloreBot, &rigaBot, &colBot) == 1) {
-                eseguiMossaCompleta(partita, rigaBot, colBot, turnoGiocatore);
+            if (trovareMossaBot(partita, coloreBot, &rigaBot, &colBot) == 1) {
+                eseguireMossaCompleta(partita, rigaBot, colBot, turnoGiocatore);
                 turnoGiocatore = (turnoGiocatore == NERO) ? BIANCO : NERO;
                 
                 if (verificareNessunaMossa(partita, turnoGiocatore) == 1) {
@@ -849,7 +846,7 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
         }
     }
     
-    neriTotali = contaPedineGiocatore(partita, NERO);
-    bianchiTotali = contaPedineGiocatore(partita, BIANCO);
+    neriTotali = contarePedineGiocatore(partita, NERO);
+    bianchiTotali = contarePedineGiocatore(partita, BIANCO);
     stampareVittoria(neriTotali, bianchiTotali);
 }

@@ -256,7 +256,7 @@ void caricarePartita(Partita *partita, const char *percorso, int *turnoCorrente)
         colonna = 0;
         while (colonna < dimensione) {
             fscanf(file, "%d", &valore);
-            scrivereStatoCasellaScacchieraPartita(partita, valore, riga, colonna);
+            scrivereStatoCasellaPartita(partita, valore, riga, colonna);
             colonna = colonna + 1;
         }
         riga = riga + 1;

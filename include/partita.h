@@ -48,7 +48,7 @@ int controllareSalvataggio(Partita partita, int *input);
 
 void inizializzarePartitaOthello(Partita *partita);
 int mossaValida(Partita *partita, int riga, int colonna, int giocatore);
-void eseguiMossa(Partita *partita, int riga, int colonna, int giocatore);
+void eseguireMossa(Partita *partita, int riga, int colonna, int giocatore);
 void flipPedine(Partita *partita, int riga, int colonna, int giocatore);
 int pedineDaFlippareInDirezione(Partita *p, int r, int c, int dr, int dc, int g);
 int nessunaMossaPossibile(Partita *partita, int giocatore);

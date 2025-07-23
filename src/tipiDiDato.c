@@ -121,7 +121,7 @@ void scrivereDimScacchieraPartita(Partita *partita, int valore) {
  * ARGOMENTI: partita: puntatore a Partita, valore: valore da scrivere, riga: riga, colonna: colonna
  * RITORNO: nessuno
  */
-void scrivereStatoCasellaScacchieraPartita(Partita *partita, int valore, int riga, int colonna) {
+void scrivereStatoCasellaPartita(Partita *partita, int valore, int riga, int colonna) {
     scrivereStatoCasellaScacchiera(&partita->scacchieraPartita, riga, colonna, valore);
 }
 

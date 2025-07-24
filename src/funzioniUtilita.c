@@ -157,7 +157,7 @@ void tornareHomepage(int *input, int posRiga, int posColonna){
 }
 
 void pulireSchermo(){
-    printf("\033[2J");    // Pulisce lo schermo
+    printf("\033[2J");    // Pulisce lo schermo                                                      *
     printf("\033[H");     // Sposta cursore in alto a sinistra
     fflush(stdout);       // Forza l'output
 }
@@ -201,7 +201,6 @@ int confrontarePrefisso(const char *stringa1, const char *prefisso) {
         }
         cursStringa = cursStringa + 1;
     }
-
     return esito;
 }
 
@@ -221,34 +220,3 @@ int modulo(int dividendo, int divisore) {
     }
     return resto;
 }
-
-/*******************************************************
-* FUNZIONE: mescolareArray                             *
-*                                                      *
-* DESCRIZIONE: mescola i valori presenti all' interno  *
-*              di un array causalmente                 *
-*                                                      *
-* ARGOMENTI:                                           *
-* array: array da mescolare, array a 1 dimensione      *
-* dimensione: numero di elementi dell' array, naturale *
-*                                                      *
-* RITORNO:                                             *
-* array: array mescolato                               *
-*******************************************************/
-void mescolareArray(int *array, int dimensione) {
-    int posCorrente;
-    int posTarget;
-    int temp;
-
-    posCorrente = dimensione - 1;
-    while (posCorrente > 0) {
-        posTarget = rand() % (posCorrente + 1);
-        // qua non utposCorrente lizziamo la nostra funzione modulo()
-        // perche' troppo lenta
-        temp = array[posCorrente];
-        array[posCorrente] = array[posTarget];
-        array[posTarget] = temp;
-        posCorrente = posCorrente  - 1;
-    }
-}
-

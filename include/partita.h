@@ -54,7 +54,6 @@ int pedineDaFlippareInDirezione(Partita *p, int r, int c, int dr, int dc, int g)
 int nessunaMossaPossibile(Partita *partita, int giocatore);
 void stampareScacchieraOthello(Partita *partita);
 int contarePedine(Partita *partita, int giocatore);
-void stampareVittoriaOthello(int neri, int bianchi);
 void stampareConteggioPedine(Partita *partita, int turnoCorrente);
 #endif // PARTITA_H
 

@@ -11,10 +11,8 @@ Scopo delle funzioni presenti:
   e il nome della partita e infine avvia la partita con i parametri raccolti.
 - stampareTitoloImpostazioni: Stampa il titolo per la sezione "Impostazioni".
 - stampareMenuImpostazioni: Stampa le opzioni del menu delle impostazioni, incluse:
-- difficoltà: facile, intermedia, difficile
 - dimensione della griglia: piccola, media, grande
 - spazio per l' inserimento del nome della partita
-- collezionareDifficolta: Richiede all’utente di inserire un valore intero che rappresenti la difficoltà della partita.
 - collezionareDimensione: Richiede all’utente un valore numerico corrispondente alla dimensione della griglia di gioco.
 - collezionaNomeGioco: Richiede all’utente il nome da assegnare alla nuova partita.
  */

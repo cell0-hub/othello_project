@@ -85,7 +85,7 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
     while (voce != NULL && conteggio < MAX_PARTITE) {
         nomeFile = ottenereNomeFile(voce);
         if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
-            nomiPartite[conteggio] = malloc(strlen(nomeFile) + 1);
+            nomiPartite[conteggio] = malloc(lunghezza(nomeFile) + 1);
             strcpy(nomiPartite[conteggio], nomeFile);
             conteggio = conteggio + 1;
         }

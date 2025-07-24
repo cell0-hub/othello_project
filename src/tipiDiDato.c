@@ -30,7 +30,6 @@ Scopo delle funzioni presenti:
 #include <stdlib.h>
 #include <string.h>
 #include "../include/tipiDiDato.h"
-#include "../include/partita.h"
 
 /**
  * DESCRIZIONE: Restituisce la dimensione della scacchiera.

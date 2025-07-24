@@ -3,8 +3,6 @@ AUTORI: Onofrio de Robertis
         Michele Amato
         Davide Fornelli
         Giuliano Antoniciello
-DATA INIZIO: 27/05/2024
-DATA MODIFICA: 22/07/2025
 */
 
 #include <stdio.h>

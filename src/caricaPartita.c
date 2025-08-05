@@ -202,7 +202,7 @@ void salvarePartita(Partita *partita, int turnoCorrente) {
     
     // Salva le informazioni della partita
     fprintf(file, "%d\n", dimensione);           // Prima riga: dimensione
-    fprintf(file, "%d\n", partita->modalita);    // Seconda riga: modalità (1=vs umano, 2=vs bot)
+    fprintf(file, "%d\n", leggereModalitaPartita(*partita));    // Seconda riga: modalità (1=vs umano, 2=vs bot)
     fprintf(file, "%d\n", turnoCorrente);        // Terza riga: turno corrente (1=NERO, 2=BIANCO)
     
     // Salva la scacchiera
@@ -210,7 +210,7 @@ void salvarePartita(Partita *partita, int turnoCorrente) {
     while (riga < dimensione) {
         colonna = 0;
         while (colonna < dimensione) {
-            valore = leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), riga, colonna);
+            valore = leggereCellaScacchiera(leggereScacchieraPartita(partita), riga, colonna);
             fprintf(file, "%d ", valore);
             colonna = colonna + 1;
         }
@@ -247,7 +247,7 @@ void caricarePartita(Partita *partita, const char *percorso, int *turnoCorrente)
     
     // Inizializza la partita
     scrivereDimScacchieraPartita(partita, dimensione);
-    partita->modalita = modalita;
+    scrivereModalitaPartita(partita, modalita);
     inizializzareScacchieraPartita(partita, dimensione);
     
     // Carica la scacchiera
@@ -256,7 +256,7 @@ void caricarePartita(Partita *partita, const char *percorso, int *turnoCorrente)
         colonna = 0;
         while (colonna < dimensione) {
             fscanf(file, "%d", &valore);
-            scrivereStatoCasellaPartita(partita, valore, riga, colonna);
+            scrivereCellaPartita(partita, valore, riga, colonna);
             colonna = colonna + 1;
         }
         riga = riga + 1;
@@ -312,10 +312,10 @@ void avviareMenuCaricaPartita() {
         liberareNomiPartite(nomiPartite, numeroPartite);
         
         // Avvia la partita in base alla modalità salvata
-        if (partita.modalita == 1) {
+        if (leggereModalitaPartita(partita) == 1) {
             // Modalità vs umano
             avviarePartitaContinuata(&partita);
-        } else if (partita.modalita == 2) {
+        } else if (leggereModalitaPartita(partita) == 2) {
             // Modalità vs bot - devi determinare il colore del giocatore umano
             // Puoi salvare anche questo o determinarlo in base al turno/pedine
             int coloreGiocatore = NERO; // Default, o implementa logica per determinarlo

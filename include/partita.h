@@ -56,6 +56,13 @@ int contarePedine(Partita *partita, int giocatore);
 void stampareConteggioPedine(Partita *partita, int turnoCorrente);
 void stampareVittoria(int neriTotali, int bianchiTotali);
 void avviarePartita(char nomePartita[50], int modalita, int dimensione);
+
+
+//Funzioni di accesso tipo di dato impostazioni
+int leggereModalitaImpostazioni(Impostazioni imp);
+int leggereDimScacchieraImp(Impostazioni imp);
+void scrivereModalitaImpostazioni(Impostazioni *imp, int valore);
+void scrivereDimScacchieraImp(Impostazioni *imp, int valore);
 #endif // PARTITA_H
 
 

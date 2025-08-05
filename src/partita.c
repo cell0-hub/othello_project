@@ -93,7 +93,7 @@ void stampareScacchiera(Partita *partita) {
         
         indiceColonna = 0;
         while (indiceColonna < dimensione) {
-            valoreCorrente = leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
+            valoreCorrente = leggereCellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
             if(valoreCorrente == NERO){
               carattereVisualizzato = 'N';
             } else if (valoreCorrente == BIANCO) {
@@ -184,7 +184,7 @@ int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
     while (indiceRiga < dimensione) {
         indiceColonna = 0;
         while (indiceColonna < dimensione) {
-            valoreCorrente = leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
+            valoreCorrente = leggereCellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
             if (valoreCorrente == coloreGiocatore) {
                 conteggioTotale = conteggioTotale + 1;
             }
@@ -230,7 +230,7 @@ int calcolarePedineFlipp(Partita *partita, int rigaInizio, int colInizio,
     
     while (rigaCorrente >= 0 && rigaCorrente < dimensioneScacc && 
            colCorrente >= 0 && colCorrente < dimensioneScacc) {
-        valoreCorrente = leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), rigaCorrente, colCorrente);
+        valoreCorrente = leggereCellaScacchiera(leggereScacchieraPartita(partita), rigaCorrente, colCorrente);
         
         if (valoreCorrente == coloreAvversario) {
             conteggioFlip = conteggioFlip + 1;
@@ -270,7 +270,7 @@ int verificareMossaValida(Partita *partita, int rigaInput, int colInput, int col
     int risultato = 0;
     
     // Verifica se la cella è vuota
-    if (leggereStatoCasellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) == VUOTO) {
+    if (leggereCellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) == VUOTO) {
         while (indiceDir < 8 && risultato == 0) {
             if (calcolarePedineFlipp(partita, rigaInput, colInput, 
                                    direzioni[indiceDir][0], direzioni[indiceDir][1], 
@@ -311,7 +311,7 @@ void eseguiFlipPedine(Partita *partita, int rigaInput, int colInput, int coloreG
         while (passoFlip <= pedineFlippabili) {
             nuovaRiga = rigaInput + direzioni[indiceDir][0] * passoFlip;
             nuovaColonna = colInput + direzioni[indiceDir][1] * passoFlip;
-            scrivereStatoCasellaPartita(partita, coloreGiocatore, nuovaRiga, nuovaColonna);
+            scrivereCellaPartita(partita, coloreGiocatore, nuovaRiga, nuovaColonna);
             passoFlip = passoFlip + 1;
         }
         indiceDir = indiceDir + 1;
@@ -328,7 +328,7 @@ void eseguiFlipPedine(Partita *partita, int rigaInput, int colInput, int coloreG
  * RITORNO: nessuno
  */
 void eseguireMossaCompleta(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
-    scrivereStatoCasellaPartita(partita, coloreGiocatore, rigaInput, colInput);
+    scrivereCellaPartita(partita, coloreGiocatore, rigaInput, colInput);
     eseguiFlipPedine(partita, rigaInput, colInput, coloreGiocatore);
 }
 
@@ -384,7 +384,7 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
     errore = FALSO;
     
     scrivereNomePartita(&partitaCorrente, nomePartita);
-    partitaCorrente.modalita = modalita;
+    scrivereModalitaPartita(&partitaCorrente, modalita); 
     scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
     inizializzareScacchieraPartita(&partitaCorrente, dimensione);
     
@@ -392,10 +392,10 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
     finePartita = 0;
     metaDimensione = dimensione / 2;
     
-    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
-    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
-    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
-    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
+    scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
+    scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
+    scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
+    scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
     
     while (finePartita == 0) {
         pulireSchermo();
@@ -652,10 +652,10 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
     metaDimensione = dimensione / 2;
     
     // Inizializzazione standard Othello
-    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
-    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
-    scrivereStatoCasellaPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
-    scrivereStatoCasellaPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
+    scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
+    scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
+    scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
+    scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
     
     while (finePartita == FALSO) {
         pulireSchermo();

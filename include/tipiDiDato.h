@@ -1,39 +1,55 @@
 #ifndef TIPIDIDATO_H
 #define TIPIDIDATO_H
 
-// Definizione della struttura Casella
+// Definizione della struttura Cella
 typedef struct {
   int stato;
-} Casella;
+} Cella;
 
 // Definizione della struttura Scacchiera
 typedef struct {
-    Casella **caselle;
+    Cella **celleScacchiera;
     int dimScacchiera;
 } Scacchiera;
+
+typedef struct {
+  int modalitaPartita;
+
+
+  int dimScacchiera;
+} Impostazioni;
 
 // Definizione della struttura Partita
 typedef struct {
     Scacchiera scacchieraPartita;
     char nomePartita[50];
-    int modalita;
+    Impostazioni impPartita;
+    int turnoGiocatore;
 } Partita;
 
 // Dichiarazioni delle funzioni per Scacchiera
 int leggereDimScacchiera(Scacchiera scacchiera);
-int leggereStatoCasellaScacchiera(Scacchiera scacchiera, int riga, int colonna);
+int leggereCellaScacchiera(Scacchiera scacchiera, int riga, int colonna);
 void scrivereDimScacchiera(Scacchiera *scacchiera, int valore);
-void scrivereStatoCasellaScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore);
-
+void scrivereCellaScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore);
 
 // Dichiarazioni delle funzioni per Partita
 Scacchiera leggereScacchieraPartita(Partita *partita);
 char* leggereNomePartita(Partita *partita);
 void scrivereNomePartita(Partita *partita, char nome[50]);
 void scrivereDimScacchieraPartita(Partita *partita, int valore);
-void scrivereStatoCasellaPartita(Partita *partita, int valore, int riga, int colonna);
+void scrivereCellaPartita(Partita *partita, int valore, int riga, int colonna);
 void inizializzareScacchieraPartita(Partita *partita, int dimensione);
-void scrivereModalitaPartita(Partita *partita, int nuovaModalita);
+Impostazioni leggereImpPartita(Partita partita);
+int leggereModalitaPartita(Partita partita);
+void scrivereModalitaPartita(Partita *partita, int valore);
+
+
+//Funzioni di accesso tipo di dato impostazioni
+int leggereModalitaImpostazioni(Impostazioni imp);
+int leggereDimScacchieraImp(Impostazioni imp);
+void scrivereModalitaImpostazioni(Impostazioni *imp, int valore);
+void scrivereDimScacchieraImp(Impostazioni *imp, int valore);
 
 #endif
 

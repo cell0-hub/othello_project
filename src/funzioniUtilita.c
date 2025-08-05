@@ -14,7 +14,6 @@ spostareCursore() -> funzione utilizzata per spostare la posizione del cursore n
 */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include "../include/homepage.h"
 
 #define VERO 1
@@ -220,3 +219,5 @@ int modulo(int dividendo, int divisore) {
     }
     return resto;
 }
+
+

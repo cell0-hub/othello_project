@@ -431,8 +431,8 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
         }
         
         if (azioneInput == 1) {
-            collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
-            collezionareInput(&colInput, RIGA_INPUT_COL);
+            collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+            collezionareInput(&colInput, RIGA_INPUT_COL + 2);
             
             rigaInput = rigaInput - 1;
             colInput = colInput - 1;
@@ -676,7 +676,7 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
         
         // Turno del giocatore umano
         if (turnoGiocatore == coloreGiocatore) {
-            spostareCursore(RIGA_INPUT - 18, COLONNA_INPUT);
+            spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
             printf(">> ");
             
             azioneInput = 0;
@@ -692,8 +692,8 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
             }
             
             if (azioneInput == 1) {
-                collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
-                collezionareInput(&colInput, RIGA_INPUT_COL);
+                collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+                collezionareInput(&colInput, RIGA_INPUT_COL + 2);
                 
                 rigaInput = rigaInput - 1;
                 colInput = colInput - 1;

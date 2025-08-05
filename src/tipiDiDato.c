@@ -32,46 +32,42 @@ Scopo delle funzioni presenti:
 #include "../include/tipiDiDato.h"
 #include "../include/costanti.h"
 
-/**
- * DESCRIZIONE: Restituisce la dimensione della scacchiera.
- * ARGOMENTI: scacchiera: struttura Scacchiera
- * RITORNO: dimensione della scacchiera
- */
+//funzioni di accesso per il tipo di dato cella
+//
+int leggereStatoCella(Cella casella){
+  int valoreLetto;
+  valoreLetto = casella.stato;
+  return valoreLetto;
+}
+
+void scrivereStatoCella(Cella *cella, int nuovoStato) {
+  cella->stato = nuovoStato;
+}
+
+//funzioni di accesso per il tipo di dato scacchiera
+
 int leggereDimScacchiera(Scacchiera scacchiera) {
     int valoreLetto;
     valoreLetto = scacchiera.dimScacchiera;
+
     return valoreLetto;
 }
 
-/**
- * DESCRIZIONE: Restituisce il valore in una cella specifica della scacchiera.
- * ARGOMENTI: scacchiera: struttura Scacchiera, riga: riga, colonna: colonna
- * RITORNO: valore della cella
- */
-int leggereCellaScacchiera(Scacchiera scacchiera, int riga, int colonna) {
-    int valoreLetto;
-    valoreLetto = scacchiera.celleScacchiera[riga][colonna].stato;
-    return valoreLetto;
-}
-
-/**
- * DESCRIZIONE: Imposta la dimensione della scacchiera.
- * ARGOMENTI: scacchiera: puntatore a Scacchiera, valore: dimensione
- * RITORNO: nessuno
- */
 void scrivereDimScacchiera(Scacchiera *scacchiera, int valore) {
     scacchiera->dimScacchiera = valore;
 }
 
-/**
- * DESCRIZIONE: Imposta un valore in una cella specifica della scacchiera.
- * ARGOMENTI: scacchiera: puntatore a Scacchiera, riga: riga, colonna: colonna, valore: valore da scrivere
- * RITORNO: nessuno
- */
-void scrivereCellaScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore) {
-    scacchiera->celleScacchiera[riga][colonna].stato = valore;
+int leggereCellaScacchiera(Scacchiera scacchiera, int riga, int colonna) {
+    int valoreLetto;
+    valoreLetto = leggereStatoCella(scacchiera.celleScacchiera[riga][colonna]); 
+    return valoreLetto;
 }
 
+void scrivereCellaScacchiera(Scacchiera *scacchiera, int riga, int colonna, int valore) {
+  scrivereStatoCella(&scacchiera->celleScacchiera[riga][colonna], valore);
+}
+
+//funzioni di accesso al tipo di dato partita
 Impostazioni leggereImpPartita(Partita partita) {
   Impostazioni impostazioniLette;
 
@@ -79,6 +75,7 @@ Impostazioni leggereImpPartita(Partita partita) {
   return impostazioniLette;
 }
 
+//???? scrivereImppartita
 int leggereModalitaPartita(Partita partita) {
   int valoreLetto;
 
@@ -87,62 +84,65 @@ int leggereModalitaPartita(Partita partita) {
 }
 
 void scrivereModalitaPartita(Partita *partita, int valore) {
-  partita->impPartita.modalitaPartita = valore;
+  Impostazioni imp;
+
+  //qui utilizziamo imp come appoggio, 
+  //perche' abbiamo bisogno di passarlo come puntatore
+  imp = leggereImpPartita(*partita);
+  scrivereModalitaImpostazioni(&imp, valore);
 }
-/**
- * DESCRIZIONE: Restituisce la scacchiera dalla struttura Partita.
- * ARGOMENTI: partita: puntatore a Partita
- * RITORNO: struttura Scacchiera
- */
+
 Scacchiera leggereScacchieraPartita(Partita *partita) {
     Scacchiera scacchieraLetta;
+
     scacchieraLetta = partita->scacchieraPartita;
     return scacchieraLetta;
 }
 
-/**
- * DESCRIZIONE: Restituisce il nome della partita.
- * ARGOMENTI: partita: puntatore a Partita
- * RITORNO: puntatore a stringa nome
- */
 char* leggereNomePartita(Partita *partita) {
     char* nomeLetto;
+
     nomeLetto = partita->nomePartita;
     return nomeLetto;
 }
 
-/**
- * DESCRIZIONE: Imposta il nome della partita.
- * ARGOMENTI: partita: puntatore a Partita, nome: stringa nome
- * RITORNO: nessuno
- */
 void scrivereNomePartita(Partita *partita, char nome[50]) {
     strcpy(partita->nomePartita, nome);
 }
 
-/**
- * DESCRIZIONE: Imposta la dimensione della scacchiera nella struttura Partita.
- * ARGOMENTI: partita: puntatore a Partita, valore: dimensione
- * RITORNO: nessuno
- */
 void scrivereDimScacchieraPartita(Partita *partita, int valore) {
-    scrivereDimScacchiera(&partita->scacchieraPartita, valore);
+  Scacchiera scacchieraPartita;
+
+  //qui utilizziamo scacchieraPartita come appoggio, 
+  //perche' abbiamo bisogno di passarlo come puntatore
+  scacchieraPartita = leggereScacchieraPartita(partita);
+  scrivereDimScacchiera(&scacchieraPartita, valore);
 }
 
-/**
- * DESCRIZIONE: Imposta un valore in una cella della scacchiera della struttura Partita.
- * ARGOMENTI: partita: puntatore a Partita, valore: valore da scrivere, riga: riga, colonna: colonna
- * RITORNO: nessuno
- */
 void scrivereCellaPartita(Partita *partita, int valore, int riga, int colonna) {
-    scrivereCellaScacchiera(&partita->scacchieraPartita, riga, colonna, valore);
+  Scacchiera scacchieraPartita;
+
+  //qui utilizziamo scacchieraPartita come appoggio, 
+  //perche' abbiamo bisogno di passarlo come puntatore
+  scacchieraPartita = leggereScacchieraPartita(partita);
+  scrivereCellaScacchiera(&scacchieraPartita, riga, colonna, valore);
 }
 
-/**
- * DESCRIZIONE: Alloca e inizializza a zero la scacchiera di gioco con dimensione scelta.
- * ARGOMENTI: partita: puntatore a Partita, dim: dimensione
- * RITORNO: nessuno
- */
+int leggereTurnoGiocatore(Partita partita) {
+  int giocatoreCorrente;
+
+  giocatoreCorrente = partita.turnoGiocatore;
+  return giocatoreCorrente;
+}
+
+void cambiareTurnoGiocatorePartita(Partita partita) {
+  if(partita.turnoGiocatore == NERO) {
+    partita.turnoGiocatore = BIANCO;
+  } else {
+    partita.turnoGiocatore = NERO;
+  }
+}
+
 void inizializzareScacchieraPartita(Partita *partita, int dim) {
     int riga;
     int colonna;
@@ -153,48 +153,15 @@ void inizializzareScacchieraPartita(Partita *partita, int dim) {
         partita->scacchieraPartita.celleScacchiera[riga] = malloc(dim * sizeof(Cella));
         colonna = 0;  
         while (colonna < dim) {
-            partita->scacchieraPartita.celleScacchiera[riga][colonna].stato = 0;
+            scrivereCellaPartita(partita, CELLA_VUOTA, riga, colonna);
             colonna = colonna + 1;
         }
         riga = riga + 1;
     }
 }
 
-int leggereTurnoGiocatore(Partita partita) {
-  int giocatoreCorrente;
 
-  giocatoreCorrente = partita.turnoGiocatore;
-  return giocatoreCorrente;
-}
-
-void cambiareTurnoGPartita(Partita partita) {
-  if(partita.turnoGiocatore == NERO) {
-    partita.turnoGiocatore = BIANCO;
-  } else {
-    partita.turnoGiocatore = NERO;
-  }
-}
-
-/**
- * DESCRIZIONE: Restituisce lo stato di una casella.
- * ARGOMENTI: casella: struttura Cella
- * RITORNO: stato della casella
- */
-int leggereStatoCella(Cella casella){
-  int valoreLetto;
-  valoreLetto = casella.stato;
-  return valoreLetto;
-}
-
-/**
- * DESCRIZIONE: Imposta lo stato di una casella.
- * ARGOMENTI: casella: puntatore a Cella, nuovoStato: valore da assegnare
- * RITORNO: nessuno
- */
-void scrivereStatoCella(Cella *casella, int nuovoStato) {
-  casella->stato = nuovoStato;
-}
-
+//funzioni di accesso tipo di dato impostazioni
 int leggereModalitaImpostazioni(Impostazioni imp) {
   int valoreLetto;
 

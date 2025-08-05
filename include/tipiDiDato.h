@@ -8,14 +8,12 @@ typedef struct {
 
 // Definizione della struttura Scacchiera
 typedef struct {
-    Cella **celleScacchiera;
     int dimScacchiera;
+    Cella **celleScacchiera;
 } Scacchiera;
 
 typedef struct {
   int modalitaPartita;
-
-
   int dimScacchiera;
 } Impostazioni;
 
@@ -51,5 +49,7 @@ int leggereDimScacchieraImp(Impostazioni imp);
 void scrivereModalitaImpostazioni(Impostazioni *imp, int valore);
 void scrivereDimScacchieraImp(Impostazioni *imp, int valore);
 
+int leggereStatoCella(Cella cella);
+void scrivereStatoCella(Cella *cella, int nuovoStato);
 #endif
 

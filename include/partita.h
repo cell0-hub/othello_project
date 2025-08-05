@@ -5,7 +5,6 @@
 #include "../include/tipiDiDato.h"
  
 // Costanti
-#define RIGA_INPUT_RIGA 13
 #define RIGA_INPUT_COLONNA 16
 #define RIGA_INPUT_VALORE 19
 #define RIGA_INPUT 28
@@ -55,6 +54,8 @@ int nessunaMossaPossibile(Partita *partita, int giocatore);
 void stampareScacchieraOthello(Partita *partita);
 int contarePedine(Partita *partita, int giocatore);
 void stampareConteggioPedine(Partita *partita, int turnoCorrente);
+void stampareVittoria(int neriTotali, int bianchiTotali);
+void avviarePartita(char nomePartita[50], int modalita, int dimensione);
 #endif // PARTITA_H
 
 

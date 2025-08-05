@@ -22,7 +22,7 @@ AUTORI: Onofrio de Robertis
 #define BLU   "\033[34m"
 #define RESET "\033[0m"
 
-#define RIGA_INPUT_RIGA   13
+#define RIGA_INPUT_RIGA   15
 #define RIGA_INPUT_COL    16
 #define RIGA_INPUT_VAL    19
 #define RIGA_INPUT        28
@@ -37,14 +37,12 @@ AUTORI: Onofrio de Robertis
 
 void stampareTitoloPartita(){
   pulireSchermo();
-  stampareCentrato("                           _   _ _                 ");
-  stampareCentrato("                          | | (_) |                ");
-  stampareCentrato(" ______   _ __   __ _ _ __| |_ _| |_ __ _   ______ ");
-  stampareCentrato("|______| | '_ \\ / _` | '__| __| | __/ _` | |______|");
-  stampareCentrato("         | |_) | (_| | |  | |_| | || (_| |         ");
-  stampareCentrato("         | .__/ \\__,_|_|   \\__|_|\\__\\__,_|         ");
-  stampareCentrato("         | |                                       ");
-  stampareCentrato("         |_|                                       ");
+  stampareCentrato("             _   _ _       ");
+  stampareCentrato(" ___ ___ ___| |_|_| |_ ___ ");
+  stampareCentrato("| . | .'|  _|  _| |  _| .'|");
+  stampareCentrato("|  _|__,|_| |_| |_|_| |__,|");
+  stampareCentrato("|_|                        ");
+  printf("\n\n");
 }
 
 void stampareLineaOrizzontale(Partita *partita) {
@@ -140,7 +138,7 @@ void stampareTabellaInput() {
     printf("-Azione-");
     spostareCursore(RIGA_INPUT_RIGA - 1, COLONNA_INPUT + 1);
     printf("-Riga-");
-    spostareCursore(RIGA_INPUT_COL - 1, COLONNA_INPUT);
+    spostareCursore(RIGA_INPUT_RIGA + 2, COLONNA_INPUT);
     printf("-Colonna-");
     spostareCursore(25, 17);
     printf("\033[34m azione: (1 giocare / 2 salvare / 3 uscire) \033[0m");
@@ -433,7 +431,7 @@ void avviarePartita(char nomePartita[50], int modalita, int dimensione) {
         }
         
         if (azioneInput == 1) {
-            collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+            collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
             collezionareInput(&colInput, RIGA_INPUT_COL);
             
             rigaInput = rigaInput - 1;
@@ -504,7 +502,7 @@ void avviarePartitaContinuata(Partita *partita) {
         }
         
         if (azioneInput == 1) {
-            collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+            collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
             collezionareInput(&colInput, RIGA_INPUT_COL);
             
             rigaInput = rigaInput - 1;
@@ -694,7 +692,7 @@ void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int c
             }
             
             if (azioneInput == 1) {
-                collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+                collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
                 collezionareInput(&colInput, RIGA_INPUT_COL);
                 
                 rigaInput = rigaInput - 1;
@@ -799,7 +797,7 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
             }
             
             if (azioneInput == 1) {
-                collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+                collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
                 collezionareInput(&colInput, RIGA_INPUT_COL);
                 
                 rigaInput = rigaInput - 1;

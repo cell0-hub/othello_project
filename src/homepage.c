@@ -66,11 +66,10 @@ void stampareMenuPrincipale()
 
   printf(VERDE);
   printf("\n");
-  stampareCentrato("       _   _          _ _          ___ ");
-  stampareCentrato("  ___ | |_| |__   ___| | | ___    / _ \\");
-  stampareCentrato(" / _ \\| __| '_ \\ / _ \\ | |/ _ \\  / /_\\/");
-  stampareCentrato("| (_) | |_| | | |  __/ | | (_) |/ /_\\ ");
-  stampareCentrato(" \\___/ \\__|_| |_|\\___|_|_|\\___(_)____/ ");
+  stampareCentrato("     _   _       _ _       _____ ");
+  stampareCentrato(" ___| |_| |_ ___| | |___  |   __|");
+  stampareCentrato("| . |  _|   | -_| | | . |_|  |  |");
+  stampareCentrato("|___|_| |_|_|___|_|_|___|_|_____|");
   printf(RESET);
 
   spostareCursore(TITOLO_RIGA, TITOLO_COLONNA);

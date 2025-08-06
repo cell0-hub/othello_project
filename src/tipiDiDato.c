@@ -105,6 +105,10 @@ void scrivereNomePartita(Partita *partita, char nome[50]) {
     strcpy(partita->nomePartita, nome);
 }
 
+void scrivereImpostazioniPartita(Partita *partita, Impostazioni imp) {
+  partita->impPartita = imp;
+}
+
 void scrivereDimScacchieraPartita(Partita *partita, int valore) {
   Scacchiera scacchieraPartita;
 

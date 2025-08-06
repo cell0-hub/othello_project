@@ -243,10 +243,8 @@ void caricarePartita(Partita *partita, const char *percorso) {
 
   // Inizializza la partita
   impPartita = inizializzareImpostazioni(modalita, dimensione);
+  scrivereImpostazioniPartita(partita, *impPartita);
   scrivereTurnoGiocatore(partita, turnoCorrente);
-  partita->impPartita = *impPartita;
-  printf("modalita: %d", partita->impPartita.modalitaPartita);
-  printf("dimensione: %d", partita->impPartita.dimScacchiera);
   inizializzareScacchieraPartita(partita, dimensione);
 
   // Carica la scacchiera

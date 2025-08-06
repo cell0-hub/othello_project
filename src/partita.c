@@ -406,7 +406,9 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
 
   while (!finePartita) {
     pulireSchermo();
-    stampareTitoloPartita();
+    if (dimensione != 16) {
+      stampareTitoloPartita();
+    }
     stampareScacchiera(&partitaCorrente);
     stampareTabellaInput();
     stampareConteggioPedine(&partitaCorrente, leggereTurnoGiocatore(&partitaCorrente));

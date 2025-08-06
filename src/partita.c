@@ -11,13 +11,7 @@ AUTORI: Onofrio de Robertis
 #include "../include/funzioniUtilita.h"
 #include "../include/caricaPartita.h"
 #include "../include/homepage.h"
-
-#define DIM_OTHELLO 8
-#define VUOTO 0
-#define CELLA_VUOTA 0
-
-#define NERO 1
-#define BIANCO 2
+#include "../include/costanti.h"
 
 #define BLU   "\033[34m"
 #define RESET "\033[0m"
@@ -272,7 +266,7 @@ int verificareMossaValida(Partita *partita, int rigaInput, int colInput, int col
   int risultato = FALSO;
 
   // Verifica se la cella è vuota
-  if (leggereCellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) == VUOTO) {
+  if (leggereCellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) == CELLA_VUOTA) {
     while (indiceDir < 8 && risultato == 0) {
       if (calcolarePedineDaCapovolgere(partita, rigaInput, colInput, 
                                        direzioni[indiceDir][0], direzioni[indiceDir][1], 

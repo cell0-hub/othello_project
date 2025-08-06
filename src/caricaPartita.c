@@ -18,13 +18,13 @@ Scopo di ogni funzione presente:
 #include "../include/funzioniUtilita.h"
 #include "../include/homepage.h"
 #include "../include/partita.h"
+#include "../include/costanti.h"
 #include <dirent.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define MAX_PARTITE 13
-#define VERO 1
 #define RIGA 11
 #define COLONNA 40
 #define TITOLO_RIGA 9
@@ -39,9 +39,6 @@ Scopo di ogni funzione presente:
 #define ERR_MSG_COLONNA 31
 #define ARANCIONE "\033[38;5;208m"
 #define RESET "\033[0m"
-
-#define NERO 1
-#define BIANCO 2
 
 /**
  * DESCRIZIONE: Legge la prossima voce in una cartella.

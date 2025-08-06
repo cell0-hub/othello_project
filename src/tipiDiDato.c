@@ -128,18 +128,18 @@ void scrivereCellaPartita(Partita *partita, int valore, int riga, int colonna) {
   scrivereCellaScacchiera(&scacchieraPartita, riga, colonna, valore);
 }
 
-int leggereTurnoGiocatore(Partita partita) {
+int leggereTurnoGiocatore(Partita *partita) {
   int giocatoreCorrente;
 
-  giocatoreCorrente = partita.turnoGiocatore;
+  giocatoreCorrente = partita->turnoGiocatore;
   return giocatoreCorrente;
 }
 
-void cambiareTurnoGiocatorePartita(Partita partita) {
-  if(partita.turnoGiocatore == NERO) {
-    partita.turnoGiocatore = BIANCO;
+void cambiareTurnoGiocatore(Partita *partita) {
+  if(partita->turnoGiocatore == NERO) {
+    partita->turnoGiocatore = BIANCO;
   } else {
-    partita.turnoGiocatore = NERO;
+    partita->turnoGiocatore = NERO;
   }
 }
 

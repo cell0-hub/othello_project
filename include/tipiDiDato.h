@@ -41,6 +41,8 @@ void inizializzareScacchieraPartita(Partita *partita, int dimensione);
 Impostazioni leggereImpPartita(Partita partita);
 int leggereModalitaPartita(Partita partita);
 void scrivereModalitaPartita(Partita *partita, int valore);
+void cambiareTurnoGiocatore(Partita *partita);
+int leggereTurnoGiocatore(Partita *partita);
 
 
 //Funzioni di accesso tipo di dato impostazioni

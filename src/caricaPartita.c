@@ -182,15 +182,17 @@ void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
  * ARGOMENTI: partita: puntatore a Partita, turnoCorrente: colore giocatore corrente
  * RITORNO: nessuno
  */
-void salvarePartita(Partita *partita, int turnoCorrente) {
+void salvarePartita(Partita *partita) {
     FILE *file;
     char percorso[100];
     int dimensione;
     int riga;
     int colonna;
     int valore;
+  int turnoCorrente;
 
     dimensione = leggereDimScacchiera(leggereScacchieraPartita(partita));
+    turnoCorrente = leggereTurnoGiocatore(partita);
     snprintf(percorso, sizeof(percorso), "database/partita_%s.txt", leggereNomePartita(partita));
     file = fopen(percorso, "w");
     if (!file) {

@@ -7,10 +7,11 @@
 
 #define MAX_NOME_FILE 50
 
+
 void avviareMenuCaricaPartita();
 void stampareTitoloCaricaPartita();
 
-void salvarePartita(Partita *partita, int turnoCorrente);
+void salvarePartita(Partita *partita);
 void salvareValoriGriglia(FILE *file, Partita *partita);
 void caricarePartita(Partita *partita, const char *percorso);
 void caricareValoriGriglia(FILE *file, Partita *partita);

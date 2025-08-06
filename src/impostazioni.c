@@ -98,7 +98,7 @@ void stampareMenuImpostazioni() {
  * ARGOMENTI: nessuno
  * RITORNO: nessuno
  */
-void avviareImpostazioni() {
+void configurareNuovaPartita() {
   char nomePartita[NOME_MAX];
   int modalita;
   int dimensione;

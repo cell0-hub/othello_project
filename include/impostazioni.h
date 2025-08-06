@@ -3,7 +3,7 @@
 
 #include "../include/funzioniUtilita.h"
 
-void avviareImpostazioni();
+void configurareNuovaPartita();
 int collezionareModalita();
 int collezionareDimensione();
 void stampareMenuImpostazioni();

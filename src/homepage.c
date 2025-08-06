@@ -127,7 +127,7 @@ void collezionareInputHomepage() {
       reimpostareZonaInput(INPUT_RIGA, INPUT_COLONNA);
     }
     else if (input == NUOVA_PARTITA) {
-      avviareImpostazioni();
+      configurareNuovaPartita();
       inMenuPrincipale = FALSO;
     }
     else if (input == PARTITE_SALVATE) {

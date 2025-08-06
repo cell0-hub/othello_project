@@ -43,6 +43,7 @@ int leggereModalitaPartita(Partita partita);
 void scrivereModalitaPartita(Partita *partita, int valore);
 void cambiareTurnoGiocatore(Partita *partita);
 int leggereTurnoGiocatore(Partita *partita);
+void scrivereTurnoGiocatore(Partita *partita, int turno);
 
 
 //Funzioni di accesso tipo di dato impostazioni

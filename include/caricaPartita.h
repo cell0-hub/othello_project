@@ -7,7 +7,6 @@
 
 #define MAX_NOME_FILE 50
 
-
 void avviareMenuCaricaPartita();
 void stampareTitoloCaricaPartita();
 

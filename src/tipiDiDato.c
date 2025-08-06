@@ -84,12 +84,7 @@ int leggereModalitaPartita(Partita partita) {
 }
 
 void scrivereModalitaPartita(Partita *partita, int valore) {
-  Impostazioni imp;
-
-  //qui utilizziamo imp come appoggio, 
-  //perche' abbiamo bisogno di passarlo come puntatore
-  imp = leggereImpPartita(*partita);
-  scrivereModalitaImpostazioni(&imp, valore);
+  scrivereModalitaImpostazioni(&(partita->impPartita), valore);
 }
 
 Scacchiera leggereScacchieraPartita(Partita *partita) {
@@ -141,6 +136,10 @@ void cambiareTurnoGiocatore(Partita *partita) {
   } else {
     partita->turnoGiocatore = NERO;
   }
+}
+
+void scrivereTurnoGiocatore(Partita *partita, int turno) {
+  partita->turnoGiocatore = turno;
 }
 
 void inizializzareScacchieraPartita(Partita *partita, int dim) {

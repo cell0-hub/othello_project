@@ -48,6 +48,7 @@ int leggereModalitaImpostazioni(Impostazioni imp);
 int leggereDimScacchieraImp(Impostazioni imp);
 void scrivereModalitaImpostazioni(Impostazioni *imp, int valore);
 void scrivereDimScacchieraImp(Impostazioni *imp, int valore);
+Impostazioni* inizializzareImpostazioni(int modalita, int dimensione);
 
 int leggereStatoCella(Cella cella);
 void scrivereStatoCella(Cella *cella, int nuovoStato);

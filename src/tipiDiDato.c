@@ -183,3 +183,13 @@ void scrivereModalitaImpostazioni(Impostazioni *imp, int valore) {
 void scrivereDimScacchieraImp(Impostazioni *imp, int valore) {
   imp->dimScacchiera = valore;
 }
+
+Impostazioni* inizializzareImpostazioni(int modalita, int dimensione) {
+    Impostazioni *imp;
+    imp = (Impostazioni*)malloc(sizeof(Impostazioni));
+    
+    imp->modalitaPartita = modalita;
+    imp->dimScacchiera = dimensione;
+    
+    return imp;
+}

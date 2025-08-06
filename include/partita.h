@@ -15,9 +15,9 @@
 #define COLONNA_ERRORE 27
 
 // Funzioni principali del gioco
-void avviarePartita();
+void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita);
 void avviarePartitaContinuata(Partita *partita);
-void avviarePartitaBot(char nomePartita[50], int modalita, int dimensione, int coloreGiocatore);
+void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, int coloreGiocatore);
 void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore);
   
 
@@ -36,7 +36,7 @@ void stampareRigheScacchiera(Scacchiera scacchiera);
 void stampareRigaScacchiera(Scacchiera scacchiera, int riga);
 
 // Funzioni di utilità per dimensioni e difficoltà
-void convertireDimensione(int *dimensione);
+int convertireDimensione(int dimensione);
 
 // Funzioni di validazione
 int collezionareInput(int *input, int rigaTerminale);
@@ -55,14 +55,8 @@ void stampareScacchieraOthello(Partita *partita);
 int contarePedine(Partita *partita, int giocatore);
 void stampareConteggioPedine(Partita *partita, int turnoCorrente);
 void stampareVittoria(int neriTotali, int bianchiTotali);
-void avviarePartita(char nomePartita[50], int modalita, int dimensione);
 
 
-//Funzioni di accesso tipo di dato impostazioni
-int leggereModalitaImpostazioni(Impostazioni imp);
-int leggereDimScacchieraImp(Impostazioni imp);
-void scrivereModalitaImpostazioni(Impostazioni *imp, int valore);
-void scrivereDimScacchieraImp(Impostazioni *imp, int valore);
 #endif // PARTITA_H
 
 

@@ -20,6 +20,7 @@ Scopo delle funzioni presenti:
 #include "../include/funzioniUtilita.h"
 #include "../include/impostazioni.h"
 #include "../include/partita.h"
+#include "../include/costanti.h"
 
 #include <stdio.h>
 
@@ -67,12 +68,15 @@ void stampareMenuImpostazioni() {
   spostareCursore(OPZIONE_START_RIGA - 2, OPZIONE_COLONNA - 7);
   printf("-Scegliere la Modalita-");
 
-  spostareCursore(OPZIONE_START_RIGA, OPZIONE_COLONNA - 2);
+  spostareCursore(OPZIONE_START_RIGA, OPZIONE_COLONNA - 3);
   printf("[1] vs amico");
   
-  spostareCursore(OPZIONE_START_RIGA + 1, OPZIONE_COLONNA - 2);
-  printf("[2] vs computer");
+  spostareCursore(OPZIONE_START_RIGA + 1, OPZIONE_COLONNA - 3);
+  printf("[2] NERO vs bot ");
   
+  spostareCursore(OPZIONE_START_RIGA + 2, OPZIONE_COLONNA - 3);
+  printf("[3] BIANCO vs bot ");
+
   spostareCursore(OPZIONE_START_RIGA + 6, OPZIONE_COLONNA - 7);
   printf("-Scegliere la Dimensione-");
 
@@ -98,6 +102,7 @@ void avviareImpostazioni() {
   char nomePartita[NOME_MAX];
   int modalita;
   int dimensione;
+  Impostazioni *impostazioniPartita;
 
   stampareMenuImpostazioni();
 
@@ -105,12 +110,16 @@ void avviareImpostazioni() {
   dimensione = collezionareDimensione();
   collezionareNomePartita(nomePartita);
 
-  convertireDimensione(&dimensione);
+  dimensione = convertireDimensione(dimensione);
+  impostazioniPartita = inizializzareImpostazioni(modalita, dimensione);
+
 
   if(modalita == 1){
-    avviarePartita(nomePartita, modalita, dimensione);
+    avviarePartita(nomePartita, impostazioniPartita);
+  } else if(modalita == 2) {
+    avviarePartitaBot(nomePartita, impostazioniPartita, NERO);
   } else {
-    avviarePartitaBot(nomePartita, modalita, dimensione, 1);
+    avviarePartitaBot(nomePartita, impostazioniPartita, BIANCO);
   }
 }
 
@@ -135,10 +144,10 @@ int collezionareModalita() {
       reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
     }
     pulireBuffer();
-    if(inputModalita >= OPZIONE_MIN && inputModalita <= OPZIONE_MAX - 1) {
+    if(inputModalita >= OPZIONE_MIN && inputModalita <= OPZIONE_MAX) {
       inMenuModalita = FALSO;  
     } else {
-      mostrareMessaggioErrore("Digita un numero tra (1 - 4)", ERR_MSG_RIGA - 6, ERR_MSG_COLONNA - 5);
+      mostrareMessaggioErrore("Digita un numero tra (1 - 3)", ERR_MSG_RIGA - 6, ERR_MSG_COLONNA - 5);
       reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
     }
   }

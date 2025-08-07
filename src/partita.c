@@ -643,19 +643,23 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
 
   modalita   = leggereModalitaImpostazioni(*impostazioniPartita);
   dimensione = leggereDimScacchieraImp(*impostazioniPartita);
+  printf("modalita: %d", modalita);
+  printf("dimensione: %d", dimensione);
 
   scrivereNomePartita(&partitaCorrente, nomePartita);
-  scrivereModalitaPartita(&partitaCorrente, modalita);
+  scrivereModalitaPartita(&partitaCorrente, leggereModalitaImpostazioni(*impostazioniPartita));
   scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
-  inizializzareScacchieraPartita(&partitaCorrente, dimensione);
+  inizializzareScacchieraPartita(&partitaCorrente, dimensione);  finePartita   = FALSO;
 
-  finePartita   = FALSO;
   metaDimensione = dimensione / 2;
   // setup iniziale
   scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
   scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
   scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione,     metaDimensione - 1);
   scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione,       metaDimensione);
+  printf("\n altre impostazioni: %d",partitaCorrente.impPartita.dimScacchiera);
+  printf("altre modalita: %d", partitaCorrente.impPartita.modalitaPartita);
+
 
   while (!finePartita) {
     pulireSchermo();

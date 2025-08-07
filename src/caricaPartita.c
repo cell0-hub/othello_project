@@ -271,7 +271,6 @@ void avviareMenuCaricaPartita() {
   char percorso[256];
   Partita partita;
   char nome[128];
-  int turnoCaricato;
 
   pulireSchermo();
   stampareTitoloCaricaPartita();

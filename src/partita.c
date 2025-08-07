@@ -489,7 +489,7 @@ void avviarePartitaContinuata(Partita *partita) {
     stampareScacchiera(partita);
     stampareTabellaInput();
 
-    spostareCursore(RIGA_INPUT - 18, COLONNA_INPUT);
+    spostareCursore(RIGA_INPUT - 15, COLONNA_INPUT);
     printf(">> ");
 
     azioneInput = 0;
@@ -505,8 +505,8 @@ void avviarePartitaContinuata(Partita *partita) {
     }
 
     if (azioneInput == 1) {
-      collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
-      collezionareInput(&colInput, RIGA_INPUT_COL);
+      collezionareInput(&rigaInput, RIGA_INPUT_RIGA - 4);
+      collezionareInput(&colInput, RIGA_INPUT_COL + 2);
 
       rigaInput = rigaInput - 1;
       colInput = colInput - 1;
@@ -787,7 +787,7 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
 
     // Turno del giocatore umano
     if (turnoGiocatore == coloreGiocatore) {
-      spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
+      spostareCursore(RIGA_INPUT - 12, COLONNA_INPUT);
       printf(">> ");
 
       azioneInput = 0;
@@ -804,8 +804,8 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
         return;
       }
       else if (azioneInput == 1) {
-        collezionareInput(&rigaInput, RIGA_INPUT_RIGA + 2);
-        collezionareInput(&colInput, RIGA_INPUT_COL);
+        collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
+        collezionareInput(&colInput, RIGA_INPUT_COL + 2);
 
         rigaInput = rigaInput - 1;
         colInput = colInput - 1;

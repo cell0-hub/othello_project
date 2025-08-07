@@ -791,7 +791,7 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
 
     // Turno del giocatore umano
     if (turnoGiocatore == coloreGiocatore) {
-      spostareCursore(RIGA_INPUT - 12, COLONNA_INPUT);
+      spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
       printf(">> ");
 
       azioneInput = 0;

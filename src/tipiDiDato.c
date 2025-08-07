@@ -110,6 +110,7 @@ void scrivereImpostazioniPartita(Partita *partita, Impostazioni imp) {
 }
 
 void scrivereDimScacchieraPartita(Partita *partita, int valore) {
+  partita->scacchieraPartita.dimScacchiera = valore;
   partita->impPartita.dimScacchiera = valore;
 }
 

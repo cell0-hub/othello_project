@@ -157,14 +157,11 @@ void tornareHomepage(int *input, int posRiga, int posColonna){
 }
 
 void pulireSchermo() {
-#ifdef _WIN32
-    system("cls");
-#else
     printf("\033[2J");    
     printf("\033[H");     
     fflush(stdout);
-#endif
 }
+
 int lunghezza(const char stringa[]) {
     int lunghezza = 0;
     while (stringa[lunghezza] != '\0') {

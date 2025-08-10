@@ -22,8 +22,8 @@ Scopo di ogni funzione presente:
 #include "../include/funzioniUtilita.h"
 #include "../include/impostazioni.h"
 #include "../include/caricaPartita.h"
+#include "../include/costanti.h"
 
-#define LARGHEZZA_TERMINALE 80
 
 #define TITOLO_RIGA 10
 #define TITOLO_COLONNA 36  
@@ -43,11 +43,7 @@ Scopo di ogni funzione presente:
 #define OPZIONE_MIN 1
 #define OPZIONE_MAX 4
 
-#define VERO 1
-#define FALSO 0
 
-#define VERDE "\033[32m"
-#define RESET "\033[0m"
 
 /********************************************************
 * FUNZIONE: stampareMenuPrincipale                      *

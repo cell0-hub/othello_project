@@ -23,11 +23,6 @@ AUTORI: Onofrio de Robertis
 #define COLONNA_INPUT     67
 #define COLONNA_ERRORE    27
 
-#define NORD -1
-#define OVEST -1
-#define SUD 1
-#define EST 1
-#define CENTRO 0
 
 void stampareTitoloPartita(){
   pulireSchermo();
@@ -584,8 +579,7 @@ void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
   int bianchiTotali = contarePedineGiocatore(partita, BIANCO);
   char* nomeGiocatoreCorrente = (turnoCorrente == NERO) ? "NERO" : "BIANCO";
 
-  // Posiziona il conteggio in alto a destra
-  spostareCursore(RIGA_ERRORE-1, COLONNA_ERRORE-8);
+  spostareCursore(RIGA_ERRORE - 1, COLONNA_ERRORE - 8);
   printf(" Nere:  %2d    ", neriTotali);
   printf(" Bianche: %2d  ", bianchiTotali);
   printf(" Turno: %s     ", nomeGiocatoreCorrente);

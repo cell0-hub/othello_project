@@ -1,7 +1,6 @@
 #ifndef CARICAPARTITA_H 
 #define CARICAPARTITA_H
 
-#include "../include/funzioniUtilita.h"
 #include "../include/tipiDiDato.h"
 
 

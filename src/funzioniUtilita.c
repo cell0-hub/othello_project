@@ -14,11 +14,8 @@ spostareCursore() -> funzione utilizzata per spostare la posizione del cursore n
 */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include "../include/homepage.h"
-
-#define VERO 1
-#define FALSO 0
+#include "../include/costanti.h"
 
 #define LARGHEZZA_TERMINALE 80
 #define ALTEZZA_TERMINALE 25

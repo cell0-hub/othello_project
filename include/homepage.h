@@ -3,7 +3,7 @@
 
 #include "../include/funzioniUtilita.h"
 
-void collezionareInputHomepage(); /* recupera un input da terminale inserito dall'utente */
+void collezionareInputHomepage(); 
 void stampareMenuPrincipale();
 void avviareMenuPrincipale();
 

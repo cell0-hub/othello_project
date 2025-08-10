@@ -117,9 +117,7 @@ int contareNumeroPartiteSalvate() {
 
   cartella = opendir("database");
   conteggio = 0;
-  if (!cartella) {
-    return 0;
-  }
+
   voce = leggereProssimaVoce(cartella);
   while (voce != NULL && conteggio < MAX_PARTITE) {
     nomeFile = ottenereNomeFile(voce);
@@ -293,8 +291,8 @@ void avviareMenuCaricaPartita() {
 
   if (input == 0) {
     liberareNomiPartite(nomiPartite, numeroPartite);
+    cursorePartite = numeroPartite; //terminiamo il ciclo...
     avviareMenuPrincipale(); 
-    return;
   } else if (input > 0 && input <= numeroPartite) {
     snprintf(percorso, sizeof(percorso), "database/%s", nomiPartite[input-1]);
     caricarePartita(&partita, percorso);

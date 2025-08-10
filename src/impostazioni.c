@@ -24,9 +24,6 @@ Scopo delle funzioni presenti:
 
 #include <stdio.h>
 
-#define  DIFFICOLTA_FACILE  1
-#define  DIFFICOLTA_INTERMEDIA  2 
-#define  DIFFICOLTA_DIFFICILE  3
 
 #define OPZIONE_START_RIGA 11
 #define OPZIONE_COLONNA 16
@@ -43,12 +40,7 @@ Scopo delle funzioni presenti:
 #define OPZIONE_MIN 1
 #define OPZIONE_MAX 3
 
-#define PICCOLA 1
-#define MEDIA 2
-#define GRANDE 3
 
-#define CIANO "\033[36m"
-#define RESET "\033[0m"
 
 /**
  * DESCRIZIONE: Pulisce lo schermo e stampa il titolo e il menu delle impostazioni di difficoltà e dimensione.

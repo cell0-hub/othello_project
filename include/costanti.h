@@ -31,3 +31,11 @@
 
 #endif
 
+#define PICCOLA 1
+#define MEDIA 2
+#define GRANDE 3
+
+#define  DIFFICOLTA_FACILE  1
+#define  DIFFICOLTA_INTERMEDIA  2 
+#define  DIFFICOLTA_DIFFICILE  3
+

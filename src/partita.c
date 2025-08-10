@@ -414,12 +414,7 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
     neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
     bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
 
-    spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
-    printf(">> ");
-
-    azioneInput = 0;
-    scanf("%d", &azioneInput);
-    pulireBuffer();
+    azioneInput = collezionareAzione();
 
     if (azioneInput == 2) {
       salvarePartita(&partitaCorrente);
@@ -427,8 +422,8 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
       avviareMenuPrincipale();
       return;
     } else if (azioneInput == 1) {
-      collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
-      collezionareInput(&colInput, RIGA_INPUT_COL + 2);
+      collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
+      collezionareCoordinata(&colInput, RIGA_INPUT_COL + 2);
 
       rigaInput = rigaInput - 1; 
       colInput = colInput - 1;
@@ -479,12 +474,7 @@ void avviarePartitaContinuata(Partita *partita) {
     stampareTabellaInput();
     stampareConteggioPedine(partita, leggereTurnoGiocatore(partita));
 
-    spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
-    printf(">> ");
-
-    azioneInput = 0;
-    scanf("%d", &azioneInput);
-    pulireBuffer();
+    azioneInput = collezionareAzione();
 
     if (azioneInput == 2) {
       salvarePartita(partita);
@@ -494,8 +484,8 @@ void avviarePartitaContinuata(Partita *partita) {
       return;
     }
     else if (azioneInput == 1) {
-      collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
-      collezionareInput(&colInput, RIGA_INPUT_COL + 2);
+      collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
+      collezionareCoordinata(&colInput, RIGA_INPUT_COL + 2);
 
       rigaInput = rigaInput - 1; 
       colInput = colInput - 1;
@@ -531,7 +521,7 @@ void avviarePartitaContinuata(Partita *partita) {
  *   rigaTerminale: riga del terminale dove posizionare il cursore
  * RITORNO: 1 se input valido, 0 altrimenti
  */
-int collezionareInput(int *input, int rigaTerminale) {
+int collezionareCoordinata(int *input, int rigaTerminale) {
   int inputValido;
   int risultatoInput;
 
@@ -550,6 +540,20 @@ int collezionareInput(int *input, int rigaTerminale) {
   pulireBuffer();
   return risultatoInput;
 }
+
+// da mettere la descrizione... daje roma daje
+int collezionareAzione() {
+    int azioneInput = 0;
+
+    spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
+    printf(">> ");
+
+    scanf("%d", &azioneInput);
+    pulireBuffer();
+
+    return azioneInput;
+}
+
 
 /**
  * DESCRIZIONE: Converte la dimensione simbolica in valore numerico (compatibilità Sudoku).
@@ -628,7 +632,6 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
   int azioneInput, errore;
   int modalita, dimensione;
 
-  partitaCorrente.turnoGiocatore = NERO;
   errore = FALSO;
 
   modalita   = leggereModalitaImpostazioni(*impostazioniPartita);
@@ -669,10 +672,8 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
 
     if (turnoGiocatore == coloreGiocatore) {
       // turno umano
-      spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
-      printf(">> ");
-      scanf("%d", &azioneInput);
-      pulireBuffer();
+
+      azioneInput = collezionareAzione();
 
       if (azioneInput == 2) {
         salvarePartita(&partitaCorrente);
@@ -682,8 +683,8 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
         return;
       }
       else if (azioneInput == 1) {
-        collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
-        collezionareInput(&colInput,   RIGA_INPUT_COL + 2);
+        collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
+        collezionareCoordinata(&colInput,   RIGA_INPUT_COL + 2);
         rigaInput = rigaInput - 1; 
         colInput = colInput - 1;
 
@@ -705,8 +706,6 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
         }
       }
     } else {
-      // turno bot
-      getchar();  // pausa
       if (trovareMossaBot(&partitaCorrente, &rigaBot, &colBot)) {
         eseguireMossaCompleta(&partitaCorrente, rigaBot, colBot, turnoGiocatore);
         cambiareTurnoGiocatore(&partitaCorrente);
@@ -760,12 +759,8 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
     }
 
     if (leggereTurnoGiocatore(partita) == coloreGiocatore) {
-    spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
-      printf(">> ");
 
-      azioneInput = 0;
-      scanf("%d", &azioneInput);
-      pulireBuffer();
+      azioneInput = collezionareAzione();
 
       if (azioneInput == 2) {
         salvarePartita(partita);
@@ -775,8 +770,8 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
         return;
       }
       else if (azioneInput == 1) {
-        collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
-        collezionareInput(&colInput, RIGA_INPUT_COL + 2);
+        collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
+        collezionareCoordinata(&colInput, RIGA_INPUT_COL + 2);
         rigaInput = rigaInput - 1; 
         colInput = colInput - 1;
 

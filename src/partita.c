@@ -13,8 +13,6 @@ AUTORI: Onofrio de Robertis
 #include "../include/homepage.h"
 #include "../include/costanti.h"
 
-#define BLU   "\033[34m"
-#define RESET "\033[0m"
 
 #define RIGA_INPUT_RIGA   15
 #define RIGA_INPUT_COL    16
@@ -608,8 +606,10 @@ int trovareMossaBot(Partita *partita, int *rigaBot, int *colBot) {
     indiceColonna = 0;
     while (indiceColonna < dimensioneScacc && mossaTrovata == 0) {
       if (verificareMossaValida(partita, indiceRiga, indiceColonna) == 1) {
+        //oooo questa va aggiustata pazzo!!!
         *rigaBot = indiceRiga;
         *colBot = indiceColonna;
+        //oooo questa va aggiustata pazzo!!!
         mossaTrovata = 1;
       }
       indiceColonna = indiceColonna + 1;

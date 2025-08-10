@@ -25,7 +25,7 @@ Scopo di ogni funzione presente:
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_PARTITE 13
+// costanti utili per la stampa
 #define RIGA 11
 #define COLONNA 40
 #define TITOLO_RIGA 9
@@ -38,8 +38,6 @@ Scopo di ogni funzione presente:
 #define INPUT_COLONNA 35
 #define ERR_MSG_RIGA 22
 #define ERR_MSG_COLONNA 31
-#define ARANCIONE "\033[38;5;208m"
-#define RESET "\033[0m"
 
 /**
  * DESCRIZIONE: Legge la prossima voce in una cartella.

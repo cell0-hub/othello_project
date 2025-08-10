@@ -437,7 +437,8 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
       collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
       collezionareInput(&colInput, RIGA_INPUT_COL + 2);
 
-      rigaInput--; colInput--;
+      rigaInput = rigaInput - 1; 
+      colInput = colInput - 1;
 
       if (rigaInput >= 0 && rigaInput < dimensione && colInput >= 0 && colInput < dimensione &&
           verificareMossaValida(&partitaCorrente, rigaInput, colInput)) {
@@ -503,7 +504,8 @@ void avviarePartitaContinuata(Partita *partita) {
       collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
       collezionareInput(&colInput, RIGA_INPUT_COL + 2);
 
-      rigaInput--; colInput--;
+      rigaInput = rigaInput - 1; 
+      colInput = colInput - 1;
 
       if (rigaInput >= 0 && rigaInput < dimensioneScacc &&
           colInput >= 0 && colInput < dimensioneScacc &&
@@ -688,7 +690,8 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
       else if (azioneInput == 1) {
         collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
         collezionareInput(&colInput,   RIGA_INPUT_COL + 2);
-        rigaInput--; colInput--;
+        rigaInput = rigaInput - 1; 
+        colInput = colInput - 1;
 
         if (rigaInput >= 0 && rigaInput < dimensione &&
             colInput  >= 0 && colInput  < dimensione &&
@@ -780,7 +783,8 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
       else if (azioneInput == 1) {
         collezionareInput(&rigaInput, RIGA_INPUT_RIGA);
         collezionareInput(&colInput, RIGA_INPUT_COL + 2);
-        rigaInput--; colInput--;
+        rigaInput = rigaInput - 1; 
+        colInput = colInput - 1;
 
         if (rigaInput >= 0 && rigaInput < dimensioneScacc &&
             colInput >= 0 && colInput < dimensioneScacc &&

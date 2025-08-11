@@ -29,8 +29,6 @@
 #define EST 1
 #define CENTRO 0
 
-#endif
-
 #define PICCOLA 1
 #define MEDIA 2
 #define GRANDE 3
@@ -38,4 +36,12 @@
 #define  DIFFICOLTA_FACILE  1
 #define  DIFFICOLTA_INTERMEDIA  2 
 #define  DIFFICOLTA_DIFFICILE  3
+
+#define GIOCA 1
+#define SALVA 2
+#define ESCI 3
+
+
+#endif
+
 

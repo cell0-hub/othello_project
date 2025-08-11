@@ -16,14 +16,8 @@
 
 // Funzioni principali del gioco
 
-void avviarePartitaUnificata(char nomePartita[50], Impostazioni *impostazioniPartita, 
+void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita, 
                             Partita *partitaEsistente, int modalitaBot, int coloreGiocatore) ;
-void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita);
-void avviarePartitaContinuata(Partita *partita);
-void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, int coloreGiocatore);
-void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore);
-  
-
 // Funzioni di visualizzazione
 void mostraSchermo(int dimensione);
 void stampareTitoloPartita();

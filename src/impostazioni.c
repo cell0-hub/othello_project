@@ -98,29 +98,24 @@ void configurareNuovaPartita() {
   stampareMenuImpostazioni();
 
   modalita = collezionareModalita();
-  printf("%d", modalita);
   dimensione = collezionareDimensione();
-  printf("%d", dimensione);
   collezionareNomePartita(nomePartita);
 
   dimensione = convertireDimensione(dimensione);
   impostazioniPartita = inizializzareImpostazioni(modalita, dimensione);
-  printf("%d", impostazioniPartita->modalitaPartita);
-  printf("%d", impostazioniPartita->dimScacchiera);
-  getchar();
 
   if (modalita == 1) {
     modalitaBot = FALSO;
-    coloreGiocatore = 0; // Non usato in modalità PvP
+    coloreGiocatore = 0;  
   } else {
     modalitaBot = VERO;
     if (modalita == 2) {
-      coloreGiocatore = NERO; // Giocatore umano è NERO
+      coloreGiocatore = NERO; 
     } else {
-      coloreGiocatore = BIANCO; // Giocatore umano è BIANCO
+      coloreGiocatore = BIANCO; 
     }
   }
-  avviarePartitaUnificata(nomePartita, impostazioniPartita, NULL, modalitaBot, coloreGiocatore);
+  avviarePartita(nomePartita, impostazioniPartita, NULL, modalitaBot, coloreGiocatore);
 }
 
 /**

@@ -156,7 +156,7 @@ void stampareTitoloCaricaPartita() {
 }
 
 /**
- * DESCRIZIONE: Estrae il nome "umano" da un file partita (toglie prefisso e suffisso).
+ * DESCRIZIONE: Estrae il nome da un file partita (toglie prefisso e suffisso).
  * ARGOMENTI: nomeFile: nome file, nome: buffer di output
  * RITORNO: nessuno
  */
@@ -194,9 +194,9 @@ void salvarePartita(Partita *partita) {
   file = fopen(percorso, "w");
 
   // Salva le informazioni della partita
-  fprintf(file, "%d\n", dimensione);           // Prima riga: dimensione
-  fprintf(file, "%d\n", leggereModalitaImpostazioni(leggereImpPartita(*partita)));    // Seconda riga: modalità (1=vs umano, 2=vs bot)
-  fprintf(file, "%d\n", turnoCorrente);        // Terza riga: turno corrente (1=NERO, 2=BIANCO)
+  fprintf(file, "%d\n", dimensione);
+  fprintf(file, "%d\n", leggereModalitaImpostazioni(leggereImpPartita(*partita)));
+  fprintf(file, "%d\n", turnoCorrente);
 
   // Salva la scacchiera
   riga = 0;
@@ -267,6 +267,7 @@ void avviareMenuCaricaPartita() {
   char percorso[256];
   Partita partita;
   char nome[128];
+  int coloreGiocatore;
 
   pulireSchermo();
   stampareTitoloCaricaPartita();
@@ -301,13 +302,13 @@ void avviareMenuCaricaPartita() {
     liberareNomiPartite(nomiPartite, numeroPartite);
 
     if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 1) {
-      avviarePartitaContinuata(&partita);
+      avviarePartita(NULL, NULL, &partita, 0, 0);
     } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 2) {
-      int coloreGiocatore = leggereTurnoGiocatore(&partita); 
-      avviarePartitaContinuataBot(&partita, coloreGiocatore);
+      coloreGiocatore = leggereTurnoGiocatore(&partita); 
+      avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
     } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 3) {
-      int coloreGiocatore = leggereTurnoGiocatore(&partita); 
-      avviarePartitaContinuataBot(&partita, coloreGiocatore);
+      coloreGiocatore = leggereTurnoGiocatore(&partita); 
+      avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
     }
   } else {
     liberareNomiPartite(nomiPartite, numeroPartite);

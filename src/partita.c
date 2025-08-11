@@ -393,16 +393,13 @@ void avviarePartitaUnificata(char nomePartita[50], Impostazioni *impostazioniPar
   if (partitaNuova) {
     // Nuova partita
     dimensione = leggereDimScacchieraImp(*impostazioniPartita);
-    printf("dimensioen : %d\n", dimensione);
+    printf("dimensioen : %d", dimensione);
     
     inizializzareScacchieraPartita(partitaAttiva, dimensione);
     scrivereNomePartita(partitaAttiva, nomePartita);
     scrivereModalitaPartita(partitaAttiva, leggereModalitaImpostazioni(*impostazioniPartita));
     scrivereTurnoGiocatore(partitaAttiva, NERO);
     scrivereDimScacchieraPartita(partitaAttiva, dimensione);
-    printf("dimmi :%d\n", partitaAttiva->impPartita.dimScacchiera);
-    printf( "%d", partitaAttiva->impPartita.modalitaPartita);
-    getchar();
     
     // Setup iniziale pedine
     metaDimensione = dimensione / 2;

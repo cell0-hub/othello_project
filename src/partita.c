@@ -383,6 +383,7 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
 
   scrivereNomePartita(&partitaCorrente, nomePartita);
   scrivereModalitaPartita(&partitaCorrente, leggereModalitaImpostazioni(*impostazioniPartita));
+  scrivereTurnoGiocatore(&partitaCorrente, NERO);
   scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
   inizializzareScacchieraPartita(&partitaCorrente, dimensione);
 
@@ -596,32 +597,30 @@ void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
  *   colBot: puntatore dove salvare la colonna della mossa
  * RITORNO: 1 se trova una mossa, 0 altrimenti
  */
-int trovareMossaBot(Partita *partita, int *rigaBot, int *colBot) {
+int trovareMossaBot(Partita *partita) {
   int dimensioneScacc;
   int indiceRiga;
   int indiceColonna;
+  int risultato;
   int mossaTrovata;
 
   dimensioneScacc = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  mossaTrovata = 0;
+  risultato = 0;
+  mossaTrovata = FALSO;
 
   indiceRiga = 0;
-  while (indiceRiga < dimensioneScacc && mossaTrovata == 0) {
+  while (indiceRiga < dimensioneScacc && mossaTrovata == FALSO) {
     indiceColonna = 0;
-    while (indiceColonna < dimensioneScacc && mossaTrovata == 0) {
+    while (indiceColonna < dimensioneScacc && mossaTrovata == FALSO) {
       if (verificareMossaValida(partita, indiceRiga, indiceColonna) == 1) {
-        //oooo questa va aggiustata pazzo!!!
-        *rigaBot = indiceRiga;
-        *colBot = indiceColonna;
-        //oooo questa va aggiustata pazzo!!!
-        mossaTrovata = 1;
+        risultato = indiceRiga * dimensioneScacc + indiceColonna;
+        mossaTrovata = VERO;
       }
       indiceColonna = indiceColonna + 1;
     }
     indiceRiga = indiceRiga + 1;
   }
-
-  return mossaTrovata;
+  return risultato;
 }
 
 void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, int coloreGiocatore) {
@@ -640,6 +639,7 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
   scrivereNomePartita(&partitaCorrente, nomePartita);
   scrivereModalitaPartita(&partitaCorrente, modalita);
   scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
+  scrivereTurnoGiocatore(&partitaCorrente, NERO);
   inizializzareScacchieraPartita(&partitaCorrente, dimensione);
 
   finePartita   = FALSO;
@@ -706,7 +706,9 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
         }
       }
     } else {
-      if (trovareMossaBot(&partitaCorrente, &rigaBot, &colBot)) {
+      if (trovareMossaBot(&partitaCorrente)) {
+        rigaBot = trovareMossaBot(&partitaCorrente) / dimensione;
+        colBot = trovareMossaBot(&partitaCorrente) % dimensione;
         eseguireMossaCompleta(&partitaCorrente, rigaBot, colBot, turnoGiocatore);
         cambiareTurnoGiocatore(&partitaCorrente);
 
@@ -797,7 +799,9 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
       printf("\nIl bot sta pensando... Premi INVIO per continuare");
       getchar();
       
-      if (trovareMossaBot(partita, &rigaBot, &colBot)) {
+      if (trovareMossaBot(partita) != 0) {
+        rigaBot = trovareMossaBot(partita) / dimensioneScacc;
+        colBot = trovareMossaBot(partita) % dimensioneScacc;
         eseguireMossaCompleta(partita, rigaBot, colBot, leggereTurnoGiocatore(partita));
         cambiareTurnoGiocatore(partita);
 

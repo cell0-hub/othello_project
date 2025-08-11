@@ -355,14 +355,7 @@ int verificareNessunaMossa(Partita *partita) {
   return risultatoFinale;
 }
 
-/**
- * DESCRIZIONE: Controlla se non ci sono mosse possibili per il giocatore.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   coloreGiocatore: colore del giocatore
- * RITORNO: 1 se nessuna mossa possibile, 0 altrimenti
- */
-/**
+/*
  * DESCRIZIONE: Funzione unificata per gestire tutti i tipi di partita (nuova, continuata, con/senza bot)
  * ARGOMENTI:
  *   nomePartita: nome della partita (può essere NULL per partite continuate)
@@ -479,16 +472,12 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
       // Turno bot
       printf("\nPremi INVIO per continuare");
       getchar();
-      
       mossaBotValida = trovareMossaBot(&partitaAttiva);
-      
       if (mossaBotValida != 0) {
         rigaBot = mossaBotValida / dimensione;
         colBot = mossaBotValida % dimensione;
-        
         eseguireMossaCompleta(&partitaAttiva, rigaBot, colBot, turnoGiocatore);
         cambiareTurnoGiocatore(&partitaAttiva);
-        
         // Verifica fine partita
         if (verificareNessunaMossa(&partitaAttiva)) {
           cambiareTurnoGiocatore(&partitaAttiva);
@@ -505,7 +494,6 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
       }
     }
   }
-  
   // Fine partita: stampa risultato
   neriTotali = contarePedineGiocatore(&partitaAttiva, NERO);
   bianchiTotali = contarePedineGiocatore(&partitaAttiva, BIANCO);
@@ -520,12 +508,12 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
  * RITORNO: dimensione convertita
  */
 int convertireDimensione(int dimensione) {
-  if (dimensione == 1) {
-    return 4;
-  } else if (dimensione == 2) {
-    return 8;
-  } else if (dimensione == 3) {
-    return 16;
+  if (dimensione == PICCOLA) {
+    dimensione = 4;
+  } else if (dimensione == MEDIA) {
+    dimensione = 8;
+  } else if (dimensione == GRANDE) {
+    dimensione = 16;
   }
   return dimensione;
 }

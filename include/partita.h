@@ -39,7 +39,7 @@ void stampareRigaScacchiera(Scacchiera scacchiera, int riga);
 int convertireDimensione(int dimensione);
 
 // Funzioni di validazione
-int collezionareCoordinata(int *input, int rigaTerminale);
+int collezionareCoordinata(int rigaTerminale);
 int collezionareAzione();
 
 // Funzioni di controllo stato partita

@@ -237,9 +237,6 @@ int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio
       colCorrente = colCorrente + deltaColonna;
     }
   }
-  if (pedineDaCapovolgere == 0) {
-    pedineDaCapovolgere = 0;
-  }
 
   return pedineDaCapovolgere;
 }
@@ -387,8 +384,6 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
   scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
   inizializzareScacchieraPartita(&partitaCorrente, dimensione);
 
-  /* Imposta turno iniziale a nero */
-  cambiareTurnoGiocatore(&partitaCorrente);  
   finePartita = 0;
   metaDimensione = dimensione / 2;
 
@@ -423,8 +418,10 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
       avviareMenuPrincipale();
       return;
     } else if (azioneInput == 1) {
-      collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
-      collezionareCoordinata(&colInput, RIGA_INPUT_COL + 2);
+      reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
+      scanf("%d", &rigaInput);
+      reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
+      scanf("%d", &colInput);
 
       rigaInput = rigaInput - 1; 
       colInput = colInput - 1;
@@ -446,7 +443,6 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
     }
   }
 
-  /* Fine partita */
   neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
   bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
   stampareVittoria(neriTotali, bianchiTotali);
@@ -485,8 +481,8 @@ void avviarePartitaContinuata(Partita *partita) {
       return;
     }
     else if (azioneInput == 1) {
-      collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
-      collezionareCoordinata(&colInput, RIGA_INPUT_COL + 2);
+      collezionareCoordinata(RIGA_INPUT_RIGA);
+      collezionareCoordinata(RIGA_INPUT_COL + 2);
 
       rigaInput = rigaInput - 1; 
       colInput = colInput - 1;
@@ -522,16 +518,17 @@ void avviarePartitaContinuata(Partita *partita) {
  *   rigaTerminale: riga del terminale dove posizionare il cursore
  * RITORNO: 1 se input valido, 0 altrimenti
  */
-int collezionareCoordinata(int *input, int rigaTerminale) {
+int collezionareCoordinata(int rigaTerminale) {
   int inputValido;
   int risultatoInput;
+  int input;
 
   inputValido = 0;
   risultatoInput = 1;
 
   while (inputValido == 0) {
     reimpostareZonaInput(rigaTerminale, COLONNA_INPUT);
-    if (scanf("%d", input) == 1) {
+    if (scanf("%d", &input) == 1) {
       inputValido = 1;
     } else {
       pulireBuffer();
@@ -539,7 +536,7 @@ int collezionareCoordinata(int *input, int rigaTerminale) {
     }
   }
   pulireBuffer();
-  return risultatoInput;
+  return input;
 }
 
 // da mettere la descrizione... daje roma daje
@@ -683,8 +680,10 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
         return;
       }
       else if (azioneInput == 1) {
-        collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
-        collezionareCoordinata(&colInput,   RIGA_INPUT_COL + 2);
+        reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
+        scanf("%d", &rigaInput);
+        reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
+        scanf("%d", &colInput);
         rigaInput = rigaInput - 1; 
         colInput = colInput - 1;
 
@@ -772,8 +771,10 @@ void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
         return;
       }
       else if (azioneInput == 1) {
-        collezionareCoordinata(&rigaInput, RIGA_INPUT_RIGA);
-        collezionareCoordinata(&colInput, RIGA_INPUT_COL + 2);
+        reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
+        scanf("%d", &rigaInput);
+        reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
+        scanf("%d", &colInput);
         rigaInput = rigaInput - 1; 
         colInput = colInput - 1;
 

@@ -15,6 +15,9 @@
 #define COLONNA_ERRORE 27
 
 // Funzioni principali del gioco
+
+void avviarePartitaUnificata(char nomePartita[50], Impostazioni *impostazioniPartita, 
+                            Partita *partitaEsistente, int modalitaBot, int coloreGiocatore) ;
 void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita);
 void avviarePartitaContinuata(Partita *partita);
 void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, int coloreGiocatore);
@@ -56,6 +59,7 @@ void stampareScacchieraOthello(Partita *partita);
 int contarePedine(Partita *partita, int giocatore);
 void stampareConteggioPedine(Partita *partita, int turnoCorrente);
 void stampareVittoria(int neriTotali, int bianchiTotali);
+int trovareMossaBot(Partita *partita);
 
 
 #endif // PARTITA_H

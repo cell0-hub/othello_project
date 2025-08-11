@@ -2,6 +2,7 @@
 #define IMPOSTAZIONI_H
 
 #include "../include/funzioniUtilita.h"
+#include "../include/partita.h"
 
 void configurareNuovaPartita();
 int collezionareModalita();

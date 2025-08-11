@@ -362,341 +362,120 @@ int verificareNessunaMossa(Partita *partita) {
  *   coloreGiocatore: colore del giocatore
  * RITORNO: 1 se nessuna mossa possibile, 0 altrimenti
  */
-void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
-  Partita partitaCorrente;
-  int finePartita;
-  int rigaInput;
-  int colInput;
-  int neriTotali;
-  int bianchiTotali;
-  int metaDimensione;
-  int azioneInput;
-  int errore;
-  int dimensione;
-
-  errore = FALSO;
-
-  dimensione = leggereDimScacchieraImp(*impostazioniPartita);
-
-  scrivereNomePartita(&partitaCorrente, nomePartita);
-  scrivereModalitaPartita(&partitaCorrente, leggereModalitaImpostazioni(*impostazioniPartita));
-  scrivereTurnoGiocatore(&partitaCorrente, NERO);
-  scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
-  inizializzareScacchieraPartita(&partitaCorrente, dimensione);
-
-  finePartita = 0;
-  metaDimensione = dimensione / 2;
-
-  /* piazza le pedine iniziali */
-  scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
-  scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
-  scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione, metaDimensione - 1);
-  scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione, metaDimensione);
-
-  while (!finePartita) {
-    pulireSchermo();
-    if (dimensione != 16) {
-      stampareTitoloPartita();
-    }
-    stampareScacchiera(&partitaCorrente);
-    stampareTabellaInput();
-    stampareConteggioPedine(&partitaCorrente, leggereTurnoGiocatore(&partitaCorrente));
-
-    if (errore) {
-      mostrareMessaggioErrore("mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
-      errore = FALSO;
-    }
-
-    neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
-    bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
-
-    azioneInput = collezionareAzione();
-
-    if (azioneInput == 2) {
-      salvarePartita(&partitaCorrente);
-    } else if (azioneInput == 3) {
-      avviareMenuPrincipale();
-      return;
-    } else if (azioneInput == 1) {
-      reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
-      scanf("%d", &rigaInput);
-      reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
-      scanf("%d", &colInput);
-
-      rigaInput = rigaInput - 1; 
-      colInput = colInput - 1;
-
-      if (rigaInput >= 0 && rigaInput < dimensione && colInput >= 0 && colInput < dimensione &&
-          verificareMossaValida(&partitaCorrente, rigaInput, colInput)) {
-        eseguireMossaCompleta(&partitaCorrente, rigaInput, colInput, leggereTurnoGiocatore(&partitaCorrente));
-        cambiareTurnoGiocatore(&partitaCorrente);
-
-        if (verificareNessunaMossa(&partitaCorrente))  {
-          cambiareTurnoGiocatore(&partitaCorrente);
-          if (verificareNessunaMossa(&partitaCorrente)) {
-            finePartita = 1;
-          }
-        }
-      } else {
-        errore = VERO;
-      }
-    }
-  }
-
-  neriTotali = contarePedineGiocatore(&partitaCorrente, NERO);
-  bianchiTotali = contarePedineGiocatore(&partitaCorrente, BIANCO);
-  stampareVittoria(neriTotali, bianchiTotali);
-}
-
-void avviarePartitaContinuata(Partita *partita) {
-  int rigaInput;
-  int colInput;
-  int finePartita;
-  int neriTotali;
-  int bianchiTotali;
-  int dimensioneScacc;
-  int azioneInput;
-
-  dimensioneScacc = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  finePartita = 0;
-
-  while (finePartita == 0) {
-    pulireSchermo();
-
-    if(dimensioneScacc != 16){
-      stampareTitoloPartita();
-    }
-
-    stampareScacchiera(partita);
-    stampareTabellaInput();
-    stampareConteggioPedine(partita, leggereTurnoGiocatore(partita));
-
-    azioneInput = collezionareAzione();
-
-    if (azioneInput == 2) {
-      salvarePartita(partita);
-    }
-    else if (azioneInput == 3) {
-      avviareMenuPrincipale();
-      return;
-    }
-    else if (azioneInput == 1) {
-      collezionareCoordinata(RIGA_INPUT_RIGA);
-      collezionareCoordinata(RIGA_INPUT_COL + 2);
-
-      rigaInput = rigaInput - 1; 
-      colInput = colInput - 1;
-
-      if (rigaInput >= 0 && rigaInput < dimensioneScacc &&
-          colInput >= 0 && colInput < dimensioneScacc &&
-          verificareMossaValida(partita, rigaInput, colInput)) {
-        
-        eseguireMossaCompleta(partita, rigaInput, colInput, leggereTurnoGiocatore(partita));
-        cambiareTurnoGiocatore(partita);
-
-        if (verificareNessunaMossa(partita)) {
-          cambiareTurnoGiocatore(partita);
-          if (verificareNessunaMossa(partita)) {
-            finePartita = 1;
-          }
-        }
-      } else {
-        mostrareMessaggioErrore("Mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
-      }
-    }
-  }
-
-  neriTotali = contarePedineGiocatore(partita, NERO);
-  bianchiTotali = contarePedineGiocatore(partita, BIANCO);
-  stampareVittoria(neriTotali, bianchiTotali);
-}
-
 /**
- * DESCRIZIONE: Colleziona un input numerico da terminale per una scacchiera, con validazione.
+ * DESCRIZIONE: Funzione unificata per gestire tutti i tipi di partita (nuova, continuata, con/senza bot)
  * ARGOMENTI:
- *   input: puntatore a intero dove salvare il valore inserito
- *   rigaTerminale: riga del terminale dove posizionare il cursore
- * RITORNO: 1 se input valido, 0 altrimenti
- */
-int collezionareCoordinata(int rigaTerminale) {
-  int inputValido;
-  int risultatoInput;
-  int input;
-
-  inputValido = 0;
-  risultatoInput = 1;
-
-  while (inputValido == 0) {
-    reimpostareZonaInput(rigaTerminale, COLONNA_INPUT);
-    if (scanf("%d", &input) == 1) {
-      inputValido = 1;
-    } else {
-      pulireBuffer();
-      mostrareMessaggioErrore("Input non valido", rigaTerminale + 2, COLONNA_INPUT);
-    }
-  }
-  pulireBuffer();
-  return input;
-}
-
-// da mettere la descrizione... daje roma daje
-int collezionareAzione() {
-    int azioneInput = 0;
-
-    spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
-    printf(">> ");
-
-    scanf("%d", &azioneInput);
-    pulireBuffer();
-
-    return azioneInput;
-}
-
-
-/**
- * DESCRIZIONE: Converte la dimensione simbolica in valore numerico (compatibilità Sudoku).
- * ARGOMENTI:
- *   dimensione: puntatore alla variabile dimensione
+ *   nomePartita: nome della partita (può essere NULL per partite continuate)
+ *   impostazioniPartita: puntatore alle impostazioni (può essere NULL per partite continuate)
+ *   partitaEsistente: puntatore a partita esistente (NULL per nuove partite)
+ *   modalitaBot: 0=PvP, 1=Bot attivo
+ *   coloreGiocatore: colore del giocatore umano (solo se modalitaBot=1)
  * RITORNO: nessuno
  */
-int convertireDimensione(int dimensione) {
-  if (dimensione == 1) {
-    dimensione = 4;
-  } else {
-    if (dimensione == 2) {
-      dimensione = 8;
-    } else {
-      if (dimensione == 3) {
-        dimensione = 16;
-      }
-    }
-  }
-  return dimensione;
-}
-
-void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
-  int neriTotali = contarePedineGiocatore(partita, NERO);
-  int bianchiTotali = contarePedineGiocatore(partita, BIANCO);
-  char* nomeGiocatoreCorrente = (turnoCorrente == NERO) ? "NERO" : "BIANCO";
-
-  spostareCursore(RIGA_ERRORE - 1, COLONNA_ERRORE - 8);
-  printf(" Nere:  %2d    ", neriTotali);
-  printf(" Bianche: %2d  ", bianchiTotali);
-  printf(" Turno: %s     ", nomeGiocatoreCorrente);
-}
-
-/**
- * DESCRIZIONE: Trova la prima mossa valida per il bot.
- * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   coloreBot: colore del bot (NERO/BIANCO)
- *   rigaBot: puntatore dove salvare la riga della mossa
- *   colBot: puntatore dove salvare la colonna della mossa
- * RITORNO: 1 se trova una mossa, 0 altrimenti
- */
-int trovareMossaBot(Partita *partita) {
-  int dimensioneScacc;
-  int indiceRiga;
-  int indiceColonna;
-  int risultato;
-  int mossaTrovata;
-
-  dimensioneScacc = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  risultato = 0;
-  mossaTrovata = FALSO;
-
-  indiceRiga = 0;
-  while (indiceRiga < dimensioneScacc && mossaTrovata == FALSO) {
-    indiceColonna = 0;
-    while (indiceColonna < dimensioneScacc && mossaTrovata == FALSO) {
-      if (verificareMossaValida(partita, indiceRiga, indiceColonna) == 1) {
-        risultato = indiceRiga * dimensioneScacc + indiceColonna;
-        mossaTrovata = VERO;
-      }
-      indiceColonna = indiceColonna + 1;
-    }
-    indiceRiga = indiceRiga + 1;
-  }
-  return risultato;
-}
-
-void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, int coloreGiocatore) {
-  Partita partitaCorrente;
+void avviarePartitaUnificata(char nomePartita[50], Impostazioni *impostazioniPartita, 
+                            Partita *partitaEsistente, int modalitaBot, int coloreGiocatore) {
+  Partita *partitaAttiva;
   int finePartita;
   int rigaInput, colInput, rigaBot, colBot;
   int neriTotali, bianchiTotali, metaDimensione;
   int azioneInput, errore;
-  int modalita, dimensione;
-
+  int dimensione;
+  int turnoGiocatore;
+  int mossaBotValida;
+  int partitaNuova;
+  
+  // Inizializzazione variabili
   errore = FALSO;
-
-  modalita   = leggereModalitaImpostazioni(*impostazioniPartita);
-  dimensione = leggereDimScacchieraImp(*impostazioniPartita);
-
-  scrivereNomePartita(&partitaCorrente, nomePartita);
-  scrivereModalitaPartita(&partitaCorrente, modalita);
-  scrivereDimScacchieraPartita(&partitaCorrente, dimensione);
-  scrivereTurnoGiocatore(&partitaCorrente, NERO);
-  inizializzareScacchieraPartita(&partitaCorrente, dimensione);
-
-  finePartita   = FALSO;
-  metaDimensione = dimensione / 2;
-  // setup iniziale
-  scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione - 1, metaDimensione - 1);
-  scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione - 1, metaDimensione);
-  scrivereCellaPartita(&partitaCorrente, BIANCO, metaDimensione,     metaDimensione - 1);
-  scrivereCellaPartita(&partitaCorrente, NERO, metaDimensione,       metaDimensione);
-
+  finePartita = FALSO;
+  partitaNuova = (partitaEsistente == NULL);
+  
+  // Configurazione partita
+  if (partitaNuova) {
+    // Nuova partita
+    dimensione = leggereDimScacchieraImp(*impostazioniPartita);
+    printf("dimensioen : %d\n", dimensione);
+    
+    inizializzareScacchieraPartita(partitaAttiva, dimensione);
+    scrivereNomePartita(partitaAttiva, nomePartita);
+    scrivereModalitaPartita(partitaAttiva, leggereModalitaImpostazioni(*impostazioniPartita));
+    scrivereTurnoGiocatore(partitaAttiva, NERO);
+    scrivereDimScacchieraPartita(partitaAttiva, dimensione);
+    printf("dimmi :%d\n", partitaAttiva->impPartita.dimScacchiera);
+    printf( "%d", partitaAttiva->impPartita.modalitaPartita);
+    getchar();
+    
+    // Setup iniziale pedine
+    metaDimensione = dimensione / 2;
+    scrivereCellaPartita(partitaAttiva, NERO, metaDimensione - 1, metaDimensione - 1);
+    scrivereCellaPartita(partitaAttiva, BIANCO, metaDimensione - 1, metaDimensione);
+    scrivereCellaPartita(partitaAttiva, BIANCO, metaDimensione, metaDimensione - 1);
+    scrivereCellaPartita(partitaAttiva, NERO, metaDimensione, metaDimensione);
+  } else {
+    // Partita continuata
+    partitaAttiva = partitaEsistente;
+    dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
+  }
+  
+  // Loop principale di gioco
   while (!finePartita) {
     pulireSchermo();
+    
+    // Stampa interfaccia
     if (dimensione != 16) {
       stampareTitoloPartita();
     }
-    stampareScacchiera(&partitaCorrente);
-    stampareConteggioPedine(&partitaCorrente, 
-      leggereTurnoGiocatore(&partitaCorrente));
+    stampareScacchiera(partitaAttiva);
     stampareTabellaInput();
-
+    stampareConteggioPedine(partitaAttiva, leggereTurnoGiocatore(partitaAttiva));
+    
     if (errore) {
       mostrareMessaggioErrore("mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
       errore = FALSO;
     }
-
-    neriTotali   = contarePedineGiocatore(&partitaCorrente, NERO);
-    bianchiTotali= contarePedineGiocatore(&partitaCorrente, BIANCO);
-
-    int turnoGiocatore = leggereTurnoGiocatore(&partitaCorrente);
-
-    if (turnoGiocatore == coloreGiocatore) {
-      // turno umano
-
+    
+    turnoGiocatore = leggereTurnoGiocatore(partitaAttiva);
+    
+    // Gestione turno
+    if (!modalitaBot || turnoGiocatore == coloreGiocatore) {
+      // Turno giocatore umano (o modalità PvP)
       azioneInput = collezionareAzione();
-
+      
       if (azioneInput == 2) {
-        salvarePartita(&partitaCorrente);
-      }
+        salvarePartita(partitaAttiva);
+      } 
       else if (azioneInput == 3) {
         avviareMenuPrincipale();
         return;
-      }
+      } 
       else if (azioneInput == 1) {
-        reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
-        scanf("%d", &rigaInput);
-        reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
-        scanf("%d", &colInput);
-        rigaInput = rigaInput - 1; 
+        // Input mossa
+        if (partitaNuova) {
+          // Usa scanf per nuove partite (compatibilità originale)
+          reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
+          scanf("%d", &rigaInput);
+          reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
+          scanf("%d", &colInput);
+        } else {
+          // Usa collezionareCoordinata per partite continuate
+          rigaInput = collezionareCoordinata(RIGA_INPUT_RIGA);
+          colInput = collezionareCoordinata(RIGA_INPUT_RIGA + 3);
+        }
+        
+        rigaInput = rigaInput - 1;
         colInput = colInput - 1;
-
-        if (rigaInput >= 0 && rigaInput < dimensione &&
-            colInput  >= 0 && colInput  < dimensione &&
-            verificareMossaValida(&partitaCorrente, rigaInput, colInput)) {
-          eseguireMossaCompleta(&partitaCorrente, rigaInput, colInput, turnoGiocatore);
-          cambiareTurnoGiocatore(&partitaCorrente);
-
-          // verifica se il prossimo non ha mosse
-          if (verificareNessunaMossa(&partitaCorrente)) {
-            cambiareTurnoGiocatore(&partitaCorrente);
-            if (verificareNessunaMossa(&partitaCorrente)) {
+        
+        // Validazione e esecuzione mossa
+        if (rigaInput >= 0 && rigaInput < dimensione && 
+            colInput >= 0 && colInput < dimensione &&
+            verificareMossaValida(partitaAttiva, rigaInput, colInput)) {
+          
+          eseguireMossaCompleta(partitaAttiva, rigaInput, colInput, turnoGiocatore);
+          cambiareTurnoGiocatore(partitaAttiva);
+          
+          // Verifica fine partita
+          if (verificareNessunaMossa(partitaAttiva)) {
+            cambiareTurnoGiocatore(partitaAttiva);
+            if (verificareNessunaMossa(partitaAttiva)) {
               finePartita = VERO;
             }
           }
@@ -705,124 +484,176 @@ void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, 
         }
       }
     } else {
-      if (trovareMossaBot(&partitaCorrente)) {
-        rigaBot = trovareMossaBot(&partitaCorrente) / dimensione;
-        colBot = trovareMossaBot(&partitaCorrente) % dimensione;
-        eseguireMossaCompleta(&partitaCorrente, rigaBot, colBot, turnoGiocatore);
-        cambiareTurnoGiocatore(&partitaCorrente);
-
-        if (verificareNessunaMossa(&partitaCorrente)) {
-          cambiareTurnoGiocatore(&partitaCorrente);
-          if (verificareNessunaMossa(&partitaCorrente)) {
+      // Turno bot
+      if (!partitaNuova) {
+        printf("\nIl bot sta pensando... Premi INVIO per continuare");
+        getchar();
+      }
+      
+      mossaBotValida = trovareMossaBot(partitaAttiva);
+      
+      if (mossaBotValida != 0) {
+        rigaBot = mossaBotValida / dimensione;
+        colBot = mossaBotValida % dimensione;
+        
+        eseguireMossaCompleta(partitaAttiva, rigaBot, colBot, turnoGiocatore);
+        cambiareTurnoGiocatore(partitaAttiva);
+        
+        // Verifica fine partita
+        if (verificareNessunaMossa(partitaAttiva)) {
+          cambiareTurnoGiocatore(partitaAttiva);
+          if (verificareNessunaMossa(partitaAttiva)) {
             finePartita = VERO;
           }
         }
       } else {
-        // bot passa
-        cambiareTurnoGiocatore(&partitaCorrente);
-        if (verificareNessunaMossa(&partitaCorrente)) {
+        // Bot passa turno
+        cambiareTurnoGiocatore(partitaAttiva);
+        if (verificareNessunaMossa(partitaAttiva)) {
           finePartita = VERO;
         }
       }
     }
   }
-
-  // fine partita: stampa il risultato
-  neriTotali   = contarePedineGiocatore(&partitaCorrente, NERO);
-  bianchiTotali= contarePedineGiocatore(&partitaCorrente, BIANCO);
+  
+  // Fine partita: stampa risultato
+  neriTotali = contarePedineGiocatore(partitaAttiva, NERO);
+  bianchiTotali = contarePedineGiocatore(partitaAttiva, BIANCO);
   stampareVittoria(neriTotali, bianchiTotali);
 }
 
+/**
+ * DESCRIZIONE: Wrapper per nuova partita PvP
+ */
+void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita) {
+  avviarePartitaUnificata(nomePartita, impostazioniPartita, NULL, 0, 0);
+}
+
+/**
+ * DESCRIZIONE: Wrapper per partita continuata PvP
+ */
+void avviarePartitaContinuata(Partita *partita) {
+  avviarePartitaUnificata(NULL, NULL, partita, 0, 0);
+}
+
+/**
+ * DESCRIZIONE: Wrapper per nuova partita con bot
+ */
+void avviarePartitaBot(char nomePartita[50], Impostazioni *impostazioniPartita, int coloreGiocatore) {
+  avviarePartitaUnificata(nomePartita, impostazioniPartita, NULL, 1, coloreGiocatore);
+}
+
+/**
+ * DESCRIZIONE: Wrapper per partita continuata con bot
+ */
 void avviarePartitaContinuataBot(Partita *partita, int coloreGiocatore) {
-  int rigaInput, colInput, rigaBot, colBot;
-  int finePartita;
-  int neriTotali, bianchiTotali;
-  int dimensioneScacc;
-  int azioneInput;
-  int errore = FALSO;
+  avviarePartitaUnificata(NULL, NULL, partita, 1, coloreGiocatore);
+}
 
-  dimensioneScacc = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  finePartita = 0;
-
-  while (!finePartita) {
-    pulireSchermo();
-
-    if (dimensioneScacc != 16) {
-      stampareTitoloPartita();
-    }
-    stampareScacchiera(partita);
-    stampareConteggioPedine(partita, leggereTurnoGiocatore(partita));
-    stampareTabellaInput();
-
-    if (errore) {
-      mostrareMessaggioErrore("mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
-      errore = FALSO;
-    }
-
-    if (leggereTurnoGiocatore(partita) == coloreGiocatore) {
-
-      azioneInput = collezionareAzione();
-
-      if (azioneInput == 2) {
-        salvarePartita(partita);
-      }
-      else if (azioneInput == 3) {
-        avviareMenuPrincipale();
-        return;
-      }
-      else if (azioneInput == 1) {
-        reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
-        scanf("%d", &rigaInput);
-        reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
-        scanf("%d", &colInput);
-        rigaInput = rigaInput - 1; 
-        colInput = colInput - 1;
-
-        if (rigaInput >= 0 && rigaInput < dimensioneScacc &&
-            colInput >= 0 && colInput < dimensioneScacc &&
-            verificareMossaValida(partita, rigaInput, colInput)) {
-          
-          eseguireMossaCompleta(partita, rigaInput, colInput, leggereTurnoGiocatore(partita));
-          cambiareTurnoGiocatore(partita);
-
-          if (verificareNessunaMossa(partita)) {
-            cambiareTurnoGiocatore(partita);
-            if (verificareNessunaMossa(partita)) {
-              finePartita = 1;
-            }
-          }
-        } else {
-          errore = VERO;
-        }
-      }
+/**
+ * DESCRIZIONE: Colleziona un input numerico da terminale per una scacchiera, con validazione.
+ * ARGOMENTI:
+ *   rigaTerminale: riga del terminale dove posizionare il cursore
+ * RITORNO: valore inserito dall'utente
+ */
+int collezionareCoordinata(int rigaTerminale) {
+  int inputValido;
+  int input;
+  
+  inputValido = FALSO;
+  
+  while (!inputValido) {
+    reimpostareZonaInput(rigaTerminale, COLONNA_INPUT);
+    if (scanf("%d", &input) == 1) {
+      inputValido = VERO;
     } else {
-      // Turno bot
-      printf("\nIl bot sta pensando... Premi INVIO per continuare");
-      getchar();
-      
-      if (trovareMossaBot(partita) != 0) {
-        rigaBot = trovareMossaBot(partita) / dimensioneScacc;
-        colBot = trovareMossaBot(partita) % dimensioneScacc;
-        eseguireMossaCompleta(partita, rigaBot, colBot, leggereTurnoGiocatore(partita));
-        cambiareTurnoGiocatore(partita);
-
-        if (verificareNessunaMossa(partita)) {
-          cambiareTurnoGiocatore(partita);
-          if (verificareNessunaMossa(partita)) {
-            finePartita = 1;
-          }
-        }
-      } else {
-        cambiareTurnoGiocatore(partita);
-        if (verificareNessunaMossa(partita)) {
-          finePartita = 1;
-        }
-      }
+      pulireBuffer();
+      mostrareMessaggioErrore("Input non valido", rigaTerminale + 2, COLONNA_INPUT);
     }
   }
-
-  neriTotali = contarePedineGiocatore(partita, NERO);
-  bianchiTotali = contarePedineGiocatore(partita, BIANCO);
-  stampareVittoria(neriTotali, bianchiTotali);
+  
+  pulireBuffer();
+  return input;
 }
 
+/**
+ * DESCRIZIONE: Colleziona l'azione desiderata dall'utente
+ * RITORNO: numero dell'azione scelta
+ */
+int collezionareAzione() {
+  int azioneInput = 0;
+  
+  spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
+  printf(">> ");
+  scanf("%d", &azioneInput);
+  pulireBuffer();
+  
+  return azioneInput;
+}
+
+/**
+ * DESCRIZIONE: Converte la dimensione simbolica in valore numerico
+ * ARGOMENTI:
+ *   dimensione: dimensione da convertire
+ * RITORNO: dimensione convertita
+ */
+int convertireDimensione(int dimensione) {
+  if (dimensione == 1) {
+    return 4;
+  } else if (dimensione == 2) {
+    return 8;
+  } else if (dimensione == 3) {
+    return 16;
+  }
+  return dimensione;
+}
+
+/**
+ * DESCRIZIONE: Stampa il conteggio delle pedine e il turno corrente
+ * ARGOMENTI:
+ *   partita: puntatore alla struttura Partita
+ *   turnoCorrente: turno del giocatore corrente
+ */
+void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
+  int neriTotali = contarePedineGiocatore(partita, NERO);
+  int bianchiTotali = contarePedineGiocatore(partita, BIANCO);
+  char* nomeGiocatoreCorrente = (turnoCorrente == NERO) ? "NERO" : "BIANCO";
+  
+  spostareCursore(RIGA_ERRORE - 1, COLONNA_ERRORE - 8);
+  printf(" Nere:  %2d    ", neriTotali);
+  printf(" Bianche: %2d  ", bianchiTotali);
+  printf(" Turno: %s     ", nomeGiocatoreCorrente);
+}
+
+/**
+ * DESCRIZIONE: Trova la prima mossa valida per il bot
+ * ARGOMENTI:
+ *   partita: puntatore alla struttura Partita
+ * RITORNO: posizione codificata della mossa (riga*dimensione + colonna), 0 se nessuna mossa
+ */
+int trovareMossaBot(Partita *partita) {
+  int dimensioneScacc;
+  int indiceRiga;
+  int indiceColonna;
+  int risultato;
+  int mossaTrovata;
+  
+  dimensioneScacc = leggereDimScacchieraImp(leggereImpPartita(*partita));
+  risultato = 0;
+  mossaTrovata = FALSO;
+  indiceRiga = 0;
+  
+  while (indiceRiga < dimensioneScacc && !mossaTrovata) {
+    indiceColonna = 0;
+    while (indiceColonna < dimensioneScacc && !mossaTrovata) {
+      if (verificareMossaValida(partita, indiceRiga, indiceColonna)) {
+        risultato = indiceRiga * dimensioneScacc + indiceColonna;
+        mossaTrovata = VERO;
+      }
+      indiceColonna = indiceColonna + 1;
+    }
+    indiceRiga = indiceRiga + 1;
+  }
+  
+  return risultato;
+}

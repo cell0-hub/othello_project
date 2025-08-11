@@ -13,8 +13,8 @@ Scopo delle funzioni presenti:
 - stampareMenuImpostazioni: Stampa le opzioni del menu delle impostazioni, incluse:
 - dimensione della griglia: piccola, media, grande
 - spazio per l' inserimento del nome della partita
-- collezionareDimensione: Richiede all’utente un valore numerico corrispondente alla dimensione della griglia di gioco.
-- collezionaNomeGioco: Richiede all’utente il nome da assegnare alla nuova partita.
+- collezionareDimensione: Richiede all'utente un valore numerico corrispondente alla dimensione della griglia di gioco.
+- collezionaNomeGioco: Richiede all'utente il nome da assegnare alla nuova partita.
  */
 
 #include "../include/funzioniUtilita.h"
@@ -23,7 +23,6 @@ Scopo delle funzioni presenti:
 #include "../include/costanti.h"
 
 #include <stdio.h>
-
 
 #define OPZIONE_START_RIGA 11
 #define OPZIONE_COLONNA 16
@@ -39,8 +38,6 @@ Scopo delle funzioni presenti:
 
 #define OPZIONE_MIN 1
 #define OPZIONE_MAX 3
-
-
 
 /**
  * DESCRIZIONE: Pulisce lo schermo e stampa il titolo e il menu delle impostazioni di difficoltà e dimensione.
@@ -86,7 +83,7 @@ void stampareMenuImpostazioni() {
 }
 
 /**
- * DESCRIZIONE: Avvia il processo per iniziare una nuova partita. Mostra il menu di scelta della difficoltà, raccoglie i parametri necessari (modalità, dimensione, nome partita) e avvia il gioco.
+ * DESCRIZIONE: Avvia il processo per iniziare una nuova partita. Mostra il menu di scelta della difficoltà, raccoglie i parametri necessari (modalità, dimensione, nome partita) e avvia il gioco usando la funzione unificata.
  * ARGOMENTI: nessuno
  * RITORNO: nessuno
  */
@@ -94,29 +91,40 @@ void configurareNuovaPartita() {
   char nomePartita[NOME_MAX];
   int modalita;
   int dimensione;
+  int modalitaBot;
+  int coloreGiocatore;
   Impostazioni *impostazioniPartita;
 
   stampareMenuImpostazioni();
 
   modalita = collezionareModalita();
+  printf("%d", modalita);
   dimensione = collezionareDimensione();
+  printf("%d", dimensione);
   collezionareNomePartita(nomePartita);
 
   dimensione = convertireDimensione(dimensione);
   impostazioniPartita = inizializzareImpostazioni(modalita, dimensione);
+  printf("%d", impostazioniPartita->modalitaPartita);
+  printf("%d", impostazioniPartita->dimScacchiera);
+  getchar();
 
-
-  if(modalita == 1){
-    avviarePartita(nomePartita, impostazioniPartita);
-  } else if(modalita == 2) {
-    avviarePartitaBot(nomePartita, impostazioniPartita, NERO);
+  if (modalita == 1) {
+    modalitaBot = FALSO;
+    coloreGiocatore = 0; // Non usato in modalità PvP
   } else {
-    avviarePartitaBot(nomePartita, impostazioniPartita, BIANCO);
+    modalitaBot = VERO;
+    if (modalita == 2) {
+      coloreGiocatore = NERO; // Giocatore umano è NERO
+    } else {
+      coloreGiocatore = BIANCO; // Giocatore umano è BIANCO
+    }
   }
+  avviarePartitaUnificata(nomePartita, impostazioniPartita, NULL, modalitaBot, coloreGiocatore);
 }
 
 /**
- * DESCRIZIONE: Permette all'utente di inserire un valore numerico per la modalità di gioco. Controlla che l'input sia numerico e compreso tra OPZIONE_MIN e OPZIONE_MAX-1.
+ * DESCRIZIONE: Permette all'utente di inserire un valore numerico per la modalità di gioco. Controlla che l'input sia numerico e compreso tra OPZIONE_MIN e OPZIONE_MAX.
  * ARGOMENTI: nessuno
  * RITORNO: valore della modalità selezionata
  */
@@ -127,16 +135,16 @@ int collezionareModalita() {
   inputModalita = 0;
   inMenuModalita = VERO;
 
-  while(inMenuModalita == VERO) {
+  while (inMenuModalita == VERO) {
     reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
-    while(scanf("%d", &inputModalita) != 1) {
+    while (scanf("%d", &inputModalita) != 1) {
       pulireBuffer();
       reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
       mostrareMessaggioErrore("Digita un Numero", ERR_MSG_RIGA - 6, ERR_MSG_COLONNA);
       reimpostareZonaInput(INPUT_RIGA_DIFFICOLTA, INPUT_COLONNA);
     }
     pulireBuffer();
-    if(inputModalita >= OPZIONE_MIN && inputModalita <= OPZIONE_MAX) {
+    if (inputModalita >= OPZIONE_MIN && inputModalita <= OPZIONE_MAX) {
       inMenuModalita = FALSO;  
     } else {
       mostrareMessaggioErrore("Digita un numero tra (1 - 3)", ERR_MSG_RIGA - 6, ERR_MSG_COLONNA - 5);
@@ -147,7 +155,7 @@ int collezionareModalita() {
 }
 
 /**
- * DESCRIZIONE: Permette all'utente di inserire un valore numerico per la dimensione della griglia. Valida l’input assicurandosi che rientri nell’intervallo OPZIONE_MIN - OPZIONE_MAX.
+ * DESCRIZIONE: Permette all'utente di inserire un valore numerico per la dimensione della griglia. Valida l'input assicurandosi che rientri nell'intervallo OPZIONE_MIN - OPZIONE_MAX.
  * ARGOMENTI: nessuno
  * RITORNO: valore della dimensione selezionata
  */
@@ -157,19 +165,20 @@ int collezionareDimensione() {
 
   inMenuDimensione = VERO;
   inputDimensione = 0;
-  while(inMenuDimensione == VERO) {
+  
+  while (inMenuDimensione == VERO) {
     reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
-    while(scanf("%d", &inputDimensione) != 1) {
+    while (scanf("%d", &inputDimensione) != 1) {
       pulireBuffer();
       reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
       mostrareMessaggioErrore("Digita un Numero", ERR_MSG_RIGA + 2, ERR_MSG_COLONNA);
       reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
     }
     pulireBuffer();
-    if(inputDimensione >= OPZIONE_MIN && inputDimensione <= OPZIONE_MAX) {
+    if (inputDimensione >= OPZIONE_MIN && inputDimensione <= OPZIONE_MAX) {
       inMenuDimensione = FALSO;  
     } else {
-      mostrareMessaggioErrore("Digita un numero tra (1 - 4)", ERR_MSG_RIGA + 2, ERR_MSG_COLONNA - 5);
+      mostrareMessaggioErrore("Digita un numero tra (1 - 3)", ERR_MSG_RIGA + 2, ERR_MSG_COLONNA - 5);
       reimpostareZonaInput(INPUT_RIGA_DIMENSIONE, INPUT_COLONNA);
     }
   }
@@ -177,7 +186,7 @@ int collezionareDimensione() {
 }
 
 /**
- * DESCRIZIONE: Permette all’utente di inserire un nome per la partita.
+ * DESCRIZIONE: Permette all'utente di inserire un nome per la partita.
  * ARGOMENTI: inputNomePartita: buffer dove salvare il nome della partita
  * RITORNO: nessuno
  */
@@ -186,17 +195,18 @@ void collezionareNomePartita(char *inputNomePartita) {
   int inputValido;
 
   lunghezzaNome = 0;
-  inputValido = 0;
-  while(inputValido == 0) {
+  inputValido = FALSO;
+  
+  while (inputValido == FALSO) {
     reimpostareZonaInput(INPUT_RIGA_NOME, INPUT_COLONNA + 35);
     fgets(inputNomePartita, NOME_MAX, stdin);
     lunghezzaNome = lunghezza(inputNomePartita);
+    
     if (inputNomePartita[lunghezzaNome - 1] == '\n' && lunghezzaNome < NOME_MAX) { 
       inputNomePartita[lunghezzaNome - 1] = '\0'; 
-      inputValido = 1;
+      inputValido = VERO;
     } else {
-        pulireBuffer();
+      pulireBuffer();
     }
   }
 }
-

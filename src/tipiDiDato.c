@@ -110,12 +110,8 @@ void scrivereImpostazioniPartita(Partita *partita, Impostazioni imp) {
 }
 
 void scrivereDimScacchieraPartita(Partita *partita, int valore) {
-  Scacchiera scacchieraPartita;
-
-  //qui utilizziamo scacchieraPartita come appoggio, 
-  //perche' abbiamo bisogno di passarlo come puntatore
-  scacchieraPartita = leggereScacchieraPartita(partita);
-  scrivereDimScacchiera(&scacchieraPartita, valore);
+  partita->impPartita.dimScacchiera = valore;
+  partita->scacchieraPartita.dimScacchiera = valore;
 }
 
 void scrivereCellaPartita(Partita *partita, int valore, int riga, int colonna) {

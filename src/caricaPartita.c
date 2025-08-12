@@ -55,7 +55,7 @@ struct dirent* leggereProssimaVoce(DIR* cartella) {
  * ARGOMENTI: voce: puntatore a struct dirent
  * RITORNO: nome del file
  */
-const char* ottenereNomeFile(struct dirent* voce) {
+const char* ottenereNomeVoce(struct dirent* voce) {
   const char* nome;
   nome = voce->d_name;
   return nome;
@@ -66,6 +66,7 @@ const char* ottenereNomeFile(struct dirent* voce) {
  * ARGOMENTI: nomiPartite: array di stringhe da riempire
  * RITORNO: nessuno
  */
+
 void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
   DIR *cartella;
   struct dirent *voce;
@@ -74,15 +75,12 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
 
   cartella = opendir("database");
   conteggio = 0;
-  if (!cartella) {
-    return;
-  }
   voce = leggereProssimaVoce(cartella);
   while (voce != NULL && conteggio < MAX_PARTITE) {
-    nomeFile = ottenereNomeFile(voce);
+    nomeFile = ottenereNomeVoce(voce);
     if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
       nomiPartite[conteggio] = malloc(lunghezza(nomeFile) + 1);
-      strcpy(nomiPartite[conteggio], nomeFile);
+      copiareDueStringhe(nomiPartite[conteggio], nomeFile);
       conteggio = conteggio + 1;
     }
     voce = leggereProssimaVoce(cartella);
@@ -120,7 +118,7 @@ int contareNumeroPartiteSalvate() {
 
   voce = leggereProssimaVoce(cartella);
   while (voce != NULL && conteggio < MAX_PARTITE) {
-    nomeFile = ottenereNomeFile(voce);
+    nomeFile = ottenereNomeVoce(voce);
     if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
       conteggio = conteggio + 1;
     }
@@ -164,13 +162,13 @@ void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
   int cursoreNome;
   int cursoreNomeFile;
   cursoreNome = 0;
-  cursoreNomeFile = 8;
-  while(nomeFile[cursoreNomeFile] != '.' && nomeFile[cursoreNomeFile] != '\0') {
+  cursoreNomeFile = PREFISSO_PARTITA;
+  while(nomeFile[cursoreNomeFile] != CARATTERE_INIZIO_ESTENSIONE && nomeFile[cursoreNomeFile] != '\0') {
     nome[cursoreNome] = nomeFile[cursoreNomeFile];
     cursoreNome = cursoreNome + 1;
     cursoreNomeFile = cursoreNomeFile + 1;
   }
-  nome[cursoreNome] = '\0';
+  nome[cursoreNome] = CARATTERE_FINE_STRINGA;
 }
 
 /**

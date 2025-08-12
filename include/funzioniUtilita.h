@@ -17,6 +17,7 @@ int lunghezza(const char stringa[]);
 void concatenareDueStringhe(const char stringa1[], const char stringa2[], char stringaFinale[]);
 int confrontarePrefisso(const char *stringa1, const char *prefisso);
 int modulo(int dividendo, int divisore);
+void copiareDueStringhe( char* stringa1, const char* stringa2);
 
 #endif
 

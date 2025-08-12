@@ -41,6 +41,9 @@
 #define SALVA 2
 #define ESCI 3
 
+#define PREFISSO_PARTITA 8
+#define CARATTERE_FINE_STRINGA '\0'
+#define CARATTERE_INIZIO_ESTENSIONE '.'
 
 #endif
 

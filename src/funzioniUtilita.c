@@ -218,4 +218,13 @@ int modulo(int dividendo, int divisore) {
     return resto;
 }
 
+void copiareDueStringhe(char* stringa1, const char* stringa2) {
+  int cursStringa;
+
+  cursStringa = 0;
+  while (cursStringa < lunghezza(stringa2)) {
+    stringa1[cursStringa] = stringa2[cursStringa];
+    cursStringa = cursStringa + 1;
+  }
+}
 

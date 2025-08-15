@@ -356,25 +356,26 @@ int verificareNessunaMossa(Partita *partita) {
 }
 
 void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
-                                Partita *partitaEsistente, Partita *partitaAttiva, int *dimensione) {
+                                Partita *partitaEsistente, Partita *partitaAttiva) {
+  int dimensione;
     if (partitaEsistente == NULL) {
         int metaDimensione;
-        *dimensione = leggereDimScacchieraImp(*impostazioniPartita);
+        dimensione = leggereDimScacchieraImp(*impostazioniPartita);
 
-        inizializzareScacchieraPartita(partitaAttiva, *dimensione);
+        inizializzareScacchieraPartita(partitaAttiva, dimensione);
         scrivereNomePartita(partitaAttiva, nomePartita);
         scrivereModalitaPartita(partitaAttiva, leggereModalitaImpostazioni(*impostazioniPartita));
         scrivereTurnoGiocatore(partitaAttiva, NERO);
-        scrivereDimScacchieraPartita(partitaAttiva, *dimensione);
+        scrivereDimScacchieraPartita(partitaAttiva, dimensione);
 
-        metaDimensione = *dimensione / 2;
+        metaDimensione = dimensione / 2;
         scrivereCellaPartita(partitaAttiva, NERO, metaDimensione - 1, metaDimensione - 1);
         scrivereCellaPartita(partitaAttiva, BIANCO, metaDimensione - 1, metaDimensione);
         scrivereCellaPartita(partitaAttiva, BIANCO, metaDimensione, metaDimensione - 1);
         scrivereCellaPartita(partitaAttiva, NERO, metaDimensione, metaDimensione);
     } else {
         *partitaAttiva = *partitaEsistente;
-        *dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
+        dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
     }
 }
 
@@ -388,7 +389,7 @@ int controllareFinePartita(Partita *partitaAttiva) {
     return FALSO;
 }
 
-int gestireTurnoGiocatore(Partita *partitaAttiva, int dimensione, int *errore) {
+void gestireTurnoGiocatore(Partita *partitaAttiva, int dimensione, int *errore) {
     int azioneInput, rigaInput, colInput;
     spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
     printf(">> ");
@@ -399,7 +400,6 @@ int gestireTurnoGiocatore(Partita *partitaAttiva, int dimensione, int *errore) {
         salvarePartita(partitaAttiva);
     } else if (azioneInput == ESCI) {
         avviareMenuPrincipale();
-        return 1; // esce dal gioco
     } else if (azioneInput == GIOCA) {
         reimpostareZonaInput(RIGA_INPUT_RIGA, COLONNA_INPUT);
         scanf("%d", &rigaInput);
@@ -418,7 +418,6 @@ int gestireTurnoGiocatore(Partita *partitaAttiva, int dimensione, int *errore) {
             *errore = VERO;
         }
     }
-    return 0;
 }
 
 void gestireTurnoBot(Partita *partitaAttiva, int dimensione) {
@@ -442,7 +441,8 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
     int finePartita = FALSO, errore = FALSO;
     int dimensione;
 
-    inizializzarePartita(nomePartita, impostazioniPartita, partitaEsistente, &partitaAttiva, &dimensione);
+    inizializzarePartita(nomePartita, impostazioniPartita, partitaEsistente, &partitaAttiva);
+    dimensione = leggereDimScacchieraImp(leggereImpPartita(partitaAttiva));
 
     while (!finePartita) {
         pulireSchermo();
@@ -457,7 +457,7 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
         }
 
         if (!modalitaBot || leggereTurnoGiocatore(&partitaAttiva) == coloreGiocatore) {
-            if (gestireTurnoGiocatore(&partitaAttiva, dimensione, &errore)) return;
+            gestireTurnoGiocatore(&partitaAttiva, dimensione, &errore);
         } else {
             gestireTurnoBot(&partitaAttiva, dimensione);
         }

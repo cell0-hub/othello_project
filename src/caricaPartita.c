@@ -21,7 +21,6 @@ Scopo di ogni funzione presente:
 #include "../include/costanti.h"
 #include "../include/tipiDiDato.h"
 #include <dirent.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 

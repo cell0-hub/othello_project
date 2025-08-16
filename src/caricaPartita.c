@@ -236,7 +236,7 @@ void caricarePartita(Partita *partita, const char *percorso) {
 
   // Inizializza la partita
   impPartita = inizializzareImpostazioni(modalita, dimensione);
-  scrivereImpostazioniPartita(partita, *impPartita);
+  scrivereImpPartita(partita, *impPartita);
   scrivereTurnoGiocatore(partita, turnoCorrente);
   inizializzareScacchieraPartita(partita, dimensione);
 

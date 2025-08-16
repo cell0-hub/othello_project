@@ -105,7 +105,7 @@ void scrivereNomePartita(Partita *partita, char nome[50]) {
     strcpy(partita->nomePartita, nome);
 }
 
-void scrivereImpostazioniPartita(Partita *partita, Impostazioni imp) {
+void scrivereImpPartita(Partita *partita, Impostazioni imp) {
   partita->impPartita = imp;
 }
 

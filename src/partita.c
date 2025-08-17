@@ -13,14 +13,12 @@ AUTORI: Onofrio de Robertis
 #include "../include/homepage.h"
 #include "../include/costanti.h"
 
-
 #define RIGA_INPUT_RIGA   15
 #define RIGA_INPUT_COL    16
 #define RIGA_INPUT_VAL    19
 #define RIGA_INPUT        28
 #define COLONNA_INPUT     67
 #define COLONNA_ERRORE    27
-
 
 void stampareTitoloPartita(){
   pulireSchermo();

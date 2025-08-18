@@ -373,18 +373,20 @@ void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartit
         scrivereCellaPartita(partitaAttiva, NERO, metaDimensione, metaDimensione);
     } else {
         *partitaAttiva = *partitaEsistente;
-        dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
     }
 }
 
 int controllareFinePartita(Partita *partitaAttiva) {
+    int esito;
+
+    esito = FALSO;
     if (verificareNessunaMossa(partitaAttiva)) {
         cambiareTurnoGiocatore(partitaAttiva);
         if (verificareNessunaMossa(partitaAttiva)) {
-            return VERO;
+            esito = VERO;
         }
     }
-    return FALSO;
+    return esito;
 }
 
 void gestireTurnoGiocatore(Partita *partitaAttiva, int dimensione, int *errore) {

@@ -389,8 +389,10 @@ int controllareFinePartita(Partita *partitaAttiva) {
     return esito;
 }
 
-void gestireTurnoGiocatore(Partita *partitaAttiva, int dimensione, int *errore) {
-    int azioneInput, rigaInput, colInput;
+void gestireTurnoGiocatore(Partita *partitaAttiva, int *errore) {
+    int azioneInput, rigaInput, colInput, dimensione;
+
+    dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
     spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
     printf(">> ");
     scanf("%d", &azioneInput);
@@ -420,8 +422,9 @@ void gestireTurnoGiocatore(Partita *partitaAttiva, int dimensione, int *errore) 
     }
 }
 
-void gestireTurnoBot(Partita *partitaAttiva, int dimensione) {
-    int mossaBotValida, rigaBot, colBot;
+void gestireTurnoBot(Partita *partitaAttiva) {
+    int mossaBotValida, rigaBot, colBot, dimensione;
+    dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
     printf("\nPremi INVIO per continuare");
     getchar();
     mossaBotValida = trovareMossaBot(partitaAttiva);
@@ -457,9 +460,9 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
         }
 
         if (!modalitaBot || leggereTurnoGiocatore(&partitaAttiva) == coloreGiocatore) {
-            gestireTurnoGiocatore(&partitaAttiva, dimensione, &errore);
+            gestireTurnoGiocatore(&partitaAttiva,  &errore);
         } else {
-            gestireTurnoBot(&partitaAttiva, dimensione);
+            gestireTurnoBot(&partitaAttiva);
         }
 
         if (!errore) {

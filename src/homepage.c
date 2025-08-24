@@ -41,7 +41,7 @@ Scopo di ogni funzione presente:
 #define ESCI 3
 
 #define OPZIONE_MIN 1
-#define OPZIONE_MAX 4
+#define OPZIONE_MAX 3 
 
 
 
@@ -119,7 +119,7 @@ void collezionareInputHomepage() {
     }
     pulireBuffer();
     if(input < OPZIONE_MIN || input > OPZIONE_MAX) {
-      mostrareMessaggioErrore("Digita un Numero compreso tra 1 - 4 ", ERR_MSG_RIGA, ERR_MSG_COLONNA - 7);
+      mostrareMessaggioErrore("Digita un Numero compreso tra 1 - 3 ", ERR_MSG_RIGA, ERR_MSG_COLONNA - 7);
       reimpostareZonaInput(INPUT_RIGA, INPUT_COLONNA);
     }
     else if (input == NUOVA_PARTITA) {

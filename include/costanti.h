@@ -46,5 +46,3 @@
 #define CARATTERE_INIZIO_ESTENSIONE '.'
 
 #endif
-
-

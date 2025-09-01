@@ -44,9 +44,9 @@ Scopo di ogni funzione presente:
  * RITORNO: puntatore a struct dirent
  */
 struct dirent* leggereProssimaVoce(DIR* cartella) {
-  struct dirent* voce;
-  voce = readdir(cartella);
-  return voce;
+    struct dirent* voce;
+    voce = readdir(cartella);
+    return voce;
 }
 
 /**
@@ -55,9 +55,9 @@ struct dirent* leggereProssimaVoce(DIR* cartella) {
  * RITORNO: nome del file
  */
 const char* ottenereNomeVoce(struct dirent* voce) {
-  const char* nome;
-  nome = voce->d_name;
-  return nome;
+    const char* nome;
+    nome = voce->d_name;
+    return nome;
 }
 
 /**
@@ -67,24 +67,24 @@ const char* ottenereNomeVoce(struct dirent* voce) {
  */
 
 void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
-  DIR *cartella;
-  struct dirent *voce;
-  int conteggio;
-  const char *nomeFile;
+    DIR *cartella;
+    struct dirent *voce;
+    int conteggio;
+    const char *nomeFile;
 
-  cartella = opendir("database");
-  conteggio = 0;
-  voce = leggereProssimaVoce(cartella);
-  while (voce != NULL && conteggio < MAX_PARTITE) {
-    nomeFile = ottenereNomeVoce(voce);
-    if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
-      nomiPartite[conteggio] = malloc(lunghezza(nomeFile) + 1);
-      copiareDueStringhe(nomiPartite[conteggio], nomeFile);
-      conteggio = conteggio + 1;
-    }
+    cartella = opendir("database");
+    conteggio = 0;
     voce = leggereProssimaVoce(cartella);
-  }
-  closedir(cartella);
+    while (voce != NULL && conteggio < MAX_PARTITE) {
+        nomeFile = ottenereNomeVoce(voce);
+        if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
+            nomiPartite[conteggio] = malloc(lunghezza(nomeFile) + 1);
+            copiareDueStringhe(nomiPartite[conteggio], nomeFile);
+            conteggio = conteggio + 1;
+        }
+        voce = leggereProssimaVoce(cartella);
+    }
+    closedir(cartella);
 }
 
 /**
@@ -93,12 +93,12 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
  * RITORNO: nessuno
  */
 void liberareNomiPartite(char *nomiPartite[], int numero) {
-  int indice;
-  indice = 0;
-  while (indice < numero) {
-    free(nomiPartite[indice]);
-    indice = indice + 1;
-  }
+    int indice;
+    indice = 0;
+    while (indice < numero) {
+        free(nomiPartite[indice]);
+        indice = indice + 1;
+    }
 }
 
 /**
@@ -107,24 +107,24 @@ void liberareNomiPartite(char *nomiPartite[], int numero) {
  * RITORNO: numero di partite trovate
  */
 int contareNumeroPartiteSalvate() {
-  DIR *cartella;
-  struct dirent *voce;
-  int conteggio;
-  const char *nomeFile;
+    DIR *cartella;
+    struct dirent *voce;
+    int conteggio;
+    const char *nomeFile;
 
-  cartella = opendir("database");
-  conteggio = 0;
+    cartella = opendir("database");
+    conteggio = 0;
 
-  voce = leggereProssimaVoce(cartella);
-  while (voce != NULL && conteggio < MAX_PARTITE) {
-    nomeFile = ottenereNomeVoce(voce);
-    if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
-      conteggio = conteggio + 1;
-    }
     voce = leggereProssimaVoce(cartella);
-  }
-  closedir(cartella);
-  return conteggio;
+    while (voce != NULL && conteggio < MAX_PARTITE) {
+        nomeFile = ottenereNomeVoce(voce);
+        if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
+            conteggio = conteggio + 1;
+        }
+        voce = leggereProssimaVoce(cartella);
+    }
+    closedir(cartella);
+    return conteggio;
 }
 
 /********************************************************
@@ -139,17 +139,17 @@ int contareNumeroPartiteSalvate() {
 * RITORNO: Terminale aggiornato                         *
 ********************************************************/
 void stampareTitoloCaricaPartita() {
-  printf(ARANCIONE);
-  stampareCentrato("     _____ _____ _____ _____ _____ _____     ");
-  stampareCentrato("    |     |  _  | __  |     |     |  _  |    ");
-  stampareCentrato("    |   --|     |    -|-   -|   --|     |    ");
-  stampareCentrato("    |_____|__|__|__|__|_____|_____|__|__|    ");
-  stampareCentrato("   _____ _____ _____ _____ _____ _____ _____ ");
-  stampareCentrato("  |  _  |  _  | __  |_   _|     |_   _|  _  |");
-  stampareCentrato("  |   __|     |    -| | | |-   -| | | |     |");
-  stampareCentrato("  |__|  |__|__|__|__| |_| |_____| |_| |__|__|");
-  stampareCentrato("                                             ");
-  printf(RESET);
+    printf(ARANCIONE);
+    stampareCentrato("     _____ _____ _____ _____ _____ _____     ");
+    stampareCentrato("    |     |  _  | __  |     |     |  _  |    ");
+    stampareCentrato("    |   --|     |    -|-   -|   --|     |    ");
+    stampareCentrato("    |_____|__|__|__|__|_____|_____|__|__|    ");
+    stampareCentrato("   _____ _____ _____ _____ _____ _____ _____ ");
+    stampareCentrato("  |  _  |  _  | __  |_   _|     |_   _|  _  |");
+    stampareCentrato("  |   __|     |    -| | | |-   -| | | |     |");
+    stampareCentrato("  |__|  |__|__|__|__| |_| |_____| |_| |__|__|");
+    stampareCentrato("                                             ");
+    printf(RESET);
 }
 
 /**
@@ -158,16 +158,16 @@ void stampareTitoloCaricaPartita() {
  * RITORNO: nessuno
  */
 void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
-  int cursoreNome;
-  int cursoreNomeFile;
-  cursoreNome = 0;
-  cursoreNomeFile = PREFISSO_PARTITA;
-  while(nomeFile[cursoreNomeFile] != CARATTERE_INIZIO_ESTENSIONE && nomeFile[cursoreNomeFile] != '\0') {
-    nome[cursoreNome] = nomeFile[cursoreNomeFile];
-    cursoreNome = cursoreNome + 1;
-    cursoreNomeFile = cursoreNomeFile + 1;
-  }
-  nome[cursoreNome] = CARATTERE_FINE_STRINGA;
+    int cursoreNome;
+    int cursoreNomeFile;
+    cursoreNome = 0;
+    cursoreNomeFile = PREFISSO_PARTITA;
+    while(nomeFile[cursoreNomeFile] != CARATTERE_INIZIO_ESTENSIONE && nomeFile[cursoreNomeFile] != '\0') {
+        nome[cursoreNome] = nomeFile[cursoreNomeFile];
+        cursoreNome = cursoreNome + 1;
+        cursoreNomeFile = cursoreNomeFile + 1;
+    }
+    nome[cursoreNome] = CARATTERE_FINE_STRINGA;
 }
 
 /**
@@ -177,37 +177,41 @@ void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
  * RITORNO: nessuno
  */
 void salvarePartita(Partita *partita) {
-  FILE *file;
-  char percorso[100];
-  int dimensione;
-  int riga;
-  int colonna;
-  int valore;
-  int turnoCorrente;
+    FILE *file;
+    char percorso[100];
+    int dimensione;
+    int riga;
+    int colonna;
+    int valore;
+    int turnoCorrente;
 
-  dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  turnoCorrente = leggereTurnoGiocatore(partita);
-  snprintf(percorso, sizeof(percorso), "database/partita_%s.txt", leggereNomePartita(partita));
-  file = fopen(percorso, "w");
+    dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
+    turnoCorrente = leggereTurnoGiocatore(partita);
+    snprintf(percorso, sizeof(percorso), "database/partita_%s.txt", leggereNomePartita(partita));
+    file = fopen(percorso, "w");
 
-  // Salva le informazioni della partita
-  fprintf(file, "%d\n", dimensione);
-  fprintf(file, "%d\n", leggereModalitaImpostazioni(leggereImpPartita(*partita)));
-  fprintf(file, "%d\n", turnoCorrente);
-
-  // Salva la scacchiera
-  riga = 0;
-  while (riga < dimensione) {
-    colonna = 0;
-    while (colonna < dimensione) {
-      valore = leggereCellaScacchiera(leggereScacchieraPartita(partita), riga, colonna);
-      fprintf(file, "%d ", valore);
-      colonna = colonna + 1;
+    // Salva le informazioni della partita
+    if(dimensione == 16) {
+        fprintf(file, "G\n");
+    } else {
+        fprintf(file, "%d\n", dimensione);
     }
-    fprintf(file, "\n");
-    riga = riga + 1;
-  }
-  fclose(file);
+    fprintf(file, "%d\n", leggereModalitaImpostazioni(leggereImpPartita(*partita)));
+    fprintf(file, "%d\n", turnoCorrente);
+
+    // Salva la scacchiera
+    riga = 0;
+    while (riga < dimensione) {
+        colonna = 0;
+        while (colonna < dimensione) {
+            valore = leggereCellaScacchiera(leggereScacchieraPartita(partita), riga, colonna);
+            fprintf(file, "%d ", valore);
+            colonna = colonna + 1;
+        }
+        fprintf(file, "\n");
+        riga = riga + 1;
+    }
+    fclose(file);
 }
 
 /**
@@ -218,97 +222,104 @@ void salvarePartita(Partita *partita) {
  * RITORNO: nessuno
  */
 void caricarePartita(Partita *partita, const char *percorso) {
-  FILE *file;
-  int dimensione;
-  int modalita;
-  int riga;
-  int colonna;
-  int valore;
-  int turnoCorrente;
-  Impostazioni *impPartita;
+    FILE *file;
+    int dimensione;
+    int modalita;
+    int riga;
+    int colonna;
+    int valore;
+    int turnoCorrente;
+    char c;
+    Impostazioni *impPartita;
 
-  file = fopen(percorso, "r");
+    file = fopen(percorso, "r");
 
-  // Carica le informazioni della partita
-  fscanf(file, "%d", &dimensione);        // Prima riga: dimensione
-  fscanf(file, "%d", &modalita);          // Seconda riga: modalità
-  fscanf(file, "%d", &turnoCorrente);      // Terza riga: turno corrente
+    if (fscanf(file, " %c", &c) == 1) {
+        if (c == 'G') {
+            dimensione = 16;
+        } else {
+            ungetc(c, file); 
+            fscanf(file, "%d", &dimensione);
+        }
+    } 
+    fscanf(file, "%d", &modalita);          
+    fscanf(file, "%d", &turnoCorrente);    
 
-  // Inizializza la partita
-  impPartita = inizializzareImpostazioni(modalita, dimensione);
-  scrivereImpPartita(partita, *impPartita);
-  scrivereTurnoGiocatore(partita, turnoCorrente);
-  inizializzareScacchieraPartita(partita, dimensione);
+    // Inizializza la partita
+    impPartita = inizializzareImpostazioni(modalita, dimensione);
+    scrivereImpPartita(partita, *impPartita);
+    scrivereTurnoGiocatore(partita, turnoCorrente);
+    inizializzareScacchieraPartita(partita, dimensione);
 
-  // Carica la scacchiera
-  riga = 0;
-  while (riga < dimensione) {
-    colonna = 0;
-    while (colonna < dimensione) {
-      fscanf(file, "%d", &valore);
-      scrivereCellaPartita(partita, valore, riga, colonna);
-      colonna = colonna + 1;
+    // Carica la scacchiera
+    riga = 0;
+    while (riga < dimensione) {
+        colonna = 0;
+        while (colonna < dimensione) {
+            fscanf(file, "%d", &valore);
+            scrivereCellaPartita(partita, valore, riga, colonna);
+            colonna = colonna + 1;
+        }
+        riga = riga + 1;
     }
-    riga = riga + 1;
-  }
-  fclose(file);
+    fclose(file);
 }
 
 void avviareMenuCaricaPartita() {
-  char *nomiPartite[100];
-  int numeroPartite;
-  int input;
-  int tornaHP;
-  int cursorePartite;
-  char nomeVisualizzato[128];
-  char percorso[256];
-  Partita partita;
-  char nome[128];
-  int coloreGiocatore;
+    char *nomiPartite[100];
+    int numeroPartite;
+    int input;
+    int tornaHP;
+    int cursorePartite;
+    char nomeVisualizzato[128];
+    char percorso[256];
+    Partita partita;
+    char nome[128];
+    int coloreGiocatore;
 
-  pulireSchermo();
-  stampareTitoloCaricaPartita();
-  raccogliereNomiPartiteSalvate(nomiPartite);
-  numeroPartite = contareNumeroPartiteSalvate();
-  if (numeroPartite == 0) {
-    stampareCentrato("Nessuna partita salvata.");
-    liberareNomiPartite(nomiPartite, numeroPartite);
-    tornareHomepage(&tornaHP, RIGA_ERRORE, COLONNA - 10);
-  }
-  printf("  [0] Torna al menu principale\n");
-  cursorePartite = 0;
-  while (cursorePartite < numeroPartite) {
-    estrapolareNomeDaFile(nomiPartite[cursorePartite], nomeVisualizzato);
-    printf("  [%d] %s\n", cursorePartite + 1, nomeVisualizzato);
-    cursorePartite = cursorePartite + 1;
-  }
-
-  printf("\n Scegli una partita: ");
-  scanf("%d", &input);
-  pulireBuffer();
-
-  if (input == 0) {
-    liberareNomiPartite(nomiPartite, numeroPartite);
-    cursorePartite = numeroPartite; //terminiamo il ciclo...
-    avviareMenuPrincipale(); 
-  } else if (input > 0 && input <= numeroPartite) {
-    snprintf(percorso, sizeof(percorso), "database/%s", nomiPartite[input-1]);
-    caricarePartita(&partita, percorso);
-    estrapolareNomeDaFile(nomiPartite[input-1], nome);
-    scrivereNomePartita(&partita, nome);
-    liberareNomiPartite(nomiPartite, numeroPartite);
-
-    if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 1) {
-      avviarePartita(NULL, NULL, &partita, 0, 0);
-    } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 2) {
-      coloreGiocatore = leggereTurnoGiocatore(&partita); 
-      avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
-    } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 3) {
-      coloreGiocatore = leggereTurnoGiocatore(&partita); 
-      avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
+    pulireSchermo();
+    stampareTitoloCaricaPartita();
+    raccogliereNomiPartiteSalvate(nomiPartite);
+    numeroPartite = contareNumeroPartiteSalvate();
+    if (numeroPartite == 0) {
+        stampareCentrato("Nessuna partita salvata.");
+        liberareNomiPartite(nomiPartite, numeroPartite);
+        tornareHomepage(&tornaHP, RIGA_ERRORE, COLONNA - 10);
     }
-  } else {
-    liberareNomiPartite(nomiPartite, numeroPartite);
-    avviareMenuCaricaPartita(); 
-  }
+    printf("  [0] Torna al menu principale\n");
+    cursorePartite = 0;
+    while (cursorePartite < numeroPartite) {
+        estrapolareNomeDaFile(nomiPartite[cursorePartite], nomeVisualizzato);
+        printf("  [%d] %s\n", cursorePartite + 1, nomeVisualizzato);
+        cursorePartite = cursorePartite + 1;
+    }
+
+    printf("\n Scegli una partita: ");
+    scanf("%d", &input);
+    pulireBuffer();
+
+    if (input == 0) {
+        liberareNomiPartite(nomiPartite, numeroPartite);
+        cursorePartite = numeroPartite; //terminiamo il ciclo...
+        avviareMenuPrincipale(); 
+    } else if (input > 0 && input <= numeroPartite) {
+        snprintf(percorso, sizeof(percorso), "database/%s", nomiPartite[input-1]);
+        caricarePartita(&partita, percorso);
+        estrapolareNomeDaFile(nomiPartite[input-1], nome);
+        scrivereNomePartita(&partita, nome);
+        liberareNomiPartite(nomiPartite, numeroPartite);
+
+        if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 1) {
+            avviarePartita(NULL, NULL, &partita, 0, 0);
+        } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 2) {
+            coloreGiocatore = leggereTurnoGiocatore(&partita); 
+            avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
+        } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 3) {
+            coloreGiocatore = leggereTurnoGiocatore(&partita); 
+            avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
+        }
+    } else {
+        liberareNomiPartite(nomiPartite, numeroPartite);
+        avviareMenuCaricaPartita(); 
+    }
 }

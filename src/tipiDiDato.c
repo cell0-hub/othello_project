@@ -192,3 +192,6 @@ Impostazioni* inizializzareImpostazioni(int modalita, int dimensione) {
     
     return imp;
 }
+
+//funzioni di accesso cartella
+

@@ -20,6 +20,11 @@ AUTORI: Onofrio de Robertis
 #define COLONNA_INPUT     67
 #define COLONNA_ERRORE    27
 
+/**
+ * DESCRIZIONE: stampa il titolo della partita
+ * ARGOMENTI: nessuno
+ * RITORNO: titolo della partita stampato a schermo
+ */
 void stampareTitoloPartita(){
   pulireSchermo();
   stampareCentrato("             _   _ _       ");
@@ -30,6 +35,11 @@ void stampareTitoloPartita(){
   printf("\n\n");
 }
 
+/**
+ * DESCRIZIONE: stampa la linea orrizonatale della scacchiera 
+ * ARGOMENTI: nessuno
+ * RITORNO: linea orrizonatale stampata a schermo 
+ */
 void stampareLineaOrizzontale(Partita *partita) {
   int indiceColonna;
   int dimensione;
@@ -45,6 +55,11 @@ void stampareLineaOrizzontale(Partita *partita) {
   printf("-+\n");
 }
 
+/**
+ * DESCRIZIONE: stampa le coordinate prima delle colonne 
+ * ARGOMENTI: partita di gioco (serve per la dimensione della scacchiera)
+ * RITORNO: coordinate prima delle colonne stampate a schermo
+ */
 void stampareIntestColonne(Partita *partita) {
   int indiceColonna;
   int dimensione;
@@ -60,6 +75,11 @@ void stampareIntestColonne(Partita *partita) {
   printf("\n");
 }
 
+/**
+ * DESCRIZIONE: stampa la scacchiera di gioco 
+ * ARGOMENTI: partita: partita di gioco, Partita
+ * RITORNO: scacchiera di gioco stampata a schermo 
+ */
 void stampareScacchiera(Partita *partita) {
   int indiceRiga;
   int indiceColonna;
@@ -97,6 +117,12 @@ void stampareScacchiera(Partita *partita) {
 
 
 
+/**
+ * DESCRIZIONE: stampa la cornice della zona
+ *              dove l' utente inserisce gli input 
+ * ARGOMENTI: nessuno 
+ * RITORNO: cornice della zona dove l' utente inserisce gli input stampata a schermo
+ */
 void disegnareCornice() {
   int contatoreCornice;
 
@@ -117,6 +143,11 @@ void disegnareCornice() {
   printf("+------------+\n");
 }
 
+/**
+ * DESCRIZIONE: stampa la zona dove l' utente inserisce gli input 
+ * ARGOMENTI: nessuno 
+ * RITORNO: zona dove l' utente inserisce gli input stampata a schermo
+ */
 void stampareTabellaInput() {
   disegnareCornice();
   spostareCursore(RIGA_INPUT_RIGA - 4, COLONNA_INPUT);
@@ -129,6 +160,12 @@ void stampareTabellaInput() {
   printf("\033[34m azione: (1 giocare / 2 salvare / 3 uscire) \033[0m");
 }
 
+/*
+ * DESCRIZIONE: stampa la schermata di vittoria
+ * ARGOMENTI: neriTotali: numero di pedine del giocatore nero
+ *            bianchiTotali: numero di pedine del giocatore bianchi
+ * RITORNO: schermata di vittoria stampata a schermo
+ */
 void stampareVittoria(int neriTotali, int bianchiTotali) {
   int inputUtente;
 
@@ -151,9 +188,10 @@ void stampareVittoria(int neriTotali, int bianchiTotali) {
 /**
  * DESCRIZIONE: Conta il numero di pedine di un giocatore sulla scacchiera.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   coloreGiocatore: colore del giocatore
- * RITORNO: numero di pedine
+ *   partita: partita di gioco
+ *   coloreGiocatore: colore del giocatore di cui si 
+ *                    vogliono contare il numero di pedine
+ * RITORNO: conteggioTotale: numero di pedine contate
  */
 int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
   int indiceRiga;
@@ -181,15 +219,15 @@ int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
 }
 
 /**
- * DESCRIZIONE: Conta quante pedine si possono flipare in una direzione.
+ * DESCRIZIONE: Conta quante pedine si possono capovolgere in una direzione.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
+ *   partita: partita di gioco, Partita 
  *   rigaInizio: riga di partenza
  *   colInizio: colonna di partenza
  *   deltaRiga: direzione riga
  *   deltaColonna: direzione colonna
  *   coloreGiocatore: colore del giocatore
- * RITORNO: numero di pedine da flippare
+ * RITORNO: pedineDaCapovolgere: numero di pedine da capovolegere
  */
 int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio, 
                                  int deltaRiga, int deltaColonna) {
@@ -242,7 +280,7 @@ int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio
 /**
  * DESCRIZIONE: Controlla se una mossa è valida per il giocatore.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
+ *   partita: partita di gioco 
  *   rigaInput: riga della mossa
  *   colInput: colonna della mossa
  *   coloreGiocatore: colore del giocatore (NERO/BIANCO)
@@ -270,14 +308,16 @@ int verificareMossaValida(Partita *partita, int rigaInput, int colInput) {
 }
 
 /**
- * DESCRIZIONE: Flippa le pedine in tutte le direzioni dopo una mossa valida.
+ * DESCRIZIONE: capovolge le pedine in tutte le direzioni valide
+ *              dopo una mossa valida.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
+ *   partita: partita di gioco, Partita 
  *   rigaInput: riga della mossa
  *   colInput: colonna della mossa
  *   coloreGiocatore: colore del giocatore
- * RITORNO: nessuno
+ * RITORNO: partita: partita con le pedine capovolte
  */
+
 void capovolgerePedine(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
   int direzioni[8][2] = {{NORD, OVEST}, {NORD, CENTRO}, {NORD, EST},
     {CENTRO, OVEST},               {CENTRO, EST}, 

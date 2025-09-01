@@ -21,6 +21,7 @@ Scopo di ogni funzione presente:
 #include "../include/costanti.h"
 #include "../include/tipiDiDato.h"
 #include <dirent.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,33 +40,32 @@ Scopo di ogni funzione presente:
 #define ERR_MSG_COLONNA 31
 
 /**
- * DESCRIZIONE: Legge la prossima voce in una cartella.
- * ARGOMENTI: cartella: puntatore a DIR
- * RITORNO: puntatore a struct dirent
+ * DESCRIZIONE: Legge la voce successiva in una cartella.
+ * ARGOMENTI: cartella, cartella da cui leggere i file, cartella
+ * RITORNO: voceLetta, file letto, FILE
  */
 struct dirent* leggereProssimaVoce(DIR* cartella) {
-    struct dirent* voce;
-    voce = readdir(cartella);
-    return voce;
+    struct dirent* voceLetta;
+    voceLetta = readdir(cartella);
+    return voceLetta;
 }
 
 /**
  * DESCRIZIONE: Ottiene il nome di un file/voce.
- * ARGOMENTI: voce: puntatore a struct dirent
- * RITORNO: nome del file
+ * ARGOMENTI: voce, voce letta dalla cartella, FILE 
+ * RITORNO: nome della voce letta dal file 
  */
 const char* ottenereNomeVoce(struct dirent* voce) {
-    const char* nome;
-    nome = voce->d_name;
-    return nome;
+    const char* nomeVoce;
+    nomeVoce = voce->d_name;
+    return nomeVoce;
 }
 
 /**
  * DESCRIZIONE: Raccoglie i nomi delle partite salvate (file che iniziano con "partita_").
  * ARGOMENTI: nomiPartite: array di stringhe da riempire
- * RITORNO: nessuno
+ * RITORNO: nomiPartite: array di stringhe riempito con i nomi dei file.
  */
-
 void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
     DIR *cartella;
     struct dirent *voce;
@@ -79,7 +79,7 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
         nomeFile = ottenereNomeVoce(voce);
         if (confrontarePrefisso(nomeFile, "partita_") == VERO) {
             nomiPartite[conteggio] = malloc(lunghezza(nomeFile) + 1);
-            copiareDueStringhe(nomiPartite[conteggio], nomeFile);
+            copiareStringa(nomiPartite[conteggio], nomeFile);
             conteggio = conteggio + 1;
         }
         voce = leggereProssimaVoce(cartella);
@@ -87,12 +87,18 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
     closedir(cartella);
 }
 
+
 /**
  * DESCRIZIONE: Libera la memoria dei nomi delle partite.
  * ARGOMENTI: nomiPartite: array di stringhe, numero: quanti elementi liberare
  * RITORNO: nessuno
  */
 void liberareNomiPartite(char *nomiPartite[], int numero) {
+    //
+    // la funzione non e' presente nello pseudocodice, 
+    // perche' l' allocazione della memoria
+    // non fa parte dei ambiti dello pseudocodice
+    //
     int indice;
     indice = 0;
     while (indice < numero) {
@@ -102,9 +108,9 @@ void liberareNomiPartite(char *nomiPartite[], int numero) {
 }
 
 /**
- * DESCRIZIONE: Conta il numero di partite salvate.
+ * DESCRIZIONE: Conta il numero di partite salvate nella cartella database.
  * ARGOMENTI: nessuno
- * RITORNO: numero di partite trovate
+ * RITORNO: conteggio: numero di partite trovate, naturale
  */
 int contareNumeroPartiteSalvate() {
     DIR *cartella;
@@ -127,17 +133,13 @@ int contareNumeroPartiteSalvate() {
     return conteggio;
 }
 
-/********************************************************
-* FUNZIONE: stampareTitoloCaricaPartita                 *
-*                                                       *
-* DESCRIZIONE: Mostra a schermo un titolo artistico     *
-*              colorato per la schermata di caricamento *
-*              delle partite salvate.                   *
-*                                                       *
-* ARGOMENTI: Nessuno                                    *
-*                                                       *
-* RITORNO: Terminale aggiornato                         *
-********************************************************/
+/*
+* DESCRIZIONE: Mostra a schermo il titolo      
+*              della schermata di caricamento 
+*              delle partite salvate.                   
+* ARGOMENTI: Nessuno                                    
+* RITORNO: Terminale aggiornato                         
+*/
 void stampareTitoloCaricaPartita() {
     printf(ARANCIONE);
     stampareCentrato("     _____ _____ _____ _____ _____ _____     ");
@@ -155,26 +157,26 @@ void stampareTitoloCaricaPartita() {
 /**
  * DESCRIZIONE: Estrae il nome da un file partita (toglie prefisso e suffisso).
  * ARGOMENTI: nomeFile: nome file, nome: buffer di output
- * RITORNO: nessuno
+ * RITORNO: nome: nome estrapolato (senza prefisso e suffisso)
  */
 void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
-    int cursoreNome;
-    int cursoreNomeFile;
-    cursoreNome = 0;
-    cursoreNomeFile = PREFISSO_PARTITA;
-    while(nomeFile[cursoreNomeFile] != CARATTERE_INIZIO_ESTENSIONE && nomeFile[cursoreNomeFile] != '\0') {
-        nome[cursoreNome] = nomeFile[cursoreNomeFile];
-        cursoreNome = cursoreNome + 1;
-        cursoreNomeFile = cursoreNomeFile + 1;
+    int cursNome;
+    int cursNomeFile;
+    cursNome = 0;
+    cursNomeFile = PREFISSO_PARTITA;
+    while(nomeFile[cursNomeFile] != CARATTERE_INIZIO_ESTENSIONE && nomeFile[cursNomeFile] != '\0') {
+        nome[cursNome] = nomeFile[cursNomeFile];
+        cursNome = cursNome + 1;
+        cursNomeFile = cursNomeFile + 1;
     }
-    nome[cursoreNome] = CARATTERE_FINE_STRINGA;
+    nome[cursNome] = CARATTERE_FINE_STRINGA;
 }
 
 /**
  * DESCRIZIONE: Salva una partita Othello completa su file: 
- *              dimensione, modalità, turno corrente, poi matrice scacchiera.
- * ARGOMENTI: partita: puntatore a Partita, turnoCorrente: colore giocatore corrente
- * RITORNO: nessuno
+ *              dimensione, modalità, turno corrente, poi scacchiera.
+ * ARGOMENTI: partita: partita di gioco
+ * RITORNO: file aggiornato con i valori della griglia di partita, FILE 
  */
 void salvarePartita(Partita *partita) {
     FILE *file;
@@ -182,7 +184,7 @@ void salvarePartita(Partita *partita) {
     int dimensione;
     int riga;
     int colonna;
-    int valore;
+    int casella;
     int turnoCorrente;
 
     dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
@@ -204,8 +206,8 @@ void salvarePartita(Partita *partita) {
     while (riga < dimensione) {
         colonna = 0;
         while (colonna < dimensione) {
-            valore = leggereCellaScacchiera(leggereScacchieraPartita(partita), riga, colonna);
-            fprintf(file, "%d ", valore);
+            casella = leggereCellaScacchiera(leggereScacchieraPartita(partita), riga, colonna);
+            fprintf(file, "%d ", casella);
             colonna = colonna + 1;
         }
         fprintf(file, "\n");
@@ -217,9 +219,9 @@ void salvarePartita(Partita *partita) {
 /**
  * DESCRIZIONE: Carica una partita Othello completa da file: 
  *              dimensione, modalità, turno corrente, poi matrice scacchiera.
- * ARGOMENTI: partita: puntatore a Partita, percorso: path del file, 
- *            turnoCorrente: puntatore per salvare il turno caricato
- * RITORNO: nessuno
+ * ARGOMENTI: partita: partita da caricare,
+ *             percorso: path del file, 
+ * RITORNO: partita: partita caricata dal file, Partita
  */
 void caricarePartita(Partita *partita, const char *percorso) {
     FILE *file;
@@ -265,12 +267,20 @@ void caricarePartita(Partita *partita, const char *percorso) {
     fclose(file);
 }
 
+/**
+ * DESCRIZIONE: mostra a schermo un menu' interattivo
+ *              che permette al giocatore di scegliere quale partita 
+ *              caricare
+ * ARGOMENTI: nessuno
+ * RITORNO: menu interattivo stampato a schermo
+ * */
+
 void avviareMenuCaricaPartita() {
     char *nomiPartite[100];
     int numeroPartite;
     int input;
     int tornaHP;
-    int cursorePartite;
+    int cursPartite;
     char nomeVisualizzato[128];
     char percorso[256];
     Partita partita;
@@ -287,11 +297,11 @@ void avviareMenuCaricaPartita() {
         tornareHomepage(&tornaHP, RIGA_ERRORE, COLONNA - 10);
     }
     printf("  [0] Torna al menu principale\n");
-    cursorePartite = 0;
-    while (cursorePartite < numeroPartite) {
-        estrapolareNomeDaFile(nomiPartite[cursorePartite], nomeVisualizzato);
-        printf("  [%d] %s\n", cursorePartite + 1, nomeVisualizzato);
-        cursorePartite = cursorePartite + 1;
+    cursPartite = 0;
+    while (cursPartite < numeroPartite) {
+        estrapolareNomeDaFile(nomiPartite[cursPartite], nomeVisualizzato);
+        printf("  [%d] %s\n", cursPartite + 1, nomeVisualizzato);
+        cursPartite = cursPartite + 1;
     }
 
     printf("\n Scegli una partita: ");
@@ -300,7 +310,7 @@ void avviareMenuCaricaPartita() {
 
     if (input == 0) {
         liberareNomiPartite(nomiPartite, numeroPartite);
-        cursorePartite = numeroPartite; //terminiamo il ciclo...
+        cursPartite = numeroPartite; //terminiamo il ciclo...
         avviareMenuPrincipale(); 
     } else if (input > 0 && input <= numeroPartite) {
         snprintf(percorso, sizeof(percorso), "database/%s", nomiPartite[input-1]);

@@ -201,7 +201,7 @@ int confrontarePrefisso(const char *stringa1, const char *prefisso) {
     return esito;
 }
 
-void copiareDueStringhe(char* stringa1, const char* stringa2) {
+void copiareStringa(char* stringa1, const char* stringa2) {
   int cursStringa;
 
   cursStringa = 0;

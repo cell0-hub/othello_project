@@ -201,23 +201,6 @@ int confrontarePrefisso(const char *stringa1, const char *prefisso) {
     return esito;
 }
 
-int modulo(int dividendo, int divisore) {
-    int resto = 0;
-    if(divisore == 0){
-      resto = -1;
-    } else {
-      while (dividendo >= divisore) {
-        dividendo = dividendo - divisore;
-      }
-      if (dividendo < 0) {
-        resto = -dividendo;
-      } else {
-        resto = dividendo;
-      }
-    }
-    return resto;
-}
-
 void copiareDueStringhe(char* stringa1, const char* stringa2) {
   int cursStringa;
 

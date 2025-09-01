@@ -192,7 +192,7 @@ int confrontarePrefisso(const char *stringa1, const char *prefisso) {
     esito = VERO;
 
     cursStringa = 0;
-    while (cursStringa < lunghezzaPrefisso) {
+    while (cursStringa < lunghezzaPrefisso && esito == VERO) {
         if (stringa1[cursStringa] != prefisso[cursStringa]) {
             esito = FALSO;
         }

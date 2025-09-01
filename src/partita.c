@@ -121,7 +121,8 @@ void stampareScacchiera(Partita *partita) {
  * DESCRIZIONE: stampa la cornice della zona
  *              dove l' utente inserisce gli input 
  * ARGOMENTI: nessuno 
- * RITORNO: cornice della zona dove l' utente inserisce gli input stampata a schermo
+ * RITORNO: cornice della zona dove 
+ *          l' utente inserisce gli input stampata a schermo
  */
 void disegnareCornice() {
   int contatoreCornice;
@@ -349,7 +350,7 @@ void capovolgerePedine(Partita *partita, int rigaInput, int colInput, int colore
  *   rigaInput: riga della mossa
  *   colInput: colonna della mossa
  *   coloreGiocatore: colore del giocatore
- * RITORNO: nessuno
+ * RITORNO: partita, partita con la mossa completa effettuta
  */
 void eseguireMossaCompleta(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
   scrivereCellaPartita(partita, coloreGiocatore, rigaInput, colInput);
@@ -393,6 +394,17 @@ int verificareNessunaMossa(Partita *partita) {
   return risultatoFinale;
 }
 
+/*
+ * DESCRIZIONE: inizializza la partita, 
+ *              se esiste una partita da caricare la carica, 
+ *              altrimenti riempie la scacchiera seguendo
+ *              le regole di othello
+ * ARGOMENTI: nomePartita: nome della partita da inizializzare
+ *            impostazioniPartita: impostazioni della partita da inizializzare
+ *            partitaEsistente: partita esistente da caricare. NULL se non esiste
+ *            partitaAttiva: partita inizializzata
+ * RITORNO: partitaAttiva: partita inizializzata
+ */
 void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
                                 Partita *partitaEsistente, Partita *partitaAttiva) {
   int dimensione;
@@ -416,6 +428,12 @@ void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartit
     }
 }
 
+/*
+ * DESCRIZIONE: controlla se ci sono mosse possibili per i giocatori
+ * ARGOMENTI: partitaAttiva: partita di gioco
+ * RITORNO: esito: VERO se non ci sono mosse possibili, 
+ *          FALSO se ci sono mosse possibili
+ */
 int controllareFinePartita(Partita *partitaAttiva) {
     int esito;
 
@@ -429,6 +447,12 @@ int controllareFinePartita(Partita *partitaAttiva) {
     return esito;
 }
 
+/*
+ * DESCRIZIONE: gestisce l' input dell utente per quanto riguarda le mosse della partita
+ * ARGOMENTI: partitaAttiva: partita di gioco
+ *            errore: indica se c'e un errore nell' input dell utente
+ * RITORNO: mossa del giocatore effettuta
+ */
 void gestireTurnoGiocatore(Partita *partitaAttiva, int *errore) {
     int azioneInput, rigaInput, colInput, dimensione;
 
@@ -462,6 +486,11 @@ void gestireTurnoGiocatore(Partita *partitaAttiva, int *errore) {
     }
 }
 
+/*
+ * DESCRIZIONE: gestisce il turno del bot. trova la prima mossa valida e la esegue
+ * ARGOMENTI: partitaAttiva: partita di gioco, Partita
+ * RITORNO: partitaAttiva: partita aggiornata con la mossa del bot, Partita
+ */
 void gestireTurnoBot(Partita *partitaAttiva) {
     int mossaBotValida, rigaBot, colBot, dimensione;
     dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
@@ -478,6 +507,16 @@ void gestireTurnoBot(Partita *partitaAttiva) {
     }
 }
 
+/*
+ * DESCRIZIONE: avvia un menu interattivo in cui l' utente puo giocare
+ *              una partita di othello
+ * ARGOMENTI: nomePartita: nome della partita scelto dall' utente
+ *            impostazioniPartita: impostazioni della partita di gioco
+ *            partitaEsistente: partita da caricare (= NULL se non esiste)
+ *            modalitaBot: indica se la partita viene giocata contro un bot o meno
+ *            coloreGiocatore: indica il colore delle pedine dell' utente nella partita corrente 
+ * RITORNO: menu interattivo stampato a schermo 
+ */
 void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
                     Partita *partitaEsistente, int modalitaBot, int coloreGiocatore) {
     Partita partitaAttiva;
@@ -521,7 +560,7 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
  * DESCRIZIONE: Converte la dimensione simbolica in valore numerico
  * ARGOMENTI:
  *   dimensione: dimensione da convertire
- * RITORNO: dimensione convertita
+ * RITORNO: dimensione: dimensione convertita
  */
 int convertireDimensione(int dimensione) {
   if (dimensione == PICCOLA) {
@@ -537,8 +576,9 @@ int convertireDimensione(int dimensione) {
 /**
  * DESCRIZIONE: Stampa il conteggio delle pedine e il turno corrente
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   turnoCorrente: turno del giocatore corrente
+ *   partita: partita di gioco corrente
+ *   turnoCorrente: colore delle pedine del giocatore corrente 
+ * RITORNO: conteggio delle pedine e turno corrente stampato a schermo
  */
 void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
   int neriTotali = contarePedineGiocatore(partita, NERO);
@@ -554,8 +594,8 @@ void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
 /**
  * DESCRIZIONE: Trova la prima mossa valida per il bot
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- * RITORNO: posizione codificata della mossa (riga*dimensione + colonna), 0 se nessuna mossa
+ *   partita: partita di gioco corrente, Partita
+ * RITORNO: risultato: coordinate della mossa del bot, intero
  */
 int trovareMossaBot(Partita *partita) {
   int dimensioneScacc;

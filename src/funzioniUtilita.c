@@ -25,15 +25,11 @@ void spostareCursore(int x, int y)
   printf("\033[%d;%dH", x, y);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- *  FUNZIONE: stampaCentrato(const char *testo)             *
- *  DESCRIZIONE: Allinea la stringa "testo"sul terminale    *
- *                                                          *
- *  ARGOMENTI:                                              *
- *  const char *testo: stringa da allineare                 *
- *                                                          *
- *  RITORNO: Terminale aggiornato                           *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  */
+/* 
+ *  DESCRIZIONE: stampa del testo centrato sullo schermo
+ *  ARGOMENTI: testo: testo da stampare
+ *  RITORNO: testo stampato centrato sullo schermo 
+ */
 void stampareCentrato(const char *testo) 
 {
   int spaziDaInserire; 
@@ -56,23 +52,18 @@ void stampareCentrato(const char *testo)
   printf("%s\n", testo);
 }
 
-
-/*******************************************************
-reimpostareZonaInput                                   *
-*                                                      *
-* DESCRIZIONE: Ripulisce e reimposta la zona di input  *
-*              nella posizione specificata sullo       *
-*              schermo. Mostra il prompt ">> " e       *
-*              cancella eventuali caratteri residui.   *
-*                                                      *
-* ARGOMENTI:                                           *
-* posRiga: riga dello schermo dove posizionare il      *
-*          cursore per l'input                         *
-* posColonna: colonna dello schermo dove posizionare   *
-*              il cursore per l'input                  *
-*                                                      *
-* RITORNO: Terminale aggiornato                        *
-*******************************************************/
+/*
+* DESCRIZIONE: Ripulisce e reimposta la zona di input  
+*              nella posizione specificata sullo       
+*              schermo. Mostra il prompt ">> " e       
+*              cancella eventuali caratteri residui.   
+* ARGOMENTI:                                           
+* posRiga: riga dello schermo dove posizionare il      
+*          cursore per l'input                         
+* posColonna: colonna dello schermo dove posizionare   
+*              il cursore per l'input                  
+* RITORNO: Terminale aggiornato                        
+*/
 void reimpostareZonaInput(int posRiga, int posColonna){
     spostareCursore(posRiga, posColonna);
     printf(">> ");
@@ -85,21 +76,17 @@ void pulireBuffer(){
 }
 
 
-/*******************************************************
-* FUNZIONE: mostrareMessaggioErrore                    *
-*                                                      *
-* DESCRIZIONE: Mostra un messaggio di errore colorato  *
-*              in rosso in una posizione specifica     *
-*              dello schermo. Cancella prima la riga   *
-*              per evitare sovrapposizioni di testo.   *
-*                                                      *
-* ARGOMENTI:                                           *
-* testo: stringa del messaggio da visualizzare         *
-* posRiga: riga in cui mostrare il messaggio           *
-* posColonna: colonna in cui mostrare il messaggio     *
-*                                                      *
-* RITORNO: Terminale aggiornato                        *
-*******************************************************/
+/*
+* DESCRIZIONE: Mostra un messaggio di errore colorato  
+*              in rosso in una posizione specifica     
+*              dello schermo. Cancella prima la riga   
+*              per evitare sovrapposizioni di testo.   
+* ARGOMENTI:                                           
+* testo: stringa del messaggio da visualizzare         
+* posRiga: riga in cui mostrare il messaggio           
+* posColonna: colonna in cui mostrare il messaggio     
+* RITORNO: Terminale aggiornato                        
+*/
 void mostrareMessaggioErrore(const char *testo, int posRiga, int posColonna) {
       spostareCursore(posRiga, 0);
       printf("%-80s", "");
@@ -108,25 +95,21 @@ void mostrareMessaggioErrore(const char *testo, int posRiga, int posColonna) {
 }
 
 
-/*******************************************************
-* FUNZIONE: tornareHomepage                            *
-*                                                      *
-* DESCRIZIONE: Mostra un'opzione per tornare alla      *
-*              homepage del menu principale. Attende   *
-*              l'inserimento del valore "0" da parte   *
-*              dell'utente, verificando che l'input    *
-*              sia corretto. In caso di input errato,  *
-*              mostra un messaggio d'errore e richiede *
-*              nuovamente l'inserimento.               *
-*                                                      *
-* ARGOMENTI:                                           *
-* input: puntatore a intero in cui viene memorizzato   *
-*        il valore inserito dall'utente                *
-* posRiga: riga in cui visualizzare il prompt          *
-* posColonna: colonna in cui visualizzare il prompt    *
-*                                                      *
-* RITORNO: Terminale aggiornato                        *
-*******************************************************/
+/*
+* DESCRIZIONE: Mostra un'opzione per tornare alla      
+*              homepage del menu principale. Attende   
+*              l'inserimento del valore "0" da parte   
+*              dell'utente, verificando che l'input    
+*              sia corretto. In caso di input errato,  
+*              mostra un messaggio d'errore e richiede 
+*              nuovamente l'inserimento.               
+* ARGOMENTI:                                           
+* input: puntatore a intero in cui viene memorizzato   
+*        il valore inserito dall'utente                
+* posRiga: riga in cui visualizzare il prompt          
+* posColonna: colonna in cui visualizzare il prompt    
+* RITORNO: Terminale aggiornato                        
+*/
 void tornareHomepage(int *input, int posRiga, int posColonna){
   int inMenuCorrente;
 
@@ -153,12 +136,22 @@ void tornareHomepage(int *input, int posRiga, int posColonna){
   }
 }
 
+/*
+ * DESCRIZIONE: pulisce lo schermo da tutto quello che e stampato sopra
+ * ARGOMENTI: nessuno
+ * RITORNO: terminale aggiornato
+ */
 void pulireSchermo() {
     printf("\033[2J");    
     printf("\033[H");     
     fflush(stdout);
 }
 
+/*
+ * DESCRIZIONE: conta il numero di caratteri di una stringa 
+ * ARGOMENTI: stringa: stringa di cui si vuole contare il numero di caratteri
+ * RITORNO: lunghezza: numero di caratteri di stringa 
+ */
 int lunghezza(const char stringa[]) {
     int lunghezza = 0;
     while (stringa[lunghezza] != '\0') {
@@ -167,6 +160,13 @@ int lunghezza(const char stringa[]) {
     return lunghezza;
 }
 
+/*
+ * DESCRIZIONE: concatena due stringhe 
+ * ARGOMENTI: stringa1: prima stringa da concatenare 
+ *            stringa2: seconda stringa da concatenare 
+ * RITORNO: stringaFinale: stringa derivata dalla concatenazione
+ *          di stringa1 con stringa2
+ */
 void concatenareDueStringhe(const char stringa1[], const char stringa2[], char stringaFinale[]) {
     int i = 0;
     while (i < lunghezza(stringa1)) {
@@ -183,6 +183,14 @@ void concatenareDueStringhe(const char stringa1[], const char stringa2[], char s
     stringaFinale[i + j] = '\0'; // Carattere di fine stringa
 }
 
+/*
+ * DESCRIZIONE: confronta una stringa con un altra,  
+ *              verificando se hanno lo stesso prefisso
+ * ARGOMENTI: stringa1: prima stringa da confrontare 
+ *            stringa2: seconda stringa da confrontare
+ * RITORNO: esito: booleano uguale VERO se hanno lo stesso prefisso, 
+ *                 FALSO se non hanno lo stesso prefisso 
+ */
 int confrontarePrefisso(const char *stringa1, const char *prefisso) {
     int lunghezzaPrefisso;
     int cursStringa;
@@ -201,6 +209,12 @@ int confrontarePrefisso(const char *stringa1, const char *prefisso) {
     return esito;
 }
 
+/*
+ * DESCRIZIONE: copia una stringa con un altra stringa 
+ * ARGOMENTI: stringa1: stringa copia
+ *            stringa2: stringa da essere copiata 
+ * RITORNO: stringa1: stringa copia di stringa2 
+ */
 void copiareStringa(char* stringa1, const char* stringa2) {
   int cursStringa;
 

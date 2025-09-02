@@ -296,14 +296,18 @@ int controllareFinePartita(Partita *partitaAttiva) {
  *            errore: indica se c'e un errore nell' input dell utente
  * RITORNO: mossa del giocatore effettuta
  */
-void gestireTurnoGiocatore(Partita *partitaAttiva, int *errore) {
-    int azioneInput, rigaInput, colInput, dimensione;
+void gestireTurnoGiocatore(Partita *partitaAttiva) {
+    int azioneInput;
+    int rigaInput;
+    int colInput;
+    int dimensione;
 
     dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
     spostareCursore(RIGA_INPUT - 16, COLONNA_INPUT);
     printf(">> ");
     scanf("%d", &azioneInput);
     pulireBuffer();
+
 
     if (azioneInput == SALVA) {
         salvarePartita(partitaAttiva);
@@ -315,7 +319,8 @@ void gestireTurnoGiocatore(Partita *partitaAttiva, int *errore) {
         reimpostareZonaInput(RIGA_INPUT_RIGA + 3, COLONNA_INPUT);
         scanf("%d", &colInput);
 
-        rigaInput--; colInput--;
+        rigaInput = rigaInput - 1;
+        colInput = colInput - 1;
 
         if (rigaInput >= 0 && rigaInput < dimensione &&
             colInput >= 0 && colInput < dimensione &&
@@ -323,9 +328,7 @@ void gestireTurnoGiocatore(Partita *partitaAttiva, int *errore) {
 
             eseguireMossaCompleta(partitaAttiva, rigaInput, colInput, leggereTurnoGiocatore(partitaAttiva));
             cambiareTurnoGiocatore(partitaAttiva);
-        } else {
-            *errore = VERO;
-        }
+        } 
     }
 }
 
@@ -335,7 +338,11 @@ void gestireTurnoGiocatore(Partita *partitaAttiva, int *errore) {
  * RITORNO: partitaAttiva: partita aggiornata con la mossa del bot, Partita
  */
 void gestireTurnoBot(Partita *partitaAttiva) {
-    int mossaBotValida, rigaBot, colBot, dimensione;
+    int mossaBotValida;
+    int rigaBot;
+    int colBot;
+    int dimensione;
+
     dimensione = leggereDimScacchieraImp(leggereImpPartita(*partitaAttiva));
     printf("\nPremi INVIO per continuare");
     getchar();
@@ -363,35 +370,31 @@ void gestireTurnoBot(Partita *partitaAttiva) {
 void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
                     Partita *partitaEsistente, int modalitaBot, int coloreGiocatore) {
     Partita partitaAttiva;
-    int finePartita = FALSO, errore = FALSO;
+    int finePartita;
     int dimensione;
+
+    finePartita = FALSO;
 
     inizializzarePartita(nomePartita, impostazioniPartita, partitaEsistente, &partitaAttiva);
     dimensione = leggereDimScacchieraImp(leggereImpPartita(partitaAttiva));
 
-    while (!finePartita) {
+    while (finePartita == FALSO) {
         pulireSchermo();
         if (dimensione != 16) stampareTitoloPartita();
         stampareScacchiera(&partitaAttiva);
         stampareTabellaInput();
         stampareConteggioPedine(&partitaAttiva, leggereTurnoGiocatore(&partitaAttiva));
 
-        if (errore) {
-            mostrareMessaggioErrore("mossa non valida", RIGA_ERRORE, COLONNA_ERRORE);
-            errore = FALSO;
-        }
-
-        if (!modalitaBot || leggereTurnoGiocatore(&partitaAttiva) == coloreGiocatore) {
-            gestireTurnoGiocatore(&partitaAttiva,  &errore);
+        if (modalitaBot == FALSO || leggereTurnoGiocatore(&partitaAttiva) == coloreGiocatore) {
+            gestireTurnoGiocatore(&partitaAttiva);
         } else {
             gestireTurnoBot(&partitaAttiva);
         }
 
-        if (!errore) {
-            if (controllareFinePartita(&partitaAttiva)) finePartita = VERO;
+        if (controllareFinePartita(&partitaAttiva)) {
+            finePartita = VERO;
         }
     }
-
     stampareVittoria(
         contarePedineGiocatore(&partitaAttiva, NERO),
         contarePedineGiocatore(&partitaAttiva, BIANCO)
@@ -424,14 +427,23 @@ int convertireDimensione(int dimensione) {
  * RITORNO: conteggio delle pedine e turno corrente stampato a schermo
  */
 void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
-  int neriTotali = contarePedineGiocatore(partita, NERO);
-  int bianchiTotali = contarePedineGiocatore(partita, BIANCO);
-  char* nomeGiocatoreCorrente = (turnoCorrente == NERO) ? "NERO" : "BIANCO";
-  
-  spostareCursore(RIGA_ERRORE - 1, COLONNA_ERRORE - 8);
-  printf(" Nere:  %2d    ", neriTotali);
-  printf(" Bianche: %2d  ", bianchiTotali);
-  printf(" Turno: %s     ", nomeGiocatoreCorrente);
+    int neriTotali; 
+    int bianchiTotali; 
+    char* nomeGiocatoreCorrente; 
+
+    bianchiTotali = contarePedineGiocatore(partita, BIANCO);
+    neriTotali = contarePedineGiocatore(partita, NERO);
+
+    if(turnoCorrente == NERO){
+        nomeGiocatoreCorrente ="NERO"; 
+    } else {
+        nomeGiocatoreCorrente = "BIANCO";
+    }
+
+    spostareCursore(RIGA_ERRORE - 1, COLONNA_ERRORE - 8);
+    printf(" Nere:  %2d    ", neriTotali);
+    printf(" Bianche: %2d  ", bianchiTotali);
+    printf(" Turno: %s     ", nomeGiocatoreCorrente);
 }
 
 /**

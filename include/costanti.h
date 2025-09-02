@@ -41,7 +41,7 @@
 #define SALVA 2
 #define ESCI 3
 
-#define PREFISSO_PARTITA 8
+#define PREFISSO_PARTITA "partita_"
 #define CARATTERE_FINE_STRINGA '\0'
 #define CARATTERE_INIZIO_ESTENSIONE '.'
 
@@ -49,4 +49,6 @@
 #define ORR 1
 
 #define NUMERO_DIREZIONI 8
+
+#define DATABASE "database" 
 #endif

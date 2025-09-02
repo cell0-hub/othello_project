@@ -11,7 +11,7 @@ void spostareCursore(int x, int y);
 void reimpostareZonaInput(int posRiga, int posColonna);
 void pulireBuffer();
 void mostrareMessaggioErrore(const char *testo, int posRiga, int posColonna);
-void tornareHomepage(int *input, int posRiga, int posColonna);
+void tornareHomepage(int posRiga, int posColonna);
 void pulireSchermo();
 int lunghezza(const char stringa[]);
 void concatenareDueStringhe(const char stringa1[], const char stringa2[], char stringaFinale[]);

@@ -627,7 +627,6 @@ void stampareTabellaInput() {
  * RITORNO: schermata di vittoria stampata a schermo
  */
 void stampareVittoria(int neriTotali, int bianchiTotali) {
-  int inputUtente;
 
   pulireSchermo();
   printf("Nero: %d pedine\n", neriTotali);
@@ -642,5 +641,5 @@ void stampareVittoria(int neriTotali, int bianchiTotali) {
       stampareCentrato("PAREGGIO!");
     }
   }
-  tornareHomepage(&inputUtente, 20, 30);
+  tornareHomepage(20, 30);
 }

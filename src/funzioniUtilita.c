@@ -110,7 +110,8 @@ void mostrareMessaggioErrore(const char *testo, int posRiga, int posColonna) {
 * posColonna: colonna in cui visualizzare il prompt    
 * RITORNO: Terminale aggiornato                        
 */
-void tornareHomepage(int *input, int posRiga, int posColonna){
+void tornareHomepage(int posRiga, int posColonna){
+    int input;
   int inMenuCorrente;
 
   inMenuCorrente = VERO;
@@ -119,17 +120,17 @@ void tornareHomepage(int *input, int posRiga, int posColonna){
   while(inMenuCorrente) {
     reimpostareZonaInput(posRiga, posColonna + 8);
 
-    while(scanf("%d", input) != 1) {
+    while(scanf("%d", &input) != 1) {
         mostrareMessaggioErrore("input non valido", posRiga + 2, posColonna + 3);
         reimpostareZonaInput(posRiga, posColonna + 8);
         pulireBuffer();
     }
-    if(*input != 0){
+    if(input != 0){
         mostrareMessaggioErrore("input non valido", posRiga + 2, posColonna + 3);
         reimpostareZonaInput(posRiga, posColonna + 8);
         pulireBuffer();
     }
-    else if (*input == 0) {
+    else if (input == 0) {
       avviareMenuPrincipale();
       inMenuCorrente = FALSO;
     }

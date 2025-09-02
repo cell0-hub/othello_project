@@ -49,7 +49,7 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
     int conteggio;
     const char *nomeFile;
 
-    cartella = opendir("database");
+    cartella = opendir(DATABASE);
     conteggio = 0;
     voce = leggereProssimaVoce(cartella);
     while (voce != NULL && conteggio < MAX_PARTITE) {
@@ -95,7 +95,7 @@ int contareNumeroPartiteSalvate() {
     int conteggio;
     const char *nomeFile;
 
-    cartella = opendir("database");
+    cartella = opendir(DATABASE);
     conteggio = 0;
 
     voce = leggereProssimaVoce(cartella);
@@ -140,7 +140,7 @@ void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
     int cursNome;
     int cursNomeFile;
     cursNome = 0;
-    cursNomeFile = PREFISSO_PARTITA;
+    cursNomeFile = lunghezza(PREFISSO_PARTITA);
     while(nomeFile[cursNomeFile] != CARATTERE_INIZIO_ESTENSIONE && nomeFile[cursNomeFile] != '\0') {
         nome[cursNome] = nomeFile[cursNomeFile];
         cursNome = cursNome + 1;
@@ -213,6 +213,8 @@ void caricarePartita(Partita *partita, const char *percorso) {
 
     file = fopen(percorso, "r");
 
+    // la variabile c non e' presente nello pseudocodice,
+    // perche' superflua nello pseudocodice
     if (fscanf(file, " %c", &c) == 1) {
         if (c == 'G') {
             dimensione = 16;
@@ -256,7 +258,6 @@ void avviareMenuCaricaPartita() {
     char *nomiPartite[100];
     int numeroPartite;
     int input;
-    int tornaHP;
     int cursPartite;
     char nomeVisualizzato[128];
     char percorso[256];
@@ -271,7 +272,7 @@ void avviareMenuCaricaPartita() {
     if (numeroPartite == 0) {
         stampareCentrato("Nessuna partita salvata.");
         liberareNomiPartite(nomiPartite, numeroPartite);
-        tornareHomepage(&tornaHP, RIGA_ERRORE, COLONNA - 10);
+        tornareHomepage(RIGA_ERRORE, COLONNA - 10);
     }
     printf("  [0] Torna al menu principale\n");
     cursPartite = 0;

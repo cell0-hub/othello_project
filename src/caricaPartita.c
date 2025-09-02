@@ -20,7 +20,6 @@ Scopo di ogni funzione presente:
 #include "../include/partita.h"
 #include "../include/costanti.h"
 #include "../include/tipiDiDato.h"
-#include <dirent.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,28 +37,6 @@ Scopo di ogni funzione presente:
 #define INPUT_COLONNA 35
 #define ERR_MSG_RIGA 22
 #define ERR_MSG_COLONNA 31
-
-/**
- * DESCRIZIONE: Legge la voce successiva in una cartella.
- * ARGOMENTI: cartella, cartella da cui leggere i file, cartella
- * RITORNO: voceLetta, file letto, FILE
- */
-struct dirent* leggereProssimaVoce(DIR* cartella) {
-    struct dirent* voceLetta;
-    voceLetta = readdir(cartella);
-    return voceLetta;
-}
-
-/**
- * DESCRIZIONE: Ottiene il nome di un file/voce.
- * ARGOMENTI: voce, voce letta dalla cartella, FILE 
- * RITORNO: nome della voce letta dal file 
- */
-const char* ottenereNomeVoce(struct dirent* voce) {
-    const char* nomeVoce;
-    nomeVoce = voce->d_name;
-    return nomeVoce;
-}
 
 /**
  * DESCRIZIONE: Raccoglie i nomi delle partite salvate (file che iniziano con "partita_").

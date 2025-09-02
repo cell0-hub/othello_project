@@ -1,6 +1,7 @@
 #ifndef TIPIDIDATO_H
 #define TIPIDIDATO_H
 
+#include <dirent.h>
 // Definizione della struttura Cella
 typedef struct {
   int stato;
@@ -55,5 +56,8 @@ Impostazioni* inizializzareImpostazioni(int modalita, int dimensione);
 
 int leggereStatoCella(Cella cella);
 void scrivereStatoCella(Cella *cella, int nuovoStato);
+
+struct dirent* leggereProssimaVoce(DIR* cartella);
+const char* ottenereNomeVoce(struct dirent* voce); 
 #endif
 

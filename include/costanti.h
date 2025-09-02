@@ -16,7 +16,7 @@
 #define ARANCIONE "\033[38;5;208m"
 #define RESET "\033[0m"
 
-#define CELLA_VUOTA 0
+#define VUOTO 0
 #define NERO 1
 #define BIANCO 2
 
@@ -45,4 +45,8 @@
 #define CARATTERE_FINE_STRINGA '\0'
 #define CARATTERE_INIZIO_ESTENSIONE '.'
 
+#define VERT 0
+#define ORR 1
+
+#define NUMERO_DIREZIONI 8
 #endif

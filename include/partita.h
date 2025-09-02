@@ -31,6 +31,7 @@ void stampareIntestazioneColonne(int dimensione, int numeroSottoquadrato);
 void stampareLineaOrizzontale(Partita *partita);
 void stampareRigheScacchiera(Scacchiera scacchiera);
 void stampareRigaScacchiera(Scacchiera scacchiera, int riga);
+void stampareScacchiera(Partita *partita);
 
 // Funzioni di utilità per dimensioni e difficoltà
 int convertireDimensione(int dimensione);

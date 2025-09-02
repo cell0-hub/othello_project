@@ -20,171 +20,6 @@ AUTORI: Onofrio de Robertis
 #define COLONNA_INPUT     67
 #define COLONNA_ERRORE    27
 
-/**
- * DESCRIZIONE: stampa il titolo della partita
- * ARGOMENTI: nessuno
- * RITORNO: titolo della partita stampato a schermo
- */
-void stampareTitoloPartita(){
-  pulireSchermo();
-  stampareCentrato("             _   _ _       ");
-  stampareCentrato(" ___ ___ ___| |_|_| |_ ___ ");
-  stampareCentrato("| . | .'|  _|  _| |  _| .'|");
-  stampareCentrato("|  _|__,|_| |_| |_|_| |__,|");
-  stampareCentrato("|_|                        ");
-  printf("\n\n");
-}
-
-/**
- * DESCRIZIONE: stampa la linea orrizonatale della scacchiera 
- * ARGOMENTI: nessuno
- * RITORNO: linea orrizonatale stampata a schermo 
- */
-void stampareLineaOrizzontale(Partita *partita) {
-  int indiceColonna;
-  int dimensione;
-
-  dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  printf("   +");
-
-  indiceColonna = 0;
-  while (indiceColonna < dimensione) {
-    printf("---");
-    indiceColonna = indiceColonna + 1;
-  }
-  printf("-+\n");
-}
-
-/**
- * DESCRIZIONE: stampa le coordinate prima delle colonne 
- * ARGOMENTI: partita di gioco (serve per la dimensione della scacchiera)
- * RITORNO: coordinate prima delle colonne stampate a schermo
- */
-void stampareIntestColonne(Partita *partita) {
-  int indiceColonna;
-  int dimensione;
-
-  dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  printf("    ");
-
-  indiceColonna = 0;
-  while (indiceColonna < dimensione) {
-    printf("%3d", indiceColonna + 1);
-    indiceColonna = indiceColonna + 1;
-  }
-  printf("\n");
-}
-
-/**
- * DESCRIZIONE: stampa la scacchiera di gioco 
- * ARGOMENTI: partita: partita di gioco, Partita
- * RITORNO: scacchiera di gioco stampata a schermo 
- */
-void stampareScacchiera(Partita *partita) {
-  int indiceRiga;
-  int indiceColonna;
-  int dimensione;
-  int valoreCorrente;
-  char carattereVisualizzato;
-
-  dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
-
-  stampareIntestColonne(partita);
-  stampareLineaOrizzontale(partita);
-
-  indiceRiga = 0;
-  while (indiceRiga < dimensione) {
-    printf("%2d |", indiceRiga + 1);
-
-    indiceColonna = 0;
-    while (indiceColonna < dimensione) {
-      valoreCorrente = leggereCellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
-      if(valoreCorrente == NERO){
-        carattereVisualizzato = 'N';
-      } else if (valoreCorrente == BIANCO) {
-        carattereVisualizzato = 'B';
-      } else {
-        carattereVisualizzato = '.';
-      }
-      printf("%3c", carattereVisualizzato);
-      indiceColonna = indiceColonna + 1;
-    }
-    printf(" |\n");
-    indiceRiga = indiceRiga + 1;
-  }
-  stampareLineaOrizzontale(partita);
-}
-
-
-
-/**
- * DESCRIZIONE: stampa la cornice della zona
- *              dove l' utente inserisce gli input 
- * ARGOMENTI: nessuno 
- * RITORNO: cornice della zona dove 
- *          l' utente inserisce gli input stampata a schermo
- */
-void disegnareCornice() {
-  int contatoreCornice;
-
-  spostareCursore(RIGA_INPUT_RIGA - 5, COLONNA_INPUT - 2);
-  printf("+------------+\n");
-  spostareCursore(RIGA_INPUT_RIGA - 6, COLONNA_INPUT - 2);
-  printf("|   Input    |\n");
-  spostareCursore(RIGA_INPUT_RIGA - 7, COLONNA_INPUT - 2);
-  printf("+------------+\n");
-
-  contatoreCornice = -4;
-  while (contatoreCornice < 4) {
-    spostareCursore(RIGA_INPUT_RIGA + contatoreCornice, COLONNA_INPUT - 2);
-    printf("|            |\n");
-    contatoreCornice = contatoreCornice + 1;
-  }
-  spostareCursore(RIGA_INPUT_RIGA + 4, COLONNA_INPUT - 2);
-  printf("+------------+\n");
-}
-
-/**
- * DESCRIZIONE: stampa la zona dove l' utente inserisce gli input 
- * ARGOMENTI: nessuno 
- * RITORNO: zona dove l' utente inserisce gli input stampata a schermo
- */
-void stampareTabellaInput() {
-  disegnareCornice();
-  spostareCursore(RIGA_INPUT_RIGA - 4, COLONNA_INPUT);
-  printf("-Azione-");
-  spostareCursore(RIGA_INPUT_RIGA - 1, COLONNA_INPUT + 1);
-  printf("-Riga-");
-  spostareCursore(RIGA_INPUT_RIGA + 2, COLONNA_INPUT);
-  printf("-Colonna-");
-  spostareCursore(25, 17);
-  printf("\033[34m azione: (1 giocare / 2 salvare / 3 uscire) \033[0m");
-}
-
-/*
- * DESCRIZIONE: stampa la schermata di vittoria
- * ARGOMENTI: neriTotali: numero di pedine del giocatore nero
- *            bianchiTotali: numero di pedine del giocatore bianchi
- * RITORNO: schermata di vittoria stampata a schermo
- */
-void stampareVittoria(int neriTotali, int bianchiTotali) {
-  int inputUtente;
-
-  pulireSchermo();
-  printf("Nero: %d pedine\n", neriTotali);
-  printf("Bianco: %d pedine\n", bianchiTotali);
-
-  if (neriTotali > bianchiTotali) {
-    stampareCentrato("VINCE IL NERO!");
-  } else {
-    if (bianchiTotali > neriTotali) {
-      stampareCentrato("VINCE IL BIANCO!");
-    } else {
-      stampareCentrato("PAREGGIO!");
-    }
-  }
-  tornareHomepage(&inputUtente, 20, 30);
-}
 
 /**
  * DESCRIZIONE: Conta il numero di pedine di un giocatore sulla scacchiera.
@@ -194,6 +29,7 @@ void stampareVittoria(int neriTotali, int bianchiTotali) {
  *                    vogliono contare il numero di pedine
  * RITORNO: conteggioTotale: numero di pedine contate
  */
+
 int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
   int indiceRiga;
   int indiceColonna;
@@ -232,6 +68,7 @@ int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
  */
 int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio, 
                                  int deltaRiga, int deltaColonna) {
+  int coloreGiocatore; 
   int coloreAvversario;
   int contatorePedine;
   int valoreCorrente;
@@ -239,7 +76,6 @@ int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio
   int rigaCorrente;
   int colCorrente;
   int pedineDaCapovolgere;
-  int coloreGiocatore; 
 
   coloreGiocatore = leggereTurnoGiocatore(partita);
   dimensioneScacc = leggereDimScacchieraImp(leggereImpPartita(*partita));
@@ -266,10 +102,10 @@ int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio
       if (valoreCorrente == coloreGiocatore) {
         pedineDaCapovolgere = contatorePedine;
       }
-      rigaCorrente = dimensioneScacc; /* Forza uscita dal ciclo */
+      rigaCorrente = dimensioneScacc + 1; /* Forza uscita dal ciclo */
     }
 
-    if (pedineDaCapovolgere == 0 && rigaCorrente < dimensioneScacc) {
+    if (pedineDaCapovolgere == 0 && rigaCorrente < dimensioneScacc && colCorrente < dimensioneScacc) {
       rigaCorrente = rigaCorrente + deltaRiga;
       colCorrente = colCorrente + deltaColonna;
     }
@@ -295,10 +131,10 @@ int verificareMossaValida(Partita *partita, int rigaInput, int colInput) {
   int risultato = FALSO;
 
   // Verifica se la cella è vuota
-  if (leggereCellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) == CELLA_VUOTA) {
-    while (indiceDir < 8 && risultato == 0) {
+  if (leggereCellaScacchiera(leggereScacchieraPartita(partita), rigaInput, colInput) == VUOTO) {
+    while (indiceDir < NUMERO_DIREZIONI && risultato == FALSO) {
       if (calcolarePedineDaCapovolgere(partita, rigaInput, colInput, 
-                                       direzioni[indiceDir][0], direzioni[indiceDir][1]) > 0) {
+                                       direzioni[indiceDir][VERT], direzioni[indiceDir][ORR]) > 0) {
         risultato = VERO;
       }
       indiceDir = indiceDir + 1;
@@ -324,20 +160,20 @@ void capovolgerePedine(Partita *partita, int rigaInput, int colInput, int colore
     {CENTRO, OVEST},               {CENTRO, EST}, 
     {SUD, OVEST},   {SUD, CENTRO}, {SUD, EST}};
   int indiceDir = 0;
-  int pedineFlippabili;
-  int passoFlip;
+  int pedineDaCapovolgere;
+  int contatorePedine;
   int nuovaRiga;
   int nuovaColonna;
 
-  while (indiceDir < 8) {
-    pedineFlippabili = calcolarePedineDaCapovolgere(partita, rigaInput, colInput, 
-                                                    direzioni[indiceDir][0], direzioni[indiceDir][1]);
-    passoFlip = 1;
-    while (passoFlip <= pedineFlippabili) {
-      nuovaRiga = rigaInput + direzioni[indiceDir][0] * passoFlip;
-      nuovaColonna = colInput + direzioni[indiceDir][1] * passoFlip;
+  while (indiceDir < NUMERO_DIREZIONI) {
+    pedineDaCapovolgere = calcolarePedineDaCapovolgere(partita, rigaInput, colInput, 
+                                                    direzioni[indiceDir][VERT], direzioni[indiceDir][ORR]);
+    contatorePedine = 1;
+    while (contatorePedine <= pedineDaCapovolgere) {
+      nuovaRiga = rigaInput + direzioni[indiceDir][0] * contatorePedine;
+      nuovaColonna = colInput + direzioni[indiceDir][1] * contatorePedine;
       scrivereCellaPartita(partita, coloreGiocatore, nuovaRiga, nuovaColonna);
-      passoFlip = passoFlip + 1;
+      contatorePedine = contatorePedine + 1;
     }
     indiceDir = indiceDir + 1;
   }
@@ -372,14 +208,14 @@ int verificareNessunaMossa(Partita *partita) {
   int risultatoFinale;
 
   dimensioneScacc = leggereDimScacchieraImp(leggereImpPartita(*partita));
-  mossaTrovata = 0;
-  risultatoFinale = 1;
+  mossaTrovata = FALSO;
+  risultatoFinale = VERO;
 
   indiceRiga = 0;
-  while (indiceRiga < dimensioneScacc && mossaTrovata == 0) {
+  while (indiceRiga < dimensioneScacc && mossaTrovata == FALSO) {
     indiceColonna = 0;
-    while (indiceColonna < dimensioneScacc && mossaTrovata == 0) {
-      if (verificareMossaValida(partita, indiceRiga, indiceColonna) == 1) {
+    while (indiceColonna < dimensioneScacc && mossaTrovata == FALSO) {
+      if (verificareMossaValida(partita, indiceRiga, indiceColonna) == VERO) {
         mossaTrovata = 1;
       }
       indiceColonna = indiceColonna + 1;
@@ -387,8 +223,8 @@ int verificareNessunaMossa(Partita *partita) {
     indiceRiga = indiceRiga + 1;
   }
 
-  if (mossaTrovata == 1) {
-    risultatoFinale = 0;
+  if (mossaTrovata == VERO) {
+    risultatoFinale = FALSO;
   }
 
   return risultatoFinale;
@@ -407,9 +243,9 @@ int verificareNessunaMossa(Partita *partita) {
  */
 void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
                                 Partita *partitaEsistente, Partita *partitaAttiva) {
-  int dimensione;
+    int metaDimensione;
+    int dimensione;
     if (partitaEsistente == NULL) {
-        int metaDimensione;
         dimensione = leggereDimScacchieraImp(*impostazioniPartita);
 
         inizializzareScacchieraPartita(partitaAttiva, dimensione);
@@ -435,16 +271,23 @@ void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartit
  *          FALSO se ci sono mosse possibili
  */
 int controllareFinePartita(Partita *partitaAttiva) {
-    int esito;
+    int esitoFinale;
+    int primoEsito;
 
-    esito = FALSO;
+    esitoFinale = FALSO;
+    primoEsito = FALSO;
+
     if (verificareNessunaMossa(partitaAttiva)) {
         cambiareTurnoGiocatore(partitaAttiva);
+        primoEsito = VERO;
+    }
+
+    if(primoEsito == VERO) {
         if (verificareNessunaMossa(partitaAttiva)) {
-            esito = VERO;
+            esitoFinale = VERO;
         }
     }
-    return esito;
+    return esitoFinale;
 }
 
 /*
@@ -622,4 +465,170 @@ int trovareMossaBot(Partita *partita) {
   }
   
   return risultato;
+}
+
+/**
+ * DESCRIZIONE: stampa il titolo della partita
+ * ARGOMENTI: nessuno
+ * RITORNO: titolo della partita stampato a schermo
+ */
+void stampareTitoloPartita(){
+  pulireSchermo();
+  stampareCentrato("             _   _ _       ");
+  stampareCentrato(" ___ ___ ___| |_|_| |_ ___ ");
+  stampareCentrato("| . | .'|  _|  _| |  _| .'|");
+  stampareCentrato("|  _|__,|_| |_| |_|_| |__,|");
+  stampareCentrato("|_|                        ");
+  printf("\n\n");
+}
+
+/**
+ * DESCRIZIONE: stampa la linea orrizonatale della scacchiera 
+ * ARGOMENTI: nessuno
+ * RITORNO: linea orrizonatale stampata a schermo 
+ */
+void stampareLineaOrizzontale(Partita *partita) {
+  int indiceColonna;
+  int dimensione;
+
+  dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
+  printf("   +");
+
+  indiceColonna = 0;
+  while (indiceColonna < dimensione) {
+    printf("---");
+    indiceColonna = indiceColonna + 1;
+  }
+  printf("-+\n");
+}
+
+/**
+ * DESCRIZIONE: stampa le coordinate prima delle colonne 
+ * ARGOMENTI: partita di gioco (serve per la dimensione della scacchiera)
+ * RITORNO: coordinate prima delle colonne stampate a schermo
+ */
+void stampareIntestColonne(Partita *partita) {
+  int indiceColonna;
+  int dimensione;
+
+  dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
+  printf("    ");
+
+  indiceColonna = 0;
+  while (indiceColonna < dimensione) {
+    printf("%3d", indiceColonna + 1);
+    indiceColonna = indiceColonna + 1;
+  }
+  printf("\n");
+}
+
+/**
+ * DESCRIZIONE: stampa la scacchiera di gioco 
+ * ARGOMENTI: partita: partita di gioco, Partita
+ * RITORNO: scacchiera di gioco stampata a schermo 
+ */
+void stampareScacchiera(Partita *partita) {
+  int indiceRiga;
+  int indiceColonna;
+  int dimensione;
+  int valoreCorrente;
+  char carattereVisualizzato;
+
+  dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
+
+  stampareIntestColonne(partita);
+  stampareLineaOrizzontale(partita);
+
+  indiceRiga = 0;
+  while (indiceRiga < dimensione) {
+    printf("%2d |", indiceRiga + 1);
+
+    indiceColonna = 0;
+    while (indiceColonna < dimensione) {
+      valoreCorrente = leggereCellaScacchiera(leggereScacchieraPartita(partita), indiceRiga, indiceColonna);
+      if(valoreCorrente == NERO){
+        carattereVisualizzato = 'N';
+      } else if (valoreCorrente == BIANCO) {
+        carattereVisualizzato = 'B';
+      } else {
+        carattereVisualizzato = '.';
+      }
+      printf("%3c", carattereVisualizzato);
+      indiceColonna = indiceColonna + 1;
+    }
+    printf(" |\n");
+    indiceRiga = indiceRiga + 1;
+  }
+  stampareLineaOrizzontale(partita);
+}
+
+
+
+/**
+ * DESCRIZIONE: stampa la cornice della zona
+ *              dove l' utente inserisce gli input 
+ * ARGOMENTI: nessuno 
+ * RITORNO: cornice della zona dove 
+ *          l' utente inserisce gli input stampata a schermo
+ */
+void disegnareCornice() {
+  int contatoreCornice;
+
+  spostareCursore(RIGA_INPUT_RIGA - 5, COLONNA_INPUT - 2);
+  printf("+------------+\n");
+  spostareCursore(RIGA_INPUT_RIGA - 6, COLONNA_INPUT - 2);
+  printf("|   Input    |\n");
+  spostareCursore(RIGA_INPUT_RIGA - 7, COLONNA_INPUT - 2);
+  printf("+------------+\n");
+
+  contatoreCornice = -4;
+  while (contatoreCornice < 4) {
+    spostareCursore(RIGA_INPUT_RIGA + contatoreCornice, COLONNA_INPUT - 2);
+    printf("|            |\n");
+    contatoreCornice = contatoreCornice + 1;
+  }
+  spostareCursore(RIGA_INPUT_RIGA + 4, COLONNA_INPUT - 2);
+  printf("+------------+\n");
+}
+
+/**
+ * DESCRIZIONE: stampa la zona dove l' utente inserisce gli input 
+ * ARGOMENTI: nessuno 
+ * RITORNO: zona dove l' utente inserisce gli input stampata a schermo
+ */
+void stampareTabellaInput() {
+  disegnareCornice();
+  spostareCursore(RIGA_INPUT_RIGA - 4, COLONNA_INPUT);
+  printf("-Azione-");
+  spostareCursore(RIGA_INPUT_RIGA - 1, COLONNA_INPUT + 1);
+  printf("-Riga-");
+  spostareCursore(RIGA_INPUT_RIGA + 2, COLONNA_INPUT);
+  printf("-Colonna-");
+  spostareCursore(25, 17);
+  printf("\033[34m azione: (1 giocare / 2 salvare / 3 uscire) \033[0m");
+}
+
+/*
+ * DESCRIZIONE: stampa la schermata di vittoria
+ * ARGOMENTI: neriTotali: numero di pedine del giocatore nero
+ *            bianchiTotali: numero di pedine del giocatore bianchi
+ * RITORNO: schermata di vittoria stampata a schermo
+ */
+void stampareVittoria(int neriTotali, int bianchiTotali) {
+  int inputUtente;
+
+  pulireSchermo();
+  printf("Nero: %d pedine\n", neriTotali);
+  printf("Bianco: %d pedine\n", bianchiTotali);
+
+  if (neriTotali > bianchiTotali) {
+    stampareCentrato("VINCE IL NERO!");
+  } else {
+    if (bianchiTotali > neriTotali) {
+      stampareCentrato("VINCE IL BIANCO!");
+    } else {
+      stampareCentrato("PAREGGIO!");
+    }
+  }
+  tornareHomepage(&inputUtente, 20, 30);
 }

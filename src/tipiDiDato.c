@@ -29,6 +29,7 @@ Scopo delle funzioni presenti:
 
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "../include/tipiDiDato.h"
 #include "../include/costanti.h"
 
@@ -152,7 +153,7 @@ void inizializzareScacchieraPartita(Partita *partita, int dim) {
         partita->scacchieraPartita.celleScacchiera[riga] = malloc(dim * sizeof(Cella));
         colonna = 0;  
         while (colonna < dim) {
-            scrivereCellaPartita(partita, CELLA_VUOTA, riga, colonna);
+            scrivereCellaPartita(partita, VUOTO, riga, colonna);
             colonna = colonna + 1;
         }
         riga = riga + 1;
@@ -194,4 +195,25 @@ Impostazioni* inizializzareImpostazioni(int modalita, int dimensione) {
 }
 
 //funzioni di accesso cartella
+/**
+ * DESCRIZIONE: Legge la voce successiva in una cartella.
+ * ARGOMENTI: cartella, cartella da cui leggere i file, cartella
+ * RITORNO: voceLetta, file letto, FILE
+ */
+struct dirent* leggereProssimaVoce(DIR* cartella) {
+    struct dirent* voceLetta;
+    voceLetta = readdir(cartella);
+    return voceLetta;
+}
+
+/**
+ * DESCRIZIONE: Ottiene il nome di un file/voce.
+ * ARGOMENTI: voce, voce letta dalla cartella, FILE 
+ * RITORNO: nome della voce letta dal file 
+ */
+const char* ottenereNomeVoce(struct dirent* voce) {
+    const char* nomeVoce;
+    nomeVoce = voce->d_name;
+    return nomeVoce;
+}
 

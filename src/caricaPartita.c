@@ -229,7 +229,7 @@ void caricarePartita(Partita *partita, const char *percorso) {
     // Inizializza la partita
     impPartita = inizializzareImpostazioni(modalita, dimensione);
     scrivereImpPartita(partita, *impPartita);
-    scrivereTurnoGiocatore(partita, turnoCorrente);
+    scrivereTurnoGiocatorePartita(partita, turnoCorrente);
     inizializzareScacchieraPartita(partita, dimensione);
 
     // Carica la scacchiera
@@ -297,12 +297,12 @@ void avviareMenuCaricaPartita() {
         scrivereNomePartita(&partita, nome);
         liberareNomiPartite(nomiPartite, numeroPartite);
 
-        if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 1) {
+        if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == VS_AMICO) {
             avviarePartita(NULL, NULL, &partita, 0, 0);
-        } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 2) {
+        } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == VS_BOT_NERO) {
             coloreGiocatore = leggereTurnoGiocatore(&partita); 
             avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
-        } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == 3) {
+        } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == VS_BOT_BIANCO) {
             coloreGiocatore = leggereTurnoGiocatore(&partita); 
             avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
         }

@@ -51,4 +51,9 @@
 #define NUMERO_DIREZIONI 8
 
 #define DATABASE "database" 
+
+#define VS_AMICO 1 
+#define VS_BOT_NERO 2
+#define VS_BOT_BIANCO 3
+
 #endif

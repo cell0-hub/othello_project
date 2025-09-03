@@ -42,9 +42,9 @@ void inizializzareScacchieraPartita(Partita *partita, int dimensione);
 Impostazioni leggereImpPartita(Partita partita);
 int leggereModalitaPartita(Partita partita);
 void scrivereModalitaPartita(Partita *partita, int valore);
-void cambiareTurnoGiocatore(Partita *partita);
+void cambiareTurnoGiocatorePartita(Partita *partita);
 int leggereTurnoGiocatore(Partita *partita);
-void scrivereTurnoGiocatore(Partita *partita, int turno);
+void scrivereTurnoGiocatorePartita(Partita *partita, int turno);
 void scrivereImpPartita(Partita *partita, Impostazioni imp);
 
 //Funzioni di accesso tipo di dato impostazioni

@@ -104,12 +104,12 @@ void configurareNuovaPartita() {
   dimensione = convertireDimensione(dimensione);
   impostazioniPartita = inizializzareImpostazioni(modalita, dimensione);
 
-  if (modalita == 1) {
+  if (modalita == VS_AMICO) {
     modalitaBot = FALSO;
     coloreGiocatore = 0;  
   } else {
     modalitaBot = VERO;
-    if (modalita == 2) {
+    if (modalita == VS_BOT_NERO) {
       coloreGiocatore = NERO; 
     } else {
       coloreGiocatore = BIANCO; 
@@ -127,7 +127,6 @@ int collezionareModalita() {
   int inputModalita;
   int inMenuModalita;
 
-  inputModalita = 0;
   inMenuModalita = VERO;
 
   while (inMenuModalita == VERO) {

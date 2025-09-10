@@ -56,6 +56,7 @@ void stampareConteggioPedine(Partita *partita, int turnoCorrente);
 void stampareVittoria(int neriTotali, int bianchiTotali);
 int trovareMossaBot(Partita *partita);
 
+void deallocarePartita(Partita *p);
 
 #endif // PARTITA_H
 

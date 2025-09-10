@@ -6,6 +6,8 @@ AUTORI: Onofrio de Robertis
 */
 
 #include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
 #include "../include/tipiDiDato.h"
 #include "../include/partita.h"
 #include "../include/funzioniUtilita.h"
@@ -24,10 +26,10 @@ AUTORI: Onofrio de Robertis
 /**
  * DESCRIZIONE: Conta il numero di pedine di un giocatore sulla scacchiera.
  * ARGOMENTI:
- *   partita: partita di gioco
- *   coloreGiocatore: colore del giocatore di cui si 
- *                    vogliono contare il numero di pedine
- * RITORNO: conteggioTotale: numero di pedine contate
+ *   Partita partita: partita di gioco
+ *   int coloreGiocatore: colore del giocatore di cui si 
+ *                        vogliono contare il numero di pedine
+ * RITORNO: int conteggioTotale: numero di pedine contate
  */
 
 int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
@@ -58,13 +60,12 @@ int contarePedineGiocatore(Partita *partita, int coloreGiocatore) {
 /**
  * DESCRIZIONE: Conta quante pedine si possono capovolgere in una direzione.
  * ARGOMENTI:
- *   partita: partita di gioco, Partita 
- *   rigaInizio: riga di partenza
- *   colInizio: colonna di partenza
- *   deltaRiga: direzione riga
- *   deltaColonna: direzione colonna
- *   coloreGiocatore: colore del giocatore
- * RITORNO: pedineDaCapovolgere: numero di pedine da capovolegere
+ *   Partita partita: partita di gioco
+ *   int rigaInizio: riga di partenza
+ *   int colInizio: colonna di partenza
+ *   int deltaRiga: direzione riga
+ *   int deltaColonna: direzione colonna
+ * RITORNO: int pedineDaCapovolgere: numero di pedine da capovolegere
  */
 int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio, 
                                  int deltaRiga, int deltaColonna) {
@@ -117,10 +118,9 @@ int calcolarePedineDaCapovolgere(Partita *partita, int rigaInizio, int colInizio
 /**
  * DESCRIZIONE: Controlla se una mossa è valida per il giocatore.
  * ARGOMENTI:
- *   partita: partita di gioco 
- *   rigaInput: riga della mossa
- *   colInput: colonna della mossa
- *   coloreGiocatore: colore del giocatore (NERO/BIANCO)
+ *   Partita partita: partita di gioco 
+ *   int rigaInput: riga della mossa
+ *   int colInput: colonna della mossa
  * RITORNO: 1 se valida, 0 altrimenti
  */
 int verificareMossaValida(Partita *partita, int rigaInput, int colInput) {
@@ -148,10 +148,10 @@ int verificareMossaValida(Partita *partita, int rigaInput, int colInput) {
  * DESCRIZIONE: capovolge le pedine in tutte le direzioni valide
  *              dopo una mossa valida.
  * ARGOMENTI:
- *   partita: partita di gioco, Partita 
- *   rigaInput: riga della mossa
- *   colInput: colonna della mossa
- *   coloreGiocatore: colore del giocatore
+ *   Partita partita: partita di gioco 
+ *   int rigaInput: riga della mossa
+ *   int colInput: colonna della mossa
+ *   int coloreGiocatore: colore del giocatore corrente
  * RITORNO: partita: partita con le pedine capovolte
  */
 
@@ -182,11 +182,11 @@ void capovolgerePedine(Partita *partita, int rigaInput, int colInput, int colore
 /**
  * DESCRIZIONE: Esegue una mossa e aggiorna la scacchiera.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   rigaInput: riga della mossa
- *   colInput: colonna della mossa
- *   coloreGiocatore: colore del giocatore
- * RITORNO: partita, partita con la mossa completa effettuta
+ *   Partita partita: parita di gioco 
+ *   int rigaInput: riga della mossa
+ *   int colInput: colonna della mossa
+ *   int coloreGiocatore: colore del giocatore che ha effettuato la mossa
+ * RITORNO: Partita partita, partita con la mossa completa effettuta
  */
 void eseguireMossaCompleta(Partita *partita, int rigaInput, int colInput, int coloreGiocatore) {
   scrivereCellaPartita(partita, coloreGiocatore, rigaInput, colInput);
@@ -196,9 +196,8 @@ void eseguireMossaCompleta(Partita *partita, int rigaInput, int colInput, int co
 /**
  * DESCRIZIONE: Controlla se non ci sono mosse possibili per il giocatore.
  * ARGOMENTI:
- *   partita: puntatore alla struttura Partita
- *   coloreGiocatore: colore del giocatore
- * RITORNO: 1 se nessuna mossa possibile, 0 altrimenti
+ *   Partita partita: puntatore alla struttura Partita
+ * RITORNO: VERO se nessuna mossa possibile, FALSO altrimenti
  */
 int verificareNessunaMossa(Partita *partita) {
   int indiceRiga;
@@ -235,11 +234,11 @@ int verificareNessunaMossa(Partita *partita) {
  *              se esiste una partita da caricare la carica, 
  *              altrimenti riempie la scacchiera seguendo
  *              le regole di othello
- * ARGOMENTI: nomePartita: nome della partita da inizializzare
- *            impostazioniPartita: impostazioni della partita da inizializzare
- *            partitaEsistente: partita esistente da caricare. NULL se non esiste
- *            partitaAttiva: partita inizializzata
- * RITORNO: partitaAttiva: partita inizializzata
+ * ARGOMENTI: char [] nomePartita: nome della partita da inizializzare
+ *            Impostazioni impostazioniPartita: impostazioni della partita da inizializzare
+ *            Partita partitaEsistente: partita esistente da caricare. NULL se non esiste
+ *            Partita partitaAttiva: partita inizializzata
+ * RITORNO: Partita partitaAttiva: partita inizializzata
  */
 void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
                                 Partita *partitaEsistente, Partita *partitaAttiva) {
@@ -266,8 +265,8 @@ void inizializzarePartita(char nomePartita[50], Impostazioni *impostazioniPartit
 
 /*
  * DESCRIZIONE: controlla se ci sono mosse possibili per i giocatori
- * ARGOMENTI: partitaAttiva: partita di gioco
- * RITORNO: esito: VERO se non ci sono mosse possibili, 
+ * ARGOMENTI: Partita partitaAttiva: partita di gioco
+ * RITORNO: int esito: VERO se non ci sono mosse possibili, 
  *          FALSO se ci sono mosse possibili
  */
 int controllareFinePartita(Partita *partitaAttiva) {
@@ -292,9 +291,9 @@ int controllareFinePartita(Partita *partitaAttiva) {
 
 /*
  * DESCRIZIONE: gestisce l' input dell utente per quanto riguarda le mosse della partita
- * ARGOMENTI: partitaAttiva: partita di gioco
+ * ARGOMENTI: Partita partitaAttiva: partita di gioco
  *            errore: indica se c'e un errore nell' input dell utente
- * RITORNO: mossa del giocatore effettuta
+ * RITORNO: Partita partitaAttiva, partita con la mossa del giocatore fatta 
  */
 void gestireTurnoGiocatore(Partita *partitaAttiva) {
     int azioneInput;
@@ -334,8 +333,8 @@ void gestireTurnoGiocatore(Partita *partitaAttiva) {
 
 /*
  * DESCRIZIONE: gestisce il turno del bot. trova la prima mossa valida e la esegue
- * ARGOMENTI: partitaAttiva: partita di gioco, Partita
- * RITORNO: partitaAttiva: partita aggiornata con la mossa del bot, Partita
+ * ARGOMENTI: Partita partitaAttiva: partita di gioco 
+ * RITORNO: Partita partitaAttiva: partita aggiornata con la mossa del bot
  */
 void gestireTurnoBot(Partita *partitaAttiva) {
     int mossaBotValida;
@@ -360,11 +359,11 @@ void gestireTurnoBot(Partita *partitaAttiva) {
 /*
  * DESCRIZIONE: avvia un menu interattivo in cui l' utente puo giocare
  *              una partita di othello
- * ARGOMENTI: nomePartita: nome della partita scelto dall' utente
- *            impostazioniPartita: impostazioni della partita di gioco
- *            partitaEsistente: partita da caricare (= NULL se non esiste)
- *            modalitaBot: indica se la partita viene giocata contro un bot o meno
- *            coloreGiocatore: indica il colore delle pedine dell' utente nella partita corrente 
+ * ARGOMENTI: char[] nomePartita: nome della partita scelto dall' utente
+ *            Impostazioni impostazioniPartita: impostazioni della partita di gioco
+ *            Partita partitaEsistente: partita da caricare (= NULL se non esiste)
+ *            int modalitaBot: indica se la partita viene giocata contro un bot o meno
+ *            int coloreGiocatore: indica il colore delle pedine dell' utente nella partita corrente 
  * RITORNO: menu interattivo stampato a schermo 
  */
 void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
@@ -399,14 +398,30 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
         contarePedineGiocatore(&partitaAttiva, NERO),
         contarePedineGiocatore(&partitaAttiva, BIANCO)
     );
+
+    deallocarePartita(&partitaAttiva);
 }
+
+void deallocarePartita(Partita *p) {
+    if (p->scacchieraPartita.celleScacchiera != NULL) {
+        int dim = p->scacchieraPartita.dimScacchiera;
+
+        for (int i = 0; i < dim; i++) {
+            free(p->scacchieraPartita.celleScacchiera[i]);
+        }
+
+        free(p->scacchieraPartita.celleScacchiera);
+        p->scacchieraPartita.celleScacchiera = NULL;
+    }
+}
+
 
 
 /**
  * DESCRIZIONE: Converte la dimensione simbolica in valore numerico
  * ARGOMENTI:
- *   dimensione: dimensione da convertire
- * RITORNO: dimensione: dimensione convertita
+ *   int dimensione, dimensione da convertire
+ * RITORNO: int dimensione, dimensione convertita
  */
 int convertireDimensione(int dimensione) {
   if (dimensione == PICCOLA) {
@@ -422,8 +437,8 @@ int convertireDimensione(int dimensione) {
 /**
  * DESCRIZIONE: Stampa il conteggio delle pedine e il turno corrente
  * ARGOMENTI:
- *   partita: partita di gioco corrente
- *   turnoCorrente: colore delle pedine del giocatore corrente 
+ *   Partita partita: partita di gioco corrente
+ *   int turnoCorrente: colore delle pedine del giocatore corrente 
  * RITORNO: conteggio delle pedine e turno corrente stampato a schermo
  */
 void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
@@ -449,8 +464,8 @@ void stampareConteggioPedine(Partita *partita, int turnoCorrente) {
 /**
  * DESCRIZIONE: Trova la prima mossa valida per il bot
  * ARGOMENTI:
- *   partita: partita di gioco corrente, Partita
- * RITORNO: risultato: coordinate della mossa del bot, intero
+ *   Partita partita: partita di gioco corrente, Partita
+ * RITORNO: int risultato: coordinate della mossa del bot, intero
  */
 int trovareMossaBot(Partita *partita) {
   int dimensioneScacc;
@@ -516,7 +531,7 @@ void stampareLineaOrizzontale(Partita *partita) {
 
 /**
  * DESCRIZIONE: stampa le coordinate prima delle colonne 
- * ARGOMENTI: partita di gioco (serve per la dimensione della scacchiera)
+ * ARGOMENTI: Partita partita, partita di gioco (serve per la dimensione della scacchiera)
  * RITORNO: coordinate prima delle colonne stampate a schermo
  */
 void stampareIntestColonne(Partita *partita) {
@@ -536,7 +551,7 @@ void stampareIntestColonne(Partita *partita) {
 
 /**
  * DESCRIZIONE: stampa la scacchiera di gioco 
- * ARGOMENTI: partita: partita di gioco, Partita
+ * ARGOMENTI: Partita partita, partita di gioco
  * RITORNO: scacchiera di gioco stampata a schermo 
  */
 void stampareScacchiera(Partita *partita) {
@@ -622,8 +637,8 @@ void stampareTabellaInput() {
 
 /*
  * DESCRIZIONE: stampa la schermata di vittoria
- * ARGOMENTI: neriTotali: numero di pedine del giocatore nero
- *            bianchiTotali: numero di pedine del giocatore bianchi
+ * ARGOMENTI: int neriTotali: numero di pedine del giocatore nero
+ *            int bianchiTotali: numero di pedine del giocatore bianchi
  * RITORNO: schermata di vittoria stampata a schermo
  */
 void stampareVittoria(int neriTotali, int bianchiTotali) {

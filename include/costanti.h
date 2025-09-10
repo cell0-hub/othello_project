@@ -33,6 +33,8 @@
 #define MEDIA 2
 #define GRANDE 3
 
+#define NOME_MAX 50
+
 #define  DIFFICOLTA_FACILE  1
 #define  DIFFICOLTA_INTERMEDIA  2 
 #define  DIFFICOLTA_DIFFICILE  3
@@ -55,5 +57,9 @@
 #define VS_AMICO 1 
 #define VS_BOT_NERO 2
 #define VS_BOT_BIANCO 3
+
+#define NUOVA_PARTITA 1
+#define PARTITE_SALVATE 2
+#define ESCI 3
 
 #endif

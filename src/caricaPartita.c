@@ -40,8 +40,8 @@ Scopo di ogni funzione presente:
 
 /**
  * DESCRIZIONE: Raccoglie i nomi delle partite salvate (file che iniziano con "partita_").
- * ARGOMENTI: nomiPartite: array di stringhe da riempire
- * RITORNO: nomiPartite: array di stringhe riempito con i nomi dei file.
+ * ARGOMENTI: char* [] nomiPartite: array di stringhe da riempire
+ * RITORNO: char* [] nomiPartite: array di stringhe riempito con i nomi dei file.
  */
 void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
     DIR *cartella;
@@ -67,10 +67,11 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
 
 /**
  * DESCRIZIONE: Libera la memoria dei nomi delle partite.
- * ARGOMENTI: nomiPartite: array di stringhe, numero: quanti elementi liberare
- * RITORNO: nessuno
+ * ARGOMENTI: char*[] nomiPartite: array di stringhe, numero: quanti elementi liberare
+ *            int numero: numero di partite salvate nell' array
+ * RITORNO: memoria liberata dall' array
  */
-void liberareNomiPartite(char *nomiPartite[], int numero) {
+void liberareNomiPartite(char *nomiPartite[], int nPartiteSalvate) {
     //
     // la funzione non e' presente nello pseudocodice, 
     // perche' l' allocazione della memoria
@@ -78,7 +79,7 @@ void liberareNomiPartite(char *nomiPartite[], int numero) {
     //
     int indice;
     indice = 0;
-    while (indice < numero) {
+    while (indice < nPartiteSalvate) {
         free(nomiPartite[indice]);
         indice = indice + 1;
     }
@@ -87,7 +88,7 @@ void liberareNomiPartite(char *nomiPartite[], int numero) {
 /**
  * DESCRIZIONE: Conta il numero di partite salvate nella cartella database.
  * ARGOMENTI: nessuno
- * RITORNO: conteggio: numero di partite trovate, naturale
+ * RITORNO: int conteggio: numero di partite trovate
  */
 int contareNumeroPartiteSalvate() {
     DIR *cartella;
@@ -133,8 +134,9 @@ void stampareTitoloCaricaPartita() {
 
 /**
  * DESCRIZIONE: Estrae il nome da un file partita (toglie prefisso e suffisso).
- * ARGOMENTI: nomeFile: nome file, nome: buffer di output
- * RITORNO: nome: nome estrapolato (senza prefisso e suffisso)
+ * ARGOMENTI: nomeFile char: nome del file (con partita_ e .txt)
+ *            char *nome: buffer di output
+ * RITORNO: char *nome: nome estrapolato (senza prefisso e suffisso)
  */
 void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
     int cursNome;
@@ -152,7 +154,7 @@ void estrapolareNomeDaFile(const char *nomeFile, char *nome) {
 /**
  * DESCRIZIONE: Salva una partita Othello completa su file: 
  *              dimensione, modalità, turno corrente, poi scacchiera.
- * ARGOMENTI: partita: partita di gioco
+ * ARGOMENTI: Partita *partita: partita di gioco
  * RITORNO: file aggiornato con i valori della griglia di partita, FILE 
  */
 void salvarePartita(Partita *partita) {
@@ -166,7 +168,7 @@ void salvarePartita(Partita *partita) {
 
     dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
     turnoCorrente = leggereTurnoGiocatore(partita);
-    snprintf(percorso, sizeof(percorso), "database/partita_%s.txt", leggereNomePartita(partita));
+    snprintf(percorso, sizeof(percorso), "%s/partita_%s.txt", DATABASE, leggereNomePartita(partita));
     file = fopen(percorso, "w");
 
     // Salva le informazioni della partita
@@ -196,9 +198,9 @@ void salvarePartita(Partita *partita) {
 /**
  * DESCRIZIONE: Carica una partita Othello completa da file: 
  *              dimensione, modalità, turno corrente, poi matrice scacchiera.
- * ARGOMENTI: partita: partita da caricare,
- *             percorso: path del file, 
- * RITORNO: partita: partita caricata dal file, Partita
+ * ARGOMENTI: Partita partita: partita da caricare 
+ *            char* percorso: path del file 
+ * RITORNO: Partita partita: partita caricata dal file, 
  */
 void caricarePartita(Partita *partita, const char *percorso) {
     FILE *file;
@@ -208,13 +210,13 @@ void caricarePartita(Partita *partita, const char *percorso) {
     int colonna;
     int valore;
     int turnoCorrente;
+    // la variabile c non e' presente nello pseudocodice,
+    // perche' superflua.
     char c;
     Impostazioni *impPartita;
 
     file = fopen(percorso, "r");
 
-    // la variabile c non e' presente nello pseudocodice,
-    // perche' superflua nello pseudocodice
     if (fscanf(file, " %c", &c) == 1) {
         if (c == 'G') {
             dimensione = 16;
@@ -229,6 +231,9 @@ void caricarePartita(Partita *partita, const char *percorso) {
     // Inizializza la partita
     impPartita = inizializzareImpostazioni(modalita, dimensione);
     scrivereImpPartita(partita, *impPartita);
+    //questa funzione non la includiamo nello pseudo perche
+    //la gestione della memoria non fa parte dei suoi ambiti;
+    free(impPartita);
     scrivereTurnoGiocatorePartita(partita, turnoCorrente);
     inizializzareScacchieraPartita(partita, dimensione);
 
@@ -243,6 +248,7 @@ void caricarePartita(Partita *partita, const char *percorso) {
         }
         riga = riga + 1;
     }
+
     fclose(file);
 }
 
@@ -291,7 +297,7 @@ void avviareMenuCaricaPartita() {
         cursPartite = numeroPartite; //terminiamo il ciclo...
         avviareMenuPrincipale(); 
     } else if (input > 0 && input <= numeroPartite) {
-        snprintf(percorso, sizeof(percorso), "database/%s", nomiPartite[input-1]);
+        snprintf(percorso, sizeof(percorso), "%s/%s", DATABASE, nomiPartite[input-1]);
         caricarePartita(&partita, percorso);
         estrapolareNomeDaFile(nomiPartite[input-1], nome);
         scrivereNomePartita(&partita, nome);
@@ -299,12 +305,15 @@ void avviareMenuCaricaPartita() {
 
         if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == VS_AMICO) {
             avviarePartita(NULL, NULL, &partita, 0, 0);
+            liberareNomiPartite(nomiPartite, numeroPartite);
         } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == VS_BOT_NERO) {
             coloreGiocatore = leggereTurnoGiocatore(&partita); 
             avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
+            liberareNomiPartite(nomiPartite, numeroPartite);
         } else if (leggereModalitaImpostazioni(leggereImpPartita(partita)) == VS_BOT_BIANCO) {
             coloreGiocatore = leggereTurnoGiocatore(&partita); 
             avviarePartita(NULL, NULL, &partita, 1, coloreGiocatore);
+            liberareNomiPartite(nomiPartite, numeroPartite);
         }
     } else {
         liberareNomiPartite(nomiPartite, numeroPartite);

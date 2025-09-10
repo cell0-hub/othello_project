@@ -36,9 +36,6 @@ Scopo di ogni funzione presente:
 #define ERR_MSG_RIGA 22
 #define ERR_MSG_COLONNA 31
 
-#define NUOVA_PARTITA 1
-#define PARTITE_SALVATE 2
-#define ESCI 3
 
 #define OPZIONE_MIN 1
 #define OPZIONE_MAX 3 

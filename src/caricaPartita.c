@@ -49,7 +49,7 @@ void raccogliereNomiPartiteSalvate(char *nomiPartite[]) {
     int conteggio;
     const char *nomeFile;
 
-    cartella = opendir(DATABASE);
+    cartella = opendir(".");
     conteggio = 0;
     voce = leggereProssimaVoce(cartella);
     while (voce != NULL && conteggio < MAX_PARTITE) {
@@ -96,7 +96,7 @@ int contareNumeroPartiteSalvate() {
     int conteggio;
     const char *nomeFile;
 
-    cartella = opendir(DATABASE);
+    cartella = opendir(".");
     conteggio = 0;
 
     voce = leggereProssimaVoce(cartella);
@@ -168,7 +168,9 @@ void salvarePartita(Partita *partita) {
 
     dimensione = leggereDimScacchieraImp(leggereImpPartita(*partita));
     turnoCorrente = leggereTurnoGiocatore(partita);
-    snprintf(percorso, sizeof(percorso), "%s/partita_%s.txt", DATABASE, leggereNomePartita(partita));
+    
+    // MODIFICA: rimuovi il "/" iniziale per salvare nella directory corrente (root del progetto)
+    snprintf(percorso, sizeof(percorso), "partita_%s.txt", leggereNomePartita(partita));
     file = fopen(percorso, "w");
 
     // Salva le informazioni della partita
@@ -251,7 +253,6 @@ void caricarePartita(Partita *partita, const char *percorso) {
 
     fclose(file);
 }
-
 /**
  * DESCRIZIONE: mostra a schermo un menu' interattivo
  *              che permette al giocatore di scegliere quale partita 
@@ -297,7 +298,8 @@ void avviareMenuCaricaPartita() {
         cursPartite = numeroPartite; //terminiamo il ciclo...
         avviareMenuPrincipale(); 
     } else if (input > 0 && input <= numeroPartite) {
-        snprintf(percorso, sizeof(percorso), "%s/%s", DATABASE, nomiPartite[input-1]);
+        // MODIFICA: rimuovi il "/" iniziale per caricare dalla directory corrente
+        snprintf(percorso, sizeof(percorso), "%s", nomiPartite[input-1]);
         caricarePartita(&partita, percorso);
         estrapolareNomeDaFile(nomiPartite[input-1], nome);
         scrivereNomePartita(&partita, nome);

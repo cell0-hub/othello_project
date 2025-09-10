@@ -399,23 +399,7 @@ void avviarePartita(char nomePartita[50], Impostazioni *impostazioniPartita,
         contarePedineGiocatore(&partitaAttiva, BIANCO)
     );
 
-    deallocarePartita(&partitaAttiva);
 }
-
-void deallocarePartita(Partita *p) {
-    if (p->scacchieraPartita.celleScacchiera != NULL) {
-        int dim = p->scacchieraPartita.dimScacchiera;
-
-        for (int i = 0; i < dim; i++) {
-            free(p->scacchieraPartita.celleScacchiera[i]);
-        }
-
-        free(p->scacchieraPartita.celleScacchiera);
-        p->scacchieraPartita.celleScacchiera = NULL;
-    }
-}
-
-
 
 /**
  * DESCRIZIONE: Converte la dimensione simbolica in valore numerico
